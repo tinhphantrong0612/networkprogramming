@@ -15,13 +15,18 @@
 
 ## Request structure
 ### Login
+``` c++
 01 | nuLL     | strlen(data) |<username> <password>
-
+```
 ### Sign up
+```c+
 02 | nuLL     | strlen(data) |<username> <password>
-
+```
 ### Create lobby
+```c+
 03 | null     | strlen(data) |<team_number>
-
+```
 ### Join lobby
+```c+
 04 | lobby_id | 0            |<null> 
+```
