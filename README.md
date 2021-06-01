@@ -19,14 +19,14 @@
 01 | nuLL     | strlen(data) |<username> <password>
 ```
 ### Sign up
-```c+
+```c++
 02 | nuLL     | strlen(data) |<username> <password>
 ```
 ### Create lobby
-```c+
+```c++
 03 | null     | strlen(data) |<team_number>
 ```
 ### Join lobby
-```c+
+```c++
 04 | lobby_id | 0            |<null> 
 ```
