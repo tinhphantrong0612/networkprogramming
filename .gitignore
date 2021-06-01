@@ -2,4 +2,6 @@
 *.mdf
 *.ldf
 *.opensdf
+*.ipch
+*. sdf
 
