@@ -7,6 +7,8 @@
 
 ## CODE
 01: lOGIN
+02: SIGNUP
 
 ## The login
 01 | nuLL | strlen(data) |<username> <password>
+02 | nuLL | strlen(data) |<username> <password>
