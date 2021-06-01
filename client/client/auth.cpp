@@ -1,21 +1,27 @@
 #include "stdafx.h"
-#include "stream.h"
+#include "util.h"
+#include "auth.h"
+#include "except.h"
 
-
-void auth_payload(char* username, char* password, char* mess) {
-	strcat_s(mess, PAYLOAD_SIZE, username);
-	strcat_s(mess, PAYLOAD_SIZE, " ");
-	strcat_s(mess, PAYLOAD_SIZE, password);
+User::User(Socket socket, char* username) : socket{ socket } {
+	strcpy_s(this->username, USERNAME_LEN, username);
 }
 
-void login(Socket& socket, char* username, char* password) {
-	char mess[PAYLOAD_SIZE] = "";
-	auth_payload(username, password, mess);
-	socket.tcp_send(LOGIN, 0, mess);
+User::~User() {
+
 }
 
-void signup(Socket& socket, char* username, char* password) {
+void User::login(char* password) {
 	char mess[PAYLOAD_SIZE] = "";
-	auth_payload(username, password, mess);
-	socket.tcp_send(SIGNUP, 0, mess);
+	auth_payload(this->username, password, mess);
+	this->socket.tcp_send(LOGIN, 0, mess);
+}
+
+void User::signup(char* password1, char* password2) {
+	if (strcmp(password1, password2)) {
+		throw ValidationError("The confirm password doesn't match");
+	}
+	char mess[PAYLOAD_SIZE] = "";
+	auth_payload(this->username, password1, mess);
+	this->socket.tcp_send(SIGNUP, 0, mess);
 }

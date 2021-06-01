@@ -28,3 +28,9 @@ void pack(char* code, int id, char* payload, char* mess) {
 	strcat_s(mess, BUFF_SIZE, payload);
 
 }
+
+void auth_payload(char* username, char* password, char* mess) {
+	strcat_s(mess, PAYLOAD_SIZE, username);
+	strcat_s(mess, PAYLOAD_SIZE, " ");
+	strcat_s(mess, PAYLOAD_SIZE, password);
+}
