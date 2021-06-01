@@ -2,9 +2,10 @@
 //
 
 #include "stdafx.h"
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "Ws2_32.lib")
+#include "stream.h"
+
+void update();
+void render();
 
 int main(int argc, char* argv[])
 {
@@ -12,50 +13,34 @@ int main(int argc, char* argv[])
 	int port_number = atoi(argv[2]);
 	char* ip_address = argv[1];
 
-	// Initialize winsock
-	WSADATA wsaData;
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {
-		WSACleanup();
-		printf("Initialize failed!! with error: %d", WSAGetLastError());
-		return 1;
-	}
-
+	//Initialize WSA
+	initWSA();
+	
 	//Create client socket
-	SOCKET clientSock;
-	clientSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (clientSock == INVALID_SOCKET) {
-		printf("Can't create socket for client with error: %d\n", WSAGetLastError());
+	Socket client(port_number, ip_address);
+	client.set_timeout(5000); // Timeout 5s
+	if (client.connect_to_server()) {
 		return 1;
 	}
 
-
-	//Set timeout option
-	int tv = 5000;		//Timeout: 5s
-	setsockopt(clientSock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&tv), sizeof(int));
-
-	//Set info for server socket
-	sockaddr_in serverAddr;
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(port_number);
-	inet_pton(AF_INET, ip_address, &serverAddr.sin_addr);
-
-
-	//Set client connect state
-	if (connect(clientSock, (sockaddr *)&serverAddr, sizeof(serverAddr))) {
-		printf("Can't connect to the server with error: %d\n", WSAGetLastError());
-		return 1;
-	}
 
 	printf("Client started!!\n");
-
 	bool running = true;
+	//Game loop
 	while (running) {
-		printf("Haha");
+		update();
+		render();
 	}
 
 	//End
-	closesocket(clientSock);
 	WSACleanup();
 	return 0;
 }
 
+void update() {
+
+}
+
+void render() {
+
+}
