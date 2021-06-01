@@ -1,4 +1,4 @@
-# The 
+# The response
 | Code | ID | Length | Payload|
 
 |---|---|---|---|
