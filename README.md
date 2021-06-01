@@ -8,7 +8,18 @@
 ## CODE
 01: lOGIN
 02: SIGNUP
+03: CREATE_LOBBY
+04: JOIN_LOBBY
 
-## The login
-01 | nuLL | strlen(data) |<username> <password>
-02 | nuLL | strlen(data) |<username> <password>
+## Request structure
+### Login
+01 | nuLL     | strlen(data) |<username> <password>
+
+### Sign up
+02 | nuLL     | strlen(data) |<username> <password>
+
+### Create lobby
+03 | null     | strlen(data) |<team_number>
+
+### Join lobby
+04 | lobby_id | 0            |<null> 
