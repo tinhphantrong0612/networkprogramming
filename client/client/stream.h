@@ -6,12 +6,11 @@
 #include "constant.h"
 
 class Socket {
-private:
+public:
 	SOCKET client_socket;
 	int port_number;
 	char ip_address[INET_ADDRSTRLEN];
 
-public:
 	Socket(int port_number, char* ip_address);
 	~Socket();
 

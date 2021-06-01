@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "stream.h"
+#include "lobby.h"
 
 void create_lobby(Socket& socket, int team_number) {
 	char teamnum_str[TEAM_NUMBER_SIZE + 1];

@@ -3,12 +3,9 @@
 #include "stream.h"
 
 class User {
-private:
+public:
 	char username[USERNAME_LEN];
-	Socket socket;
-	User(Socket socket, char* username);
+	bool is_ready = false;
+	User(char* username);
 	~User();
-
-	void login(char* password);
-	void signup(char* password1, char* password2);
 };

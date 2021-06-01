@@ -9,6 +9,9 @@
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
 
+// Boundery
+#define MAX_NUM_PLAYER 12
+
 //CODE
 #define LOGIN "01"
 #define SIGNUP "02"
