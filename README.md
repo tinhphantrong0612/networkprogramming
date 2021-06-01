@@ -6,10 +6,12 @@
 
 
 ## CODE
+``` c++
 01: LOGIN
 02: SIGNUP
 03: CREATE_LOBBY
 04: JOIN_LOBBY
+```
 
 ## Request structure
 ### Login
