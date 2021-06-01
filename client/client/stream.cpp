@@ -39,6 +39,9 @@ void Socket::tcp_send(char* code, int id, char* payload) {
 	char mess[BUFF_SIZE] = "";
 	pack(code, id, payload, mess);
 	int ret = send(this->client_socket, mess, strlen(mess), 0);
+	if (ret == SOCKET_ERROR) {
+		printf("Can't send to the server with error: %d\n", WSAGetLastError());
+	}
 }
 
 int initWSA() {
