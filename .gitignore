@@ -1,0 +1,7 @@
+# SQL Server files
+*.mdf
+*.ldf
+*.opensdf
+*.ipch
+*. sdf
+
