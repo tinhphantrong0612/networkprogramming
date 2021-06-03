@@ -3,4 +3,11 @@
 *.ldf
 *.opensdf
 *.ipch
-*. sdf
+*.sdf
+
+# Execute, Binary, Precompile files
+*.exe
+*.obj
+*.pch
+*.pdb
+*.idb
