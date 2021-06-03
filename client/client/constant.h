@@ -8,6 +8,9 @@
 #define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
+#define NAME_LENGTH 256
+#define QUESTION_LENGTH 256
+#define ANSWER_LENGTH 256
 
 // Boundery
 #define MAX_NUM_PLAYER 12
