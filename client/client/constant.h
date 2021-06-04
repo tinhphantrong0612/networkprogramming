@@ -8,6 +8,9 @@
 #define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
+#define NAME_LENGTH 256
+#define QUESTION_LENGTH 256
+#define ANSWER_LENGTH 256
 
 // Boundery
 #define MAX_NUM_PLAYER 12
@@ -17,3 +20,10 @@
 #define SIGNUP "02"
 #define CREATE_LOBBY "03"
 #define JOIN_LOBBY "04"
+#define CHOOSE_TEAM "05"
+#define CHOOSE_MINE "06"
+#define CHOOSE_CASTLE "07"
+#define CHOOSE_QUESTION "08"
+#define CHOOSE_ANSWER "09"
+#define ATTACK_CASTLE "10"
+#define EQUIP_WALL "11"
