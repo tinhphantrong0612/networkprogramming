@@ -3,8 +3,9 @@
 //Buffer size
 #define PAYLOAD_SIZE 2048
 #define BUFF_SIZE 32000
-#define ID_SIZE 4
-#define PAYLOAD_LEN 4
+#define PAYLOAD_LEN_SIZE 2
+#define CODE_SIZE 2
+
 #define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
@@ -14,6 +15,16 @@
 
 // Boundery
 #define MAX_NUM_PLAYER 12
+
+// default value
+#define DEFAULT_PORT 5500
+#define DEFAULT_IP "127.0.0.1"
+#define DEFAULT_USRNAME ""
+#define DELIM_RESPONSE " "
+
+
+// Response code
+#define OK 1
 
 //CODE
 #define LOGIN "01"

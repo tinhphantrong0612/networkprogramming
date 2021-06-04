@@ -11,13 +11,16 @@ public:
 	int port_number;
 	char ip_address[INET_ADDRSTRLEN];
 
+	Socket();
 	Socket(int port_number, char* ip_address);
 	~Socket();
 
+
+	// Initialize winsock
+	int initWSA();
 	void set_timeout(int time);
 	int connect_to_server();
-	void tcp_send(char* code, int id, char* payload);
+	int tcp_send(char* code, char* payload);
+	int tcp_receive(char*code, char* payload);
 };
 
-// Initialize winsock
-int initWSA();
