@@ -1,6 +1,11 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "stream.h"
 #include "util.h"
+
+Socket::Socket() {
+	strcpy_s(this->ip_address, INET_ADDRSTRLEN, DEFAULT_IP);
+	this->port_number = DEFAULT_PORT;
+}
 
 Socket::Socket(int port_number, char* ip_address) : port_number{ port_number }{
 	strcpy_s(this->ip_address, INET_ADDRSTRLEN, ip_address);
@@ -13,6 +18,7 @@ Socket::Socket(int port_number, char* ip_address) : port_number{ port_number }{
 
 Socket::~Socket() {
 	closesocket(this->client_socket);
+	WSACleanup();
 };
 
 void Socket::set_timeout(int time) {
@@ -35,16 +41,47 @@ int Socket::connect_to_server() {
 	return 0;
 }
 
-void Socket::tcp_send(char* code, int id, char* payload) {
+int Socket::tcp_send(char* code, char* payload) {
 	char mess[BUFF_SIZE] = "";
-	pack(code, id, payload, mess);
+	pack(code, payload, mess);
 	int ret = send(this->client_socket, mess, strlen(mess), 0);
 	if (ret == SOCKET_ERROR) {
-		printf("Can't send to the server with error: %d\n", WSAGetLastError());
+		printf("Can't send to the server with error: %d\n", WSAGetLastError());	// Dòng này thay bằng thông báo của UI
+		return WSAGetLastError();
 	}
+	if (!ret) {
+		return WSAECONNRESET;
+	}
+
+	return 0;
 }
 
-int initWSA() {
+int Socket::tcp_receive(char* code, char* payload) {
+	char mess[BUFF_SIZE] = "";
+	int ret = recv(this->client_socket, mess, BUFF_SIZE, 0);
+	if (ret == SOCKET_ERROR) {
+		printf("Can't receive from the server with error: %d\n", WSAGetLastError());	// Dòng này thay bằng thông báo của UI
+		return WSAGetLastError();
+	}
+
+	if (ret) {
+		mess[ret] = '\0';
+		char* ptr = mess;
+		strncpy_s(code, CODE_SIZE + 1, mess, CODE_SIZE);
+		ptr += CODE_SIZE;
+		int first_byte = ptr[0];
+		int second_byte = ptr[1];
+		int len = first_byte * 256 + second_byte;
+		strncpy_s(payload, PAYLOAD_SIZE + 1, ptr + PAYLOAD_LEN_SIZE, len);
+	}
+	else {
+		return WSAECONNRESET;
+	}
+
+	return 0;
+}
+
+int Socket::initWSA() {
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {
 		WSACleanup();

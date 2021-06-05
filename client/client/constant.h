@@ -3,8 +3,9 @@
 //Buffer size
 #define PAYLOAD_SIZE 2048
 #define BUFF_SIZE 32000
-#define ID_SIZE 4
-#define PAYLOAD_LEN 4
+#define PAYLOAD_LEN_SIZE 2
+#define CODE_SIZE 2
+
 #define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
@@ -15,15 +16,32 @@
 // Boundery
 #define MAX_NUM_PLAYER 12
 
+// default value
+#define DEFAULT_PORT 5500
+#define DEFAULT_IP "127.0.0.1"
+#define DEFAULT_USRNAME ""
+#define DELIM_RESPONSE " "
+
+
+// Response code
+#define OK 1
+
 //CODE
 #define LOGIN "01"
 #define SIGNUP "02"
-#define CREATE_LOBBY "03"
-#define JOIN_LOBBY "04"
-#define CHOOSE_TEAM "05"
-#define CHOOSE_MINE "06"
-#define CHOOSE_CASTLE "07"
-#define CHOOSE_QUESTION "08"
-#define CHOOSE_ANSWER "09"
-#define ATTACK_CASTLE "10"
-#define EQUIP_WALL "11"
+#define CREATE_GAME "03"
+#define GET_LOBBY "04"
+#define JOIN_GAME "05"
+#define CHANGE_TEAM "06"
+#define READY_PLAY "07"
+#define UNREADY_PLAY "08"
+#define QUIT_GAME "09"
+#define START_GAME "10"
+#define LOGOUT "11"
+#define ATTACK_CASTLE "12"
+#define ATTACK_MINE "13"
+#define BUY_WEAPON "14"
+#define BUY_WALL "15"
+#define UPDATE_CASTLE_QUESTION "16"
+#define UPDATE_MINE_QUESTION "17"
+#define TIMELY_UPDATE
