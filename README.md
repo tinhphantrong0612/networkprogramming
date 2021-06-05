@@ -147,7 +147,7 @@ Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 `player_ingame_id` is player's index in players array in game struct
-Whenever a player joins a lobby successfully, server sends update to all players in that lobby
+Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
