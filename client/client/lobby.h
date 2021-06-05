@@ -17,9 +17,12 @@ public:
 	Lobby(int id, int team_number);
 	~Lobby();
 
-	static Lobby create_lobby(Socket& socket, int team_number);
+	void create_lobby_request(Socket& socket, int team_number);
+	void get_lobby_request(Socket& socket);
+	void join_lobby_request(Socket& socket, char* id, char* team_id, Player& player);
 
-	static Lobby* get_lobby(Socket& socket);
+	void create_lobby_response(char* payload);
+	Lobby* get_lobby_response(char* payload);
+	Player join_lobby_response(char* payload);
 
-	static Lobby join_lobby(Socket& socket, char* id, char* team_id, Player& player);
 };

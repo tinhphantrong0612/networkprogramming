@@ -23,6 +23,8 @@ struct Join_lobby {
 	int id;
 	int ingame_id;
 	int team_number;
+	int player_number;
 	int team_players[MAX_NUM_PLAYER];
 	Player players[MAX_NUM_PLAYER];
+
 };

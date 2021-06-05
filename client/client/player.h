@@ -1,5 +1,5 @@
 #pragma once
-#include "constant.h"
+#include "stream.h"
 
 class Player {
 public:
@@ -14,4 +14,5 @@ public:
 	Player(int id, char* username, int game_id, int team_id, int state);
 	~Player();
 
+	void change_team(Socket& socket, int team_id);
 };

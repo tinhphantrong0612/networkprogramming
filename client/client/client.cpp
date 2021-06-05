@@ -5,6 +5,9 @@
 #include "stream.h"
 
 
+void receive_data(Socket& socket);
+
+
 int main(int argc, char* argv[])
 {
 	//Get port number and address
@@ -13,4 +16,17 @@ int main(int argc, char* argv[])
 
 
 	return 0;
+}
+
+void receive_data(Socket& socket) {
+	//Receive response
+	char code[CODE_SIZE + 1];
+	char payload[PAYLOAD_SIZE + 1];
+	socket.tcp_receive(code, payload);
+	if (!strcmp(code, LOGIN)) {
+
+	}
+	else if (!strcmp(code, SIGNUP)) {
+
+	}
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "player.h"
+#include "stream.h"
 
 Player::Player() {
 
@@ -17,4 +18,11 @@ Player::Player(int id, char* username, int game_id, int team_id, int state) : id
 
 Player::~Player() {
 
+}
+
+void Player::change_team(Socket& socket, int team_id) {
+	// Send team id
+	char team_id_str[2];
+	_itoa_s(team_id, team_id_str, 2, 10);
+	socket.tcp_send(CHANGE_TEAM, team_id_str);
 }

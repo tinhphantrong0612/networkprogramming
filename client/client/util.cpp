@@ -126,6 +126,7 @@ Join_lobby join_lobby_data(char* payload) {
 
 		i++;
 	}
+	result.player_number = i;
 
 	return result;
 }
