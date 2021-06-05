@@ -110,7 +110,7 @@
 151: BUY_WALL_E_NOTENOUGH
 152: BUY_WALL_E_WEAKER // Can't by weaker wall
 153: BUY_WALL_E_GONE // Your castle is gone
-154 BUY_WALL_E_NOTPLAYING
+154: BUY_WALL_E_NOTPLAYING
 ```
 ## Request/Success response structure
 ### Login
@@ -135,7 +135,7 @@
 ```
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
-Example: "04xx400 1622867470450 2 0x100x11xxxxx 1622867475670 3 0x20xx11xx2xx "
+Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
 ### Join lobby
 ```c++
 05|strlen(data)|<game_id> <team_id>
