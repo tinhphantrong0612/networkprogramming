@@ -4,7 +4,7 @@
 #define BUFF_SIZE				8192
 #define ACCOUNT_SIZE			50
 #define TIME_SIZE				50
-#define HEADER_SIZE				10
+#define HEADER_SIZE				4
 #define CASTLE_BUFF				4
 #define MINE_BUFF				6
 #define TEAM_BUFF				11
@@ -33,96 +33,114 @@
 #define LOGIN					"01" // username	| password
 #define SIGNUP					"02" // username	| password
 #define CREATE_GAME				"03" // nothing
-#define JOIN_GAME				"04" // gameId
-#define CHANGE_TEAM				"05" // teamIndex
-#define READY_PLAY				"06" // nothing
-#define UNREADY_PLAY			"07" // nothing
-#define OUT_GAME				"08" // nothing
-#define START_GAME				"09" // nothing
-#define LOGOUT					"10" // nothing
+#define GET_LOBBY				"04" // nothing
+#define JOIN_GAME				"05" // gameId
+#define CHANGE_TEAM				"06" // teamIndex
+#define READY_PLAY				"07" // nothing
+#define UNREADY_PLAY			"08" // nothing
+#define QUIT_GAME				"09" // nothing
+#define START_GAME				"10" // nothing
+#define LOGOUT					"11" // nothing
 
 // Outgame - Response
-#define LOGIN_SUCCESS			"010"
-#define LOGIN_E_ALREADY			"011"
-#define LOGIN_E_ELSEWHERE		"012"
-#define LOGIN_E_PASSWORD		"013"
-#define LOGIN_E_NOTEXIST		"014"
+#define LOGIN_SUCCESS			"010" // nothing
+#define LOGIN_E_ALREADY			"011" // nothing
+#define LOGIN_E_ELSEWHERE		"012" // nothing
+#define LOGIN_E_PASSWORD		"013" // nothing
+#define LOGIN_E_NOTEXIST		"014" // nothing
 
-#define SIGNUP_SUCCESS			"020"
-#define SIGNUP_E_LOGGEDIN		"021"
-#define SIGNUP_E_EXIST			"022"
+#define SIGNUP_SUCCESS			"020" // nothing
+#define SIGNUP_E_LOGGEDIN		"021" // nothing
+#define SIGNUP_E_FORMAT			"022" // nothing
+#define SIGNUP_E_EXIST			"023" // nothing
 
-#define CREATE_SUCCESS			"030"
-#define CREATE_E_NOTAUTH		"031"
-#define CREATE_E_INGAME			"032"
+#define CREATE_SUCCESS			"030" // gameid
+#define CREATE_E_NOTAUTH		"031" // nothing
+#define CREATE_E_INGAME			"032" // nothing
+#define CREATE_E_FULLGAME		"033" // nothing
+#define CREATE_E_INVALIDTEAM	"034" // nothing
 
-#define JOIN_SUCCESS			"040"
-#define JOIN_E_NOTAUTH			"041"
-#define JOIN_E_FULL				"042"
-#define JOIN_E_ALREADY			"043"
+#define LOBBY_SUCCESS			"040"
+#define LOBBY_E_NOTAUTH			"041"
 
-#define CHANGE_SUCCESS			"050"
-#define CHANGE_E_NOTAUTH		"051"
-#define CHANGE_E_NOTINGAME		"052"
-#define CHANGE_E_FULL			"053"
-#define CHANGE_E_READY			"054"
-#define CHANGE_E_PLAYING		"055"
+#define JOIN_SUCCESS			"050"
+#define JOIN_E_NOTAUTH			"051"
+#define JOIN_E_ALREADY			"052"
+#define JOIN_E_FORMAT			"053"
+#define JOIN_E_FULLGAME			"054"
+#define JOIN_E_FULLTEAM			"055"
+#define JOIN_E_NOGAME			"056"
+#define JOIN_E_NOTEAM			"057"
+#define JOIN_E_PLAYING			"058"
 
-#define READY_SUCCESS			"060"
-#define READY_E_NOTAUTH			"061"
-#define READY_E_NOTINGAME		"062"
-#define READY_E_ALREADY			"063"
-#define READY_E_PLAYING			"064"
-#define READY_E_CREATOR			"065"
+#define CHANGE_SUCCESS			"060"
+#define CHANGE_E_NOTAUTH		"061"
+#define CHANGE_E_NOTINGAME		"062"
+#define CHANGE_E_FULL			"063"
+#define CHANGE_E_READY			"064"
+#define CHANGE_E_PLAYING		"065"
 
-#define UNREADY_SUCCESS			"070"
-#define UNREADY_E_NOTAUTH		"071"
-#define UNREADY_E_NOTINGAME		"072"
-#define UNREADY_E_ALREADY		"073"
-#define UNREADY_E_PLAYING		"074"
-#define UNREADY_E_CREATOR		"075"
+#define READY_SUCCESS			"070"
+#define READY_E_NOTAUTH			"071"
+#define READY_E_NOTINGAME		"072"
+#define READY_E_ALREADY			"073"
+#define READY_E_PLAYING			"074"
+#define READY_E_HOST			"075"
 
-#define OUT_SUCCESS				"080"
-#define OUT_E_NOTAUTH			"081"
-#define OUT_E_NOTINGAME			"082"
-#define OUT_E_READY				"083"
-#define OUT_E_PLAYING			"084"
+#define UNREADY_SUCCESS			"080"
+#define UNREADY_E_NOTAUTH		"081"
+#define UNREADY_E_NOTINGAME		"082"
+#define UNREADY_E_ALREADY		"083"
+#define UNREADY_E_PLAYING		"084"
+#define UNREADY_E_HOST			"085"
 
-#define START_SUCCESS			"090"
-#define START_E_NOTAUTH			"091"
-#define START_E_NOTINGAME		"092"
-#define START_E_NOTALLREADY		"093"
-#define START_E_PLAYING			"094"
-#define START_E_NOTCREATOR		"095"
+#define QUIT_SUCCESS			"090"
+#define QUIT_E_NOTAUTH			"091"
+#define QUIT_E_NOTINGAME		"092"
+#define QUIT_E_READY			"093"
 
-#define LOGOUT_SUCCESS			"100"
-#define LOGOUT_E_NOTAUTH		"101"
-#define LOGOUT_E_INGAME			"102"
+#define START_SUCCESS			"100"
+#define START_E_NOTAUTH			"101"
+#define START_E_NOTINGAME		"102"
+#define START_E_NOTALLREADY		"103"
+#define START_E_PLAYING			"104"
+#define START_E_NOTHOST			"105"
+
+#define LOGOUT_SUCCESS			"110"
+#define LOGOUT_E_NOTAUTH		"111"
+#define LOGOUT_E_INGAME			"112"
 
 // Ingame - Request header
-#define ATTACK					"11" // targetType	| targetIndex	| QuestionId Answer
-#define BUY_WEAPON				"12" // weaponType
-#define BUY_WALL				"13" // wallType	| castleIndex
+#define ATTACK_CASTLE			"12" // targetType	| targetIndex	| QuestionId Answer
+#define ATTACK_MINE				"13"
+#define BUY_WEAPON				"14" // weaponType
+#define BUY_WALL				"15" // wallType	| castleIndex
 
 // Ingame - Response header
-// No success header because success will change the game,
-// Server will send game info to all player
-#define ATTACK_E_TOOLATE		"111" // Answer the question too late
-#define ATTACK_E_TOOWEAK		"112" // Enemy build a better wall
-#define ATTACK_E_YOURS			"113" // Guess your teammate got it first
-#define ATTACK_E_NOTPLAYING		"114" // Either game or player is not playing
+#define ATK_CST_SUCCESS			"120"
+#define ATK_CST_E_TOOLATE		"121" // Answer the question too late
+#define ATK_CST_E_TOOWEAK		"122" // Enemy build a better wall
+#define ATK_CST_E_YOURS			"123" // Guess your teammate got it first
+#define ATK_CST_E_NOTPLAYING	"124" // Either game or player is not playing
 
-#define BUY_WEAPON_E_NOTENOUGH	"121" // Guess your teammate bought it first
-#define BUY_WEAPON_E_WEAKER		"122" // Can't buy a weaker weapon
-#define BUY_WEAPON_E_NOTPLAYING	"123" // Either game or player is not playing
+#define ATK_MINE_SUCCESS		"130"
+#define ATK_MINE_E_TOOLATE		"131" // Answer the question too late
+#define ATK_MINE_E_NOTPLAYING	"132" // Either game or player is not playing
 
-#define BUY_WALL_E_NOTENOUGH	"131" // Guess your teammate bought it first
-#define BUY_WALL_E_WEAKER		"132" // Can't buy a weaker wall
-#define BUY_WALL_E_GONE			"133" // Castle has been taken by enemy
-#define BUY_WALL_E_NOTPLAYING	"134" // Either game or player is not playing
+#define BUY_WEAPON_SUCCESS		"140"
+#define BUY_WEAPON_E_NOTENOUGH	"141" // Guess your teammate bought it first
+#define BUY_WEAPON_E_WEAKER		"142" // Can't buy a weaker weapon
+#define BUY_WEAPON_E_NOTPLAYING	"143" // Either game or player is not playing
+
+#define BUY_WALL_SUCCESS		"150"
+#define BUY_WALL_E_NOTENOUGH	"151" // Guess your teammate bought it first
+#define BUY_WALL_E_WEAKER		"152" // Can't buy a weaker wall
+#define BUY_WALL_E_GONE			"153" // Castle has been taken by enemy
+#define BUY_WALL_E_NOTPLAYING	"154" // Either game or player is not playing
 
 // *** Game logic constant ***
 // Amount
+#define GAME_NUM				12
 #define PLAYER_NUM				12
 #define TEAM_NUM				4
 #define CASTLE_NUM				3

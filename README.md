@@ -49,13 +49,15 @@
 040: LOBBY_SUCCESS		
 041: LOBBY_E_NOTAUTH		
 
-050: JOIN_SUCCESS		
-051: JOIN_E_NOTAUTH			
-052: JOIN_E_FULLGAME			
-053: JOIN_E_ALREADY
-054: JOIN_E_NOGAME
-055: JOIN_E_FULLTEAM
-056: JOIN_E_FORMAT
+050: JOIN_SUCCESS			
+051: JOIN_E_NOTAUTH		
+052: JOIN_E_ALREADY			
+053: JOIN_E_FORMAT			
+054: JOIN_E_FULLGAME			
+055: JOIN_E_FULLTEAM		
+056: JOIN_E_NOGAME		
+057: JOIN_E_NOTEAM	
+058: JOIN_E_PLAYING // Game already start
 
 060: CHANGE_SUCCESS		
 061: CHANGE_E_NOTAUTH	
@@ -144,37 +146,42 @@ Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
 05|strlen(data)|<game_id> <team_id>
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
-`player_ingame_id` is player's index in players array in game struct
-Whenever a player joins a lobby successfully, server sends update to all players in that lobby
+`player_ingame_id` and `request_player_ingame_id` is player's index in players array in game struct, and using a ASCII character, from '0' to ';' in ASCII table, subtract 48 when receive  
+`player_state` is similar, subtract 48 when receive
+Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
-05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+05|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+```
+`JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
+```c++
+05|strlen(data)|<result_code> [<game_id> <team_number> <team-player-string>]*
 ```
 ### Change team
 ```c++
 06|strlen(data)|<team_id>
-06|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+06|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 Whenever a player changes team successfully, server sends update to all players in that lobby
 ```c++
-06|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+06|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 ### Ready
 ```c++
 07|strlen(data)|<none>
-07|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+07|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 Whenever a player is ready, server sends update to all players in that lobby
 ```c++
-07|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+07|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 ### Unready
 ```c++
 08|strlen(data)|<none>
-08|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+08|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 Whenever a player is unready, server sends update to all players in that lobby
 ```c++
-08|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+08|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 ### Quit Game
 ```c++
@@ -183,7 +190,7 @@ Whenever a player is unready, server sends update to all players in that lobby
 ```
 Whenever a player is quit game or disconnect, server sends update to all players in that lobby
 ```c++
-09|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
+09|strlen(data)|<result_code> <game_id> <team_number> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
 ### Start Game
 ```c++
