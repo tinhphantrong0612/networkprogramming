@@ -15,5 +15,6 @@ public:
 	~Lobby();
 
 	static Lobby create_lobby(Socket& socket, int team_number);
+	static void get_lobby(Socket& socket, Lobby lobbies[MAX_LOBBY]);
 	static void join_lobby(Socket& socket, char* id);
 };
