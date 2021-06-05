@@ -26,8 +26,8 @@ User User::login(Socket& socket, char* username, char* password) {
 	socket.tcp_send(LOGIN, mess);
 	
 	//Receive response
-	char code[CODE_SIZE + 1];
-	char payload[PAYLOAD_SIZE + 1];
+	char code[CODE_SIZE];
+	char payload[PAYLOAD_SIZE];
 	socket.tcp_receive(code, payload);
 
 	if (!strcmp(code, LOGIN)) {
@@ -48,8 +48,8 @@ void User::signup(Socket& socket, char* username, char* password1, char* passwor
 	socket.tcp_send(SIGNUP, mess);
 
 	//Receive signup response
-	char code[CODE_SIZE + 1];
-	char payload[PAYLOAD_SIZE + 1];
+	char code[CODE_SIZE];
+	char payload[PAYLOAD_SIZE];
 	socket.tcp_receive(code, payload);
 
 	if (!strcmp(code, LOGIN)) {
