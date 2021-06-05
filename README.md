@@ -146,7 +146,8 @@ Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
 05|strlen(data)|<game_id> <team_id>
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
-`player_ingame_id` and `request_player_ingame_id` is player's index in players array in game struct, and using a ASCII character, from 1 to 12 to avoid 0  
+`player_ingame_id` and `request_player_ingame_id` is player's index in players array in game struct, and using a ASCII character, from '0' to ';' in ASCII table, subtract 48 when receive  
+`player_state` is similar, subtract 48 when receive
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
