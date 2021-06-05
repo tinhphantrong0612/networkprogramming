@@ -151,6 +151,10 @@ Whenever a player joins a lobby successfully, server sends update to all players
 ```c++
 05|strlen(data)|<result_code> <game_id> <request_player_ingame_id> <team-player-string> [<player_ingame_id> <player_name> <player_state>]*
 ```
+`JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
+```c++
+05|strlen(data)|<result_code> [<game_id> <team_number> <team-player-string>]*
+```
 ### Change team
 ```c++
 06|strlen(data)|<team_id>
