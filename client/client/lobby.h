@@ -10,9 +10,10 @@ public:
 	User members[MAX_NUM_PLAYER];
 	int state;
 
+	Lobby();
+	Lobby(int id, int team_number);
+	~Lobby();
+
+	static Lobby create_lobby(Socket& socket, int team_number);
+	static void join_lobby(Socket& socket, char* id);
 };
-
-
-void create_lobby(Socket& socket, int team_number);
-
-void join_lobby(Socket& socket, int id);
