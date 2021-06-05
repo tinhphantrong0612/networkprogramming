@@ -84,6 +84,7 @@
     <ClInclude Include="except.h" />
     <ClInclude Include="lobby.h" />
     <ClInclude Include="mine.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="question.h" />
     <ClInclude Include="response.h" />
     <ClInclude Include="stdafx.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="auth.cpp" />
     <ClCompile Include="except.cpp" />
     <ClCompile Include="lobby.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

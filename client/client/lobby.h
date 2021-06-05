@@ -1,20 +1,25 @@
+#pragma once
 #include "stream.h"
 #include "auth.h"
+#include "player.h"
 
 class Lobby {
 public:
 	int id;
 	int team_number;
-	int current_number_player;
-	User creator;
-	User members[MAX_NUM_PLAYER];
+
+	Player players[MAX_NUM_PLAYER];
+	int team_players[MAX_NUM_PLAYER];
 	int state;
 
 	Lobby();
+	Lobby(int id);
 	Lobby(int id, int team_number);
 	~Lobby();
 
 	static Lobby create_lobby(Socket& socket, int team_number);
-	static void get_lobby(Socket& socket, Lobby lobbies[MAX_LOBBY]);
-	static void join_lobby(Socket& socket, char* id);
+
+	static Lobby* get_lobby(Socket& socket);
+
+	static Lobby join_lobby(Socket& socket, char* id, char* team_id, Player& player);
 };

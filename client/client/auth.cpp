@@ -21,18 +21,18 @@ User::~User() {
 
 User User::login(Socket& socket, char* username, char* password) {
 	// Send login request
-	char mess[PAYLOAD_SIZE] = "";
+	char mess[PAYLOAD_SIZE + 1] = "";
 	auth_payload(username, password, mess);
 	socket.tcp_send(LOGIN, mess);
 	
 	//Receive response
-	char code[CODE_SIZE];
-	char payload[PAYLOAD_SIZE];
+	char code[CODE_SIZE + 1];
+	char payload[PAYLOAD_SIZE + 1];
 	socket.tcp_receive(code, payload);
 
 	if (!strcmp(code, LOGIN)) {
-		Auth auth = auth_data(payload);
-		if (auth.request_code == OK)
+		Auth response = auth_data(payload);
+		if (!strcmp(response.result_code, LOGIN_SUCCESS))
 			return User(username, true);
 	}
 	return User();
@@ -43,18 +43,18 @@ void User::signup(Socket& socket, char* username, char* password1, char* passwor
 		throw ValidationError("The confirm password doesn't match");
 	}
 	// Send signup request
-	char mess[PAYLOAD_SIZE] = "";
+	char mess[PAYLOAD_SIZE + 1] = "";
 	auth_payload(username, password1, mess);
 	socket.tcp_send(SIGNUP, mess);
 
 	//Receive signup response
-	char code[CODE_SIZE];
-	char payload[PAYLOAD_SIZE];
+	char code[CODE_SIZE + 1];
+	char payload[PAYLOAD_SIZE + 1];
 	socket.tcp_receive(code, payload);
 
 	if (!strcmp(code, LOGIN)) {
-		Auth auth = auth_data(payload);
-		if (auth.request_code == OK)
+		Auth response = auth_data(payload);
+		if (!strcmp(response.result_code, SIGNUP_SUCCESS))
 			printf("Sign up successful with username: %s", username);	// Dòng này thay thông báo của UI
 	}
 }
