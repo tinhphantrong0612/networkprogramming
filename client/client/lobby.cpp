@@ -68,8 +68,7 @@ Player Lobby::join_lobby_response(char* payload) {
 		player.team_id = response.team_players[player.game_id];
 		player.state = UNREADY;
 
-
-		// Cần team number
+		this->team_number = response.team_number;
 		this->id = response.id;
 		this->state = WAITING;
 		for (int i = 0; i < response.player_number; i++) {
@@ -83,4 +82,92 @@ Player Lobby::join_lobby_response(char* payload) {
 
 	return player;
 
+}
+
+void Lobby::change_team_request(Socket& socket, int team_id) {
+	// Send team id
+	char team_id_str[2];
+	_itoa_s(team_id, team_id_str, 2, 10);
+	socket.tcp_send(CHANGE_TEAM, team_id_str);
+}
+
+
+Player Lobby::change_team_response(char* payload) {
+	Player player;
+	Join_lobby response = change_team_data(payload);
+	if (strcmp(response.result_code, JOIN_SUCCESS)) {
+		player.id = response.ingame_id;
+		player.game_id = response.id;
+		player.team_id = response.team_players[player.game_id];
+		player.state = UNREADY;
+
+		this->team_number = response.team_number;
+		this->id = response.id;
+		this->state = WAITING;
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+
+	}
+
+	return player;
+}
+
+void Lobby::ready_request(Socket& socket) {
+	socket.tcp_send(READY_PLAY, "");
+}
+
+Player Lobby::ready_response(char* payload) {
+	Player player;
+	Join_lobby response = ready_data(payload);
+	if (strcmp(response.result_code, READY_SUCCESS)) {
+		player.id = response.ingame_id;
+		player.game_id = response.id;
+		player.team_id = response.team_players[player.game_id];
+		player.state = READY;
+
+		this->team_number = response.team_number;
+		this->id = response.id;
+		this->state = WAITING;
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+
+	}
+
+	return player;
+}
+
+void Lobby::unready_request(Socket& socket) {
+	socket.tcp_send(READY_PLAY, "");
+}
+
+Player Lobby::unready_response(char* payload) {
+	Player player;
+	Join_lobby response = unready_data(payload);
+	if (strcmp(response.result_code, READY_SUCCESS)) {
+		player.id = response.ingame_id;
+		player.game_id = response.id;
+		player.team_id = response.team_players[player.game_id];
+		player.state = UNREADY;
+
+		this->team_number = response.team_number;
+		this->id = response.id;
+		this->state = WAITING;
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+
+	}
+
+	return player;
 }

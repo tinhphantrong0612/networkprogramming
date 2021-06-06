@@ -34,3 +34,11 @@ struct Change_team : public Join_lobby{
 	Change_team(Join_lobby& data);
 
 };
+
+struct Ready : public Join_lobby {
+	Ready(Join_lobby& data);
+};
+
+struct Unready : public Join_lobby {
+	Unready(Join_lobby& data);
+};
