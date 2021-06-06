@@ -1,12 +1,12 @@
 #pragma once
 
 //Buffer size
-#define PAYLOAD_SIZE 2048
+#define PAYLOAD_SIZE 16384
 #define BUFF_SIZE 32000
-#define PAYLOAD_LEN_SIZE 3
+#define PAYLOAD_LEN_SIZE 2
 #define CODE_SIZE 3
 
-#define TEAM_NUMBER_SIZE 2
+#define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
 #define NAME_LENGTH 256
@@ -14,7 +14,8 @@
 #define ANSWER_LENGTH 256
 
 // Boundery
-#define MAX_NUM_PLAYER 13	// for lobby play size
+#define MAX_PLAYER_OF_TEAM 3
+#define MAX_NUM_PLAYER 12	// for lobby play size
 #define MAX_LOBBY 100		// for get lobbies arr
 #define TEAM_PLAYER_NUM_STR 13	// for decode get lobby str
 
@@ -24,9 +25,15 @@
 #define DEFAULT_USRNAME ""
 #define DELIM_RESPONSE " "
 
+// State
+#define UNREADY 0
+#define READY 1
+
+#define WAITING 0
+#define INGAME 1
+
 
 // RESPONSE CODE
-
 // Login
 #define LOGIN_SUCCESS "010"
 #define LOGIN_E_ALREADY "011"
@@ -49,7 +56,7 @@
 
 // Get lobby
 #define LOBBY_SUCCESS "040"
-#define LOBBY_E_NOTAUTH "041
+#define LOBBY_E_NOTAUTH "041"
 
 // Join Lobby
 #define JOIN_SUCCESS "050"
@@ -131,7 +138,7 @@
 #define SIGNUP "02"
 #define CREATE_LOBBY "03"
 #define GET_LOBBY "04"
-#define JOIN_GAME "05"
+#define JOIN_LOBBY "05"
 #define CHANGE_TEAM "06"
 #define READY_PLAY "07"
 #define UNREADY_PLAY "08"
