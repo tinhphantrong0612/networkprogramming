@@ -122,7 +122,7 @@
 ## Request/Success response structure
 ### Login
 ``` c++
-01|strlen(data)|<username> <password>
+01|strlen(data)|<username>#<password>
 01|strlen(data)|<result_code>
 ```
 ### Sign up
@@ -152,7 +152,7 @@ Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
 `player_state` is similar, subtract 48 when receive
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
-05|strlen(data)|<result_code>#<game_id> <team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+05|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 `JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
 ```c++
@@ -165,12 +165,12 @@ Whenever a player joins a lobby successfully, server sends update to all players
 ```
 Whenever a player changes team successfully, server sends update to all players in that lobby
 ```c++
-06|strlen(data)|<result_code>#<game_id> <team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+06|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Ready
 ```c++
 07|strlen(data)|<none>
-07|strlen(data)|<result_code>#<game_id> <team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+07|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 Whenever a player is ready, server sends update to all players in that lobby
 ```c++
