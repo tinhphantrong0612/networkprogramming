@@ -28,19 +28,6 @@ void Lobby::create_lobby_request(Socket& socket, int team_number) {
 
 }
 
-
-void Lobby::get_lobby_request(Socket& socket) {
-	socket.tcp_send(GET_LOBBY, "");
-}
-
-void Lobby::join_lobby_request(Socket& socket, char* game_id, char* team_id, Player& player) {
-	char mess[BUFF_SIZE] = "";
-	join_lobby_payload(game_id, team_id, mess);
-	socket.tcp_send(JOIN_LOBBY, mess);
-
-}
-
-
 void Lobby::create_lobby_response(char* payload) {
 	Create_lobby response = create_lobby_data(payload);
 	if (!strcmp(response.result_code, CREATE_SUCCESS)){
@@ -49,13 +36,25 @@ void Lobby::create_lobby_response(char* payload) {
 	}
 }
 
-Lobby* get_lobby_response(char* payload) {
+
+void Lobby::get_lobby_request(Socket& socket) {
+	socket.tcp_send(GET_LOBBY, "");
+}
+
+Lobby* Lobby::get_lobby_response(char* payload) {
 	//Receive lobby request
 	Get_lobby response = get_lobby_data(payload);
 	if (!strcmp(response.result_code, LOBBY_SUCCESS)) {
 		return response.lobbies;
 	}
 	return NULL;
+}
+
+void Lobby::join_lobby_request(Socket& socket, char* game_id, char* team_id, Player& player) {
+	char mess[BUFF_SIZE] = "";
+	join_lobby_payload(game_id, team_id, mess);
+	socket.tcp_send(JOIN_LOBBY, mess);
+
 }
 
 Player Lobby::join_lobby_response(char* payload) {
@@ -170,4 +169,28 @@ Player Lobby::unready_response(char* payload) {
 	}
 
 	return player;
+}
+
+
+void Lobby::quit_lobby_request(Socket& socket) {
+	socket.tcp_send(QUIT_GAME, "");
+}
+
+void Lobby::quit_lobby_response(char* payload) {
+	Quit_lobby response = quit_lobby_data(payload);
+	if (!strcmp(response.result_code, QUIT_SUCCESS)) {
+		printf("Quit success\n");	//Dòng này thay bằng thông báo UI
+	}
+}
+
+void Lobby::start_game_request(Socket& socket) {
+	socket.tcp_send(START_GAME, "");
+}
+
+void Lobby::start_game_response(char* payload) {
+	Start_game response = start_game_data(payload);
+
+	if (!strcmp(response.result_code, START_SUCCESS)) {
+		printf("Gogogogogo");	// Dòng này chuyển UI vào game
+	}
 }

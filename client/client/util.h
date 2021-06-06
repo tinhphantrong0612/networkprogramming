@@ -16,5 +16,7 @@ Join_lobby join_lobby_data(char* payload);
 Change_team change_team_data(char* payload);
 Ready ready_data(char* payload);
 Unready unready_data(char* payload);
+Quit_lobby quit_lobby_data(char* payload);
+Start_game start_game_data(char* payload);
 
 void resolve_team_player_str(char* string, int team_number, int team_player[]);

@@ -18,16 +18,20 @@ public:
 	~Lobby();
 
 	void create_lobby_request(Socket& socket, int team_number);
-	void get_lobby_request(Socket& socket);
+	static void get_lobby_request(Socket& socket);
 	void join_lobby_request(Socket& socket, char* id, char* team_id, Player& player);
 	void change_team_request(Socket& socket, int team_id);
 	void ready_request(Socket& socket);
 	void unready_request(Socket& socket);
+	void quit_lobby_request(Socket& socket);
+	void start_game_request(Socket& socket);
 
 	void create_lobby_response(char* payload);
-	Lobby* get_lobby_response(char* payload);
+	static Lobby* get_lobby_response(char* payload);
 	Player join_lobby_response(char* payload);
 	Player change_team_response(char* payload);
 	Player ready_response(char* payload);
 	Player unready_response(char* payload);
+	void quit_lobby_response(char* payload);
+	void start_game_response(char* payload);
 };

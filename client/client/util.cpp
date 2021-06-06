@@ -98,6 +98,9 @@ Join_lobby join_lobby_data(char* payload) {
 
 	// Get game id of this client
 	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	if (!token) {
+		return result;
+	}
 	result.id = atoi(token);
 
 	// Get team number
@@ -144,6 +147,21 @@ Unready unready_data(char* payload) {
 	return Unready(join_lobby_data(payload));
 }
 
+Quit_lobby quit_lobby_data(char* payload) {
+	return Quit_lobby(join_lobby_data(payload));
+}
+
+Start_game start_game_data(char* payload) {
+	char* next_token;
+	// Get result code
+	char result_code[CODE_SIZE + 1];
+	char* token = strtok_s(payload, DELIM_RESPONSE, &next_token);
+	strcpy_s(result_code, CODE_SIZE + 1, token);
+	// Get game id
+	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	int game_id = atoi(token);
+	return Start_game{ result_code, game_id };
+}
 
 void resolve_team_player_str(char* string, int team_number, int* member_team) {
 	for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {

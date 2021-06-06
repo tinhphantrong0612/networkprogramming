@@ -32,13 +32,30 @@ struct Join_lobby {
 
 struct Change_team : public Join_lobby{
 	Change_team(Join_lobby& data);
+	Change_team() {
+	};
 
 };
 
 struct Ready : public Join_lobby {
 	Ready(Join_lobby& data);
+	Ready() {
+	};
 };
 
 struct Unready : public Join_lobby {
 	Unready(Join_lobby& data);
+	Unready() {
+	};
+};
+
+struct Quit_lobby : public Join_lobby {
+	Quit_lobby(Join_lobby& data);
+	Quit_lobby() {
+	};
+};
+
+struct Start_game {
+	char* result_code;
+	int id;
 };
