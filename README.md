@@ -179,11 +179,11 @@ Whenever a player is ready, server sends update to all players in that lobby
 ### Unready
 ```c++
 08|strlen(data)|<none>
-08|strlen(data)|<result_code>#<game_id> <team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name> <player_state>]*
+08|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 Whenever a player is unready, server sends update to all players in that lobby
 ```c++
-08|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id> <player_name> <player_state>]*
+08|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Quit Game
 ```c++
@@ -239,7 +239,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-14|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood> <stone>#<iron>]*
+14|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 ### Buy wall
 ```c++
