@@ -4,7 +4,76 @@
 |---|---|---|
 |2 bytes|2 bytes| max 2048 bytes|
 
+## SOME CONSTANT
+```c++
+0: WOOD
+1: STONE
+2: IRON
 
+0: NO_WALL
+1: FENCE
+2: WOOD_WALL
+3: STONE_WALL
+4: LEGEND_WALL
+
+// Wall defense
+NO_WALL_DEF				0
+FENCE_DEF				200
+WOOD_WALL_DEF			1000
+STONE_WALL_DEF			3000
+LEGEND_WALL_DEF			8000
+
+// Wall's wood price
+NO_WALL_WOOD			0
+FENCE_WOOD				200
+WOOD_WALL_WOOD			1000
+STONE_WALL_WOOD			200
+LEGEND_WALL_WOOD		1000
+
+// Wall's stone price
+NO_WALL_STONE			0
+FENCE_STONE				50
+WOOD_WALL_STONE			100
+STONE_WALL_STONE		1000
+LEGEND_WALL_STONE		2000
+
+// Wall's iron price
+NO_WALL_IRON			0
+FENCE_IRON				50
+WOOD_WALL_IRON			100
+STONE_WALL_IRON			1000
+LEGEND_WALL_IRON		2000
+
+
+0: NO_WEAPON
+1: BALLISTA
+2: CATAPULT
+3: CANNON
+
+// Weapon attack
+NO_WEAPON_ATK			0
+BALLISTA_ATK			1000
+CATAPULT_ATK			3000
+CANNON_ATK				8000
+
+// Weapon's wood price
+NO_WEAPON_WOOD			0
+BALLISTA_WOOD			1500
+CATAPULT_WOOD			400
+CANNON_WOOD				500
+
+// Weapon's stone price
+NO_WEAPON_STONE			0
+BALLISTA_STONE			0
+CATAPULT_STONE			1500
+CANNON_STONE			2500
+
+// Weapon's iron price
+NO_WEAPON_IRON			0
+BALLISTA_IRON			200
+CATAPULT_IRON			300
+CANNON_IRON				1800
+```
 ## CODE
 ``` c++
 01: LOGIN
@@ -223,7 +292,7 @@ And sends questions to all players in that lobby
 16|strlen(data)|UPDATE_GAME_CASTQUEST#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 17|strlen(data)|UPDATE_GAME_MINEQUEST#<mine_type_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
-`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron
+`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron, when receive need to subtract 48
 ### Log Out
 Only when player is not in any game.
 ```c++
@@ -263,7 +332,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```c++
 19|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
-`castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4
+`castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4, when receive need to subtract 48
 ### Timely update
 ```c++
 18|strlen(data)|[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
