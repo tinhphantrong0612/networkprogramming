@@ -29,4 +29,32 @@ void receive_data(Socket& socket) {
 	else if (!strcmp(code, SIGNUP)) {
 
 	}
+	else if (!strcmp(code, CREATE_LOBBY)) {
+
+	}
+	else if (!strcmp(code, GET_LOBBY)) {
+
+	}
+	else if (!strcmp(code, JOIN_LOBBY)) {
+
+	}
+	else if (!strcmp(code, CHANGE_TEAM)) {
+
+	}
+	else if (!strcmp(code, READY_PLAY)) {
+
+	}
+	else if (!strcmp(code, UNREADY_PLAY)) {
+
+	}
+	else if (!strcmp(code, READY_PLAY)) {
+
+	}
+	else if (!strcmp(code, READY_PLAY)) {
+
+	}
+	else if (!strcmp(code, READY_PLAY)) {
+
+	}
+
 }
