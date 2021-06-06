@@ -131,6 +131,11 @@ Join_lobby join_lobby_data(char* payload) {
 	return result;
 }
 
+
+Change_team change_team_data(char* payload) {
+	return Change_team(join_lobby_data(payload));
+}
+
 void resolve_team_player_str(char* string, int team_number, int* member_team) {
 	for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
 		if (string[i] == 'x') {

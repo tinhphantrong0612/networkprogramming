@@ -20,9 +20,13 @@ Player::~Player() {
 
 }
 
-void Player::change_team(Socket& socket, int team_id) {
+void Player::change_team_request(Socket& socket, int team_id) {
 	// Send team id
 	char team_id_str[2];
 	_itoa_s(team_id, team_id_str, 2, 10);
 	socket.tcp_send(CHANGE_TEAM, team_id_str);
+}
+
+void Player::change_team_response(char* payload) {
+
 }
