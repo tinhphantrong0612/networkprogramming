@@ -3,6 +3,7 @@
 #include "auth.h"
 #include "lobby.h"
 #include "player.h"
+#include "question.h"
 
 struct Auth {
 	char* result_code;
@@ -58,4 +59,17 @@ struct Quit_lobby : public Join_lobby {
 struct Start_game {
 	char* result_code;
 	int id;
+};
+
+struct Castle_question {
+	int id;
+	int castle_id;
+	Question questions[MAX_QUESTION];
+};
+
+struct Mine_question {
+	int id;
+	int mine_id;
+	int type;
+	Question questions[MAX_QUESTION];
 };

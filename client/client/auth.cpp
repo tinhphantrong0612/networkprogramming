@@ -9,9 +9,10 @@ User::User() {
 
 User::User(char* username){
 	strcpy_s(this->username, USERNAME_LEN, username);
+
 }
 
-User::User(char* username, bool is_login) : is_login{is_login}{
+User::User(char* username, int state) : state{ state }{
 	strcpy_s(this->username, USERNAME_LEN, username);
 }
 
@@ -40,7 +41,7 @@ void User::signup_request(Socket& socket, char* username, char* password1, char*
 void User::login_response(char* payload) {
 	Auth response = auth_data(payload);
 	if (!strcmp(response.result_code, LOGIN_SUCCESS))
-		this->is_login = true;
+		this->state = USER_AUTH;
 	else if (!strcmp(response.result_code, LOGIN_E_NOTEXIST)) {
 		strcpy_s(this->username, USERNAME_LEN, "");
 	}

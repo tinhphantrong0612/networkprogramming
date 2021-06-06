@@ -80,8 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auth.h" />
+    <ClInclude Include="castle.h" />
     <ClInclude Include="constant.h" />
     <ClInclude Include="except.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="lobby.h" />
     <ClInclude Include="mine.h" />
     <ClInclude Include="player.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="stream.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="team.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="weapon.h" />
@@ -100,6 +103,7 @@
     <ClCompile Include="except.cpp" />
     <ClCompile Include="lobby.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="question.cpp" />
     <ClCompile Include="response.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

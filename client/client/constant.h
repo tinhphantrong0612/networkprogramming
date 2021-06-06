@@ -16,7 +16,12 @@
 // Boundery
 #define MAX_PLAYER_OF_TEAM 3
 #define MAX_NUM_PLAYER 12	// for lobby play size
+#define MAX_TEAM_OF_GAME 4
+#define MAX_CASTLE_OF_GAME 3
+#define MAX_MINE_OF_GAME 6
+
 #define MAX_LOBBY 100		// for get lobbies arr
+#define MAX_QUESTION 200
 #define TEAM_PLAYER_NUM_STR 13	// for decode get lobby str
 
 // default value
@@ -26,12 +31,25 @@
 #define DELIM_RESPONSE " "
 
 // State
+// User state
+#define USER_NONAUTH 0	// Khi chua dang nhap
+#define USER_AUTH 1		// Khi da dang nhap
+#define USER_WATING 2	// Khi dang trong phong
+#define USER_INGAME 3	// Khi dang choi game
+
+// Player state
 #define UNREADY 0
 #define READY 1
 
+// Lobby state
 #define WAITING 0
 #define INGAME 1
 
+
+// Type
+#define WOOD 0
+#define STONE 1
+#define IRON 2
 
 // RESPONSE CODE
 // Login
@@ -142,7 +160,7 @@
 #define CHANGE_TEAM "06"
 #define READY_PLAY "07"
 #define UNREADY_PLAY "08"
-#define QUIT_GAME "09"
+#define QUIT_LOBBY "09"
 #define START_GAME "10"
 #define LOGOUT "11"
 #define ATTACK_CASTLE "12"

@@ -173,7 +173,7 @@ Player Lobby::unready_response(char* payload) {
 
 
 void Lobby::quit_lobby_request(Socket& socket) {
-	socket.tcp_send(QUIT_GAME, "");
+	socket.tcp_send(QUIT_LOBBY, "");
 }
 
 void Lobby::quit_lobby_response(char* payload) {
