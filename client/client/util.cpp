@@ -25,18 +25,26 @@ void pack(char* code, char* payload, char* mess) {
 
 }
 
-void auth_payload(char* username, char* password, char* mess) {
-	strcat_s(mess, PAYLOAD_SIZE, username);
-	strcat_s(mess, PAYLOAD_SIZE, " ");
-	strcat_s(mess, PAYLOAD_SIZE, password);
+void auth_payload(char* username, char* password, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, username);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, password);
 }
 
-void join_lobby_payload(char* game_id, char* team_id, char* mess) {
-	strcat_s(mess, PAYLOAD_SIZE, game_id);
-	strcat_s(mess, PAYLOAD_SIZE, " ");
-	strcat_s(mess, PAYLOAD_SIZE, team_id);
+void join_lobby_payload(char* game_id, char* team_id, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, game_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, team_id);
 }
 
+void attack_castle_payload(char* castle_id, char* question_id, char* answer_id, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, castle_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, question_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, answer_id);
+
+}
 
 Auth auth_data(char* payload) {
 	return Auth{payload};

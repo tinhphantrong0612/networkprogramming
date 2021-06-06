@@ -22,8 +22,8 @@ Lobby::~Lobby() {
 
 void Lobby::create_lobby_request(Socket& socket, int team_number) {
 	// Send create lobby request
-	char teamnum_str[TEAM_NUMBER_SIZE ];
-	_itoa_s(team_number, teamnum_str, TEAM_NUMBER_SIZE, 10);
+	char teamnum_str[TEAM_ID_SIZE + 1];
+	_itoa_s(team_number, teamnum_str, TEAM_ID_SIZE + 1, 10);
 	socket.tcp_send(CREATE_LOBBY, teamnum_str);
 
 }
@@ -50,10 +50,15 @@ Lobby* Lobby::get_lobby_response(char* payload) {
 	return NULL;
 }
 
-void Lobby::join_lobby_request(Socket& socket, char* game_id, char* team_id, Player& player) {
-	char mess[BUFF_SIZE] = "";
-	join_lobby_payload(game_id, team_id, mess);
-	socket.tcp_send(JOIN_LOBBY, mess);
+void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id, Player& player) {
+	char game_id_str[GAME_ID_SIZE + 1];
+	char team_id_str[TEAM_ID_SIZE + 1];
+	_itoa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);
+	_itoa_s(team_id, team_id_str, TEAM_ID_SIZE + 1, 10);
+
+	char payload[PAYLOAD_SIZE + 1] = "";
+	join_lobby_payload(game_id_str, team_id_str, payload);
+	socket.tcp_send(JOIN_LOBBY, payload);
 
 }
 

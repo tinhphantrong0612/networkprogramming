@@ -3,8 +3,9 @@
 
 void pack(char* code, char* payload, char* mess);
 
-void auth_payload(char* username, char* password, char* mess);
-void join_lobby_payload(char* game_id, char* team_id, char* mess);
+void auth_payload(char* username, char* password, char* payload);
+void join_lobby_payload(char* game_id, char* team_id, char* payload);
+void attack_castle_payload(char* castle_id, char* question_id, char* answer_id, char* payload);
 
 // For login and signup
 Auth auth_data(char* payload);

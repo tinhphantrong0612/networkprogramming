@@ -6,7 +6,6 @@
 #define PAYLOAD_LEN_SIZE 2
 #define CODE_SIZE 3
 
-#define TEAM_NUMBER_SIZE 1
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
 #define NAME_LENGTH 256
@@ -23,6 +22,13 @@
 #define MAX_LOBBY 100		// for get lobbies arr
 #define MAX_QUESTION 200
 #define TEAM_PLAYER_NUM_STR 13	// for decode get lobby str
+
+#define GAME_ID_SIZE 13	// for game id str
+#define TEAM_ID_SIZE 1	// for team id str
+#define CASTLE_ID_SIZE 1	// for castle id str
+#define MINE_ID_SIZE 1	// for mine id str
+#define QUESTION_ID_SIZE 3 // for question id str
+#define ANSWER_ID_SIZE 3 // for question id str
 
 // default value
 #define DEFAULT_PORT 5500
@@ -169,4 +175,4 @@
 #define BUY_WALL "15"
 #define UPDATE_CASTLE_QUESTION "16"
 #define UPDATE_MINE_QUESTION "17"
-#define TIMELY_UPDATE
+#define TIMELY_UPDATE "18"

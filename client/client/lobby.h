@@ -19,7 +19,7 @@ public:
 
 	void create_lobby_request(Socket& socket, int team_number);
 	static void get_lobby_request(Socket& socket);
-	void join_lobby_request(Socket& socket, char* id, char* team_id, Player& player);
+	void join_lobby_request(Socket& socket, int game_id, int team_id, Player& player);
 	void change_team_request(Socket& socket, int team_id);
 	void ready_request(Socket& socket);
 	void unready_request(Socket& socket);
