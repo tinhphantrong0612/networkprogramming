@@ -225,8 +225,7 @@ Only when player is not in any game.
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-12|strlen(data)|<result_code>#<game_id>#<castle_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*
-16|strlen(data)|<game_id>#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+12|strlen(data)|<result_code>#<game_id>#<castle_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 
 ### Attack mine
@@ -235,8 +234,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-13|strlen(data)|<result_code>#<game_id>#<mine_id>#<type>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
-17|strlen(data)|<game_id>#<mine_id>#<type>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+13|strlen(data)|<result_code>#<game_id>#<mine_id>#<type>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 ### Buy weapon
 ```c++
