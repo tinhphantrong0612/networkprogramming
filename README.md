@@ -221,7 +221,7 @@ Only when player is not in any game.
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
 12|strlen(data)|<result_code>#<game_id>#<castle_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*
-16|strlen(data)|<game_id>#<castle_id>#<question_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+16|strlen(data)|<game_id>#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 
 ### Attack mine
