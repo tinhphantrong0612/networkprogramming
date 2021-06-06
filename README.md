@@ -242,7 +242,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-14|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+14|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 ### Buy wall
 ```c++
@@ -250,7 +250,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-15|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+15|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#<castle_id>#<wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 
 ### Timely update
