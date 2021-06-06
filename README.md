@@ -25,6 +25,8 @@
 16: UPDATE_CASTLE_QUESTION // From server only
 17: UPDATE_MINE_QUESTION // From server only
 18: TIMELY_UPDATE // From server only
+19: UPDATE_GAME // From server only
+20: UPDATE_LOBBY // From server only
 ```
 
 ## RESPONSE CODE FROM SERVER
@@ -123,6 +125,20 @@
 152: BUY_WALL_E_WEAKER // Can't by weaker wall
 153: BUY_WALL_E_GONE // Your castle is gone
 154: BUY_WALL_E_NOTPLAYING
+
+190: UPDATE_GAME_START
+191: UDPATE_GAME_CASTQUEST
+192: UPDATE_GAME_MINEQUEST
+193: UPDATE_GAME_ATTACK_CASTLE
+194: UPDATE_GAME_ATTACK_MINE
+195: UPDATE_GAME_BUY_WPN
+196: UPDATE_GAME_BUY_WALL
+
+200: UPDATE_LOBBY_DISCONNECT
+201: UPDATE_LOBBY_JOIN
+202: UPDATE_LOBBY_CHANGETEAM
+203: UPDATE_LOBBY_READY
+204: UPDATE_LOBBY_UNREADY
 ```
 ## Request/Success response structure
 ### Login
@@ -147,17 +163,16 @@
 ```
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
-Example: "04xx400 1622867470450 2 0x100x11xxxx 1622867475670 3 0x20xx11xx2x "
+Example: "04xx040#1622867470450#2#0x100x11xxxx#1622867475670#3#0x20xx11xx2x#"
 ### Join lobby
 ```c++
 05|strlen(data)|<game_id>#<team_id>
-05|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 `player_ingame_id` and `request_player_ingame_id` is player's index in players array in game struct, and using a ASCII character, from '0' to ';' in ASCII table, subtract 48 when receive  
 `player_state` is similar, subtract 48 when receive
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
-05|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+20|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 `JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
 ```c++
@@ -166,53 +181,49 @@ Whenever a player joins a lobby successfully, server sends update to all players
 ### Change team
 ```c++
 06|strlen(data)|<team_id>
-06|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 Whenever a player changes team successfully, server sends update to all players in that lobby
 ```c++
-06|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+20|strlen(data)|UPDATE_LOBBY_CHANGETEAM#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Ready
 ```c++
 07|strlen(data)|<none>
-07|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 Whenever a player is ready, server sends update to all players in that lobby
 ```c++
-07|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+20|strlen(data)|UPDATE_LOBBY_READY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Unready
 ```c++
 08|strlen(data)|<none>
-08|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 Whenever a player is unready, server sends update to all players in that lobby
 ```c++
-08|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+20|strlen(data)|UPDATE_LOBBY_UNREADY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Quit Game
 ```c++
 09|strlen(data)|<none>
-09|strlen(data)|<result_code>
 ```
 Whenever a player is quit game or disconnect, server sends update to all players in that lobby
 ```c++
-09|strlen(data)|<result_code>#<game_id>#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+20|strlen(data)|UPDATE_LOBBY_DISCONNECT#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Start Game
 ```c++
 10|strlen(data)|<none>
-10|strlen(data)|<result_code>#<game_id>
 ```
 Whenever host starts game successfully, server sends update to all players in that lobby
 ```c++
-10|strlen(data)|<result_code>#<game_id>
+10|strlen(data)|190
 ```
 And sends questions to all players in that lobby
 ```c++
-16|strlen(data)|<game_id>#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
-17|strlen(data)|<game_id>#<mine_id>#<type>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+16|strlen(data)|UPDATE_GAME_CASTQUEST#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+17|strlen(data)|UPDATE_GAME_MINEQUEST#<mine_type_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
+`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron
 ### Log Out
 Only when player is not in any game.
 ```c++
@@ -225,7 +236,7 @@ Only when player is not in any game.
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-12|strlen(data)|<result_code>#<game_id>#<castle_id>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+19|strlen(data)|UPDATE_GAME_ATK_CST#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 
 ### Attack mine
@@ -234,7 +245,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-13|strlen(data)|<result_code>#<game_id>#<mine_id>#<type>#<request_player_ingame_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+19|strlen(data)|UPDATE_GAME_ATK_MINE#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 ### Buy weapon
 ```c++
@@ -242,7 +253,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-14|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+19|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 ### Buy wall
 ```c++
@@ -250,10 +261,10 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-15|strlen(data)|<result_code>#<game_id>#<request_player_ingame_id>#<castle_id>#<wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+19|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
-
+`castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4
 ### Timely update
 ```c++
-18|strlen(data)|<game_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+18|strlen(data)|[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
