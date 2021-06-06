@@ -57,3 +57,15 @@ void User::signup_response(char* payload) {
 	if (!strcmp(response.result_code, SIGNUP_SUCCESS))
 		printf("Sign up successful with username: %s", username);	// Dòng này thay thông báo của UI
 }
+
+void User::logout_request(Socket& socket) {
+	socket.tcp_send(LOGOUT, ""); 
+}
+
+void User::logout_rexponse(char* payload) {
+	Auth response = auth_data(payload);
+
+	if (!strcmp(response.result_code, LOGOUT_SUCCESS)) {
+		printf("Logout success\n");	// Dòng này thay thế bằng UI sang đăng nhập
+	}
+}
