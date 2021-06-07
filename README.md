@@ -74,274 +74,304 @@
 300:  CATAPULT_IRON			
 1800: CANNON_IRON				
 ```
-## CODE
-``` c++
-01: LOGIN
-02: SIGNUP
-03: CREATE_GAME
-04: GET_LOBBY
-05: JOIN_GAME
-06: CHANGE_TEAM
-07: READY_PLAY
-08: UNREADY_PLAY
-09: QUIT_GAME
-10: START_GAME
-11: LOGOUT
-12: ATTACK_CASTLE
-13: ATTACK_MINE
-14: BUY_WEAPON
-15: BUY_WALL
-16: UPDATE_CASTLE_QUESTION // From server only
-17: UPDATE_MINE_QUESTION // From server only
-18: TIMELY_UPDATE // From server only
-19: UPDATE_GAME // From server only
-20: UPDATE_LOBBY // From server only
-```
+``` C++
+// Outgame - Request header
+100: LOGIN
+101: SIGNUP
+102: LOGOUT
+103: CREATE_GAME
+104: GET_LOBBY
+105: JOIN_GAME
 
-## RESPONSE CODE FROM SERVER
-```c++
-190: UPDATE_GAME_START
-191: UDPATE_GAME_CASTQUEST
-192: UPDATE_GAME_MINEQUEST
-193: UPDATE_GAME_ATTACK_CST_R
-194: UPDATE_GAME_ATTACK_MINE_R
-195: UPDATE_GAME_ATTACK_CST_W
-196: UPDATE_GAME_ATTACK_MINE_W
-197: UPDATE_GAME_BUY_WPN
-198: UPDATE_GAME_BUY_WALL
+// In lobby - Request header
+200: READY_PLAY
+201: UNREADY_PLAY
+202: START_GAME
+203: QUIT_GAME
+204: CHANGE_TEAM
 
-200: UPDATE_LOBBY_DISCONNECT
-201: UPDATE_LOBBY_JOIN
-202: UPDATE_LOBBY_CHANGETEAM
-203: UPDATE_LOBBY_READY
-204: UPDATE_LOBBY_UNREADY
+// Ingame - Request header
+300: ATTACK_CASTLE
+301: ATTACK_MINE
+302: BUY_WEAPON
+303: BUY_WALL
+
+// Update header - Server send back only
+400: TIMELY_UPDATE
+401: UPDATE_GAME
+402: UPDATE_LOBBY
+
+// Outgame - Response
+
+// Ingame - Response header
+40100: UPDATE_GAME_START
+40101: UPDATE_GAME_CSTQUEST
+40102: UPDATE_GAME_MINEQUEST
+40103: UPDATE_GAME_ATK_CST_R
+40104: UPDATE_GAME_ATK_MINE_R
+40105: UPDATE_GAME_ATK_CST_W
+40106: UPDATE_GAME_ATK_MINE_W
+40107: UPDATE_GAME_BUY_WPN
+40108: UPDATE_GAME_BUY_WALL
+
+40200: UPDATE_LOBBY_QUIT
+40201: UPDATE_LOBBY_JOIN
+40202: UPDATE_LOBBY_CHANGETEAM
+40203: UPDATE_LOBBY_READY
+40204: UPDATE_LOBBY_UNREADY
 ```
 ## Request/Success response structure
 ### Login
 ``` c++
-01|strlen(data)|<username>#<password>
-01|strlen(data)|<result_code>
+100|strlen(data)|<username>#<password>
+100|strlen(data)|<result_code>
 ```
 Result code:
 ``` c++
-010: LOGIN_SUCCESS
-011: LOGIN_E_ALREADY
-012: LOGIN_E_ELSEWHERE
-013: LOGIN_E_PASSWORD
-014: LOGIN_E_NOTEXIST
+10000: LOGIN_SUCCESS
+10001: LOGIN_E_ALREADY
+10002: LOGIN_E_ELSEWHERE
+10003: LOGIN_E_PASSWORD
+10004: LOGIN_E_NOTEXIST
 ```
 ### Sign up
 ```c++
-02|strlen(data)|<username>#<password>
-02|strlen(data)|<result_code>
+101|strlen(data)|<username>#<password>
+101|strlen(data)|<result_code>
 ```
 Result code:
 ``` c++
-020: SIGNUP_SUCCESS
-021: SIGNUP_E_LOGGEDIN
-022: SIGNUP_E_FORMAT
-023: SIGNUP_E_EXIST
+10100: SIGNUP_SUCCESS
+10101: SIGNUP_E_LOGGEDIN
+10102: SIGNUP_E_FORMAT
+10103: SIGNUP_E_EXIST
 ```
+### Log Out
+Only when player is not in any game.
+```c++
+102|strlen(data)|<none>
+102|strlen(data)|<result_code>
+```
+Result code:
+```c++
+10200: LOGOUT_SUCCESS
+10201: LOGOUT_E_NOTAUTH
+10202: LOGOUT_E_INGAME
+```
+
 ### Create lobby
 ```c++
-03|strlen(data)|<team_number>
-03|strlen(data)|<result_code>#<game_id>
+103|strlen(data)|<team_number>
+103|strlen(data)|<result_code>#<game_id>
 ```
 Result code:
 ``` c++
-030: CREATE_SUCCESS
-031: CREATE_E_NOTAUTH	
-032: CREATE_E_INGAME			
-033: CREATE_E_FULLGAME		
-034: CREATE_E_INVALIDTEAM
+10300: CREATE_SUCCESS
+10301: CREATE_E_NOTAUTH
+10302: CREATE_E_INGAME
+10303: CREATE_E_FULLGAME
+10304: CREATE_E_INVALIDTEAM
 ```
 ### Get lobby
 ```c++
-04|strlen(data)|<null> 
-04|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
-
-040: LOBBY_SUCCESS		
-041: LOBBY_E_NOTAUTH	
+104|strlen(data)|<null> 
+104|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
+```
+Result code:
+``` C++
+10400: LOBBY_SUCCESS
+10401: LOBBY_E_NOTAUTH
 ```
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
 Example: "04xx040#1622867470450#2#0x100x11xxxx#1622867475670#3#0x20xx11xx2x#"
 ### Join lobby
 ```c++
-05|strlen(data)|<game_id>#<team_id>
-
-050: JOIN_SUCCESS			
-051: JOIN_E_NOTAUTH		
-052: JOIN_E_ALREADY			
-053: JOIN_E_FORMAT			
-054: JOIN_E_FULLGAME			
-055: JOIN_E_FULLTEAM		
-056: JOIN_E_NOGAME		
-057: JOIN_E_NOTEAM	
-058: JOIN_E_PLAYING // Game already start
+105|strlen(data)|<game_id>#<team_id>
+```
+Result code:
+```C++
+//10500: JOIN_SUCCESS // Using UPDATE_LOBBY_JOIN instead
+10501: JOIN_E_NOTAUTH
+10502: JOIN_E_ALREADY
+10503: JOIN_E_FORMAT
+10504: JOIN_E_FULLGAME
+10505: JOIN_E_FULLTEAM
+10506: JOIN_E_NOGAME
+10507: JOIN_E_NOTEAM
+10508: JOIN_E_PLAYING
 ```
 `player_ingame_id` and `request_player_ingame_id` is player's index in players array in game struct, and using a ASCII character, from '0' to ';' in ASCII table, subtract 48 when receive  
 `player_state` is similar, subtract 48 when receive
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
-20|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+402|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 `JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
 ```c++
-05|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
-```
-### Change team
-```c++
-06|strlen(data)|<team_id>
-
-060: CHANGE_SUCCESS		
-061: CHANGE_E_NOTAUTH	
-062: CHANGE_E_NOTINGAME	
-063: CHANGE_E_FULL		
-064: CHANGE_E_READY		
-065: CHANGE_E_PLAYING	
-066: CHANGE_E_UNKNOWNTEAM
-067: CHANGE_E_CURRENTTEAM
-```
-Whenever a player changes team successfully, server sends update to all players in that lobby
-```c++
-20|strlen(data)|UPDATE_LOBBY_CHANGETEAM#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+105|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
 ```
 ### Ready
 ```c++
-07|strlen(data)|<none>
-
-070: READY_SUCCESS	
-071: READY_E_NOTAUTH		
-072: READY_E_NOTINGAME	
-073: READY_E_ALREADY		
-074: READY_E_PLAYING	
-075: READY_E_HOST	
+200|strlen(data)|<none>
+```
+Result code:
+```
+//20000: READY_SUCCESS // Using UPDATE_LOBBY_READY instead
+20001: READY_E_NOTAUTH
+20002: READY_E_NOTINGAME
+20003: READY_E_ALREADY
+20004: READY_E_PLAYING
+20005: READY_E_HOST
 ```
 Whenever a player is ready, server sends update to all players in that lobby
 ```c++
-20|strlen(data)|UPDATE_LOBBY_READY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+402|strlen(data)|UPDATE_LOBBY_READY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Unready
 ```c++
-08|strlen(data)|<none>
-
-080: UNREADY_SUCCESS
-081: UNREADY_E_NOTAUTH
-082: UNREADY_E_NOTINGAME
-083: UNREADY_E_ALREADY
-084: UNREADY_E_PLAYING
-085: UNREADY_E_HOST
+201|strlen(data)|<none>
+```
+Result code:
+```
+//20100: UNREADY_SUCCESS // Using UPDATE_GAME_UNREADY instead
+20101: UNREADY_E_NOTAUTH
+20102: UNREADY_E_NOTINGAME
+20103: UNREADY_E_ALREADY
+20104: UNREADY_E_PLAYING
+20105: UNREADY_E_HOST
 ```
 Whenever a player is unready, server sends update to all players in that lobby
 ```c++
-20|strlen(data)|UPDATE_LOBBY_UNREADY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
-```
-### Quit Game
-```c++
-09|strlen(data)|<none>
-
-090: QUIT_SUCCESS
-091: QUIT_E_NOTAUTH
-092: QUIT_E_NOTINGAME
-093: QUIT_E_READY
-```
-Whenever a player is quit game or disconnect, server sends update to all players in that lobby
-```c++
-20|strlen(data)|UPDATE_LOBBY_DISCONNECT#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+402|strlen(data)|UPDATE_LOBBY_UNREADY#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Start Game
 ```c++
-10|strlen(data)|<none>
-
-100: START_SUCCESS			
-101: START_E_NOTAUTH	
-102: START_E_NOTINGAME		
-103: START_E_NOTALLREADY		
-104: START_E_PLAYING		
-105: START_E_NOTHOST
-106: START_E_ONETEAM
+15|strlen(data)|<none>
+```
+Result code:
+```
+//20200: START_SUCCESS // Using UPDATE_GAME_START instead
+20201: START_E_NOTAUTH
+20202: START_E_NOTINGAME
+20203: START_E_NOTALLREADY
+20204: START_E_PLAYING
+20205: START_E_NOTHOST
+20206: START_E_ONETEAM
 ```
 Whenever host starts game successfully, server sends update to all players in that lobby
 ```c++
-10|strlen(data)|190
+401|strlen(data)|UPDATE_GAME_START
 ```
 And sends questions to all players in that lobby
 ```c++
-16|strlen(data)|UPDATE_GAME_CASTQUEST#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
-17|strlen(data)|UPDATE_GAME_MINEQUEST#<mine_type_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+401|strlen(data)|UPDATE_GAME_CASTQUEST#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+401|strlen(data)|UPDATE_GAME_MINEQUEST#<mine_type_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 `mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron, when receive need to subtract 48
-### Log Out
-Only when player is not in any game.
+### Quit Game
 ```c++
-11|strlen(data)|<none>
-11|strlen(data)|<result_code>
-
-110: LOGOUT_SUCCESS
-111: LOGOUT_E_NOTAUTH
-112: LOGOUT_E_INGAME
+14|strlen(data)|<none>
+```
+Result code:
+```
+20300: QUIT_SUCCESS	// Using to inform player quit success, and using UPDATE_LOBBY_QUIT to inform all player in that game room
+20301: QUIT_E_NOTAUTH
+20302: QUIT_E_NOTINGAME
+20303: QUIT_E_READY
+```
+Whenever a player is quit game or disconnect, server sends update to all players in that lobby
+```c++
+402|strlen(data)|UPDATE_LOBBY_DISCONNECT#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
+```
+### Change team
+```c++
+11|strlen(data)|<team_id>
+```
+Result code:
+``` C++
+//20400: CHANGE_SUCCESS	// Using UPDATE_LOBBY_CHANGE to inform all other player
+20401: CHANGE_E_NOTAUTH
+20402: CHANGE_E_NOTINGAME
+20403: CHANGE_E_FULL
+20404: CHANGE_E_READY
+20405: CHANGE_E_PLAYING
+20406: CHANGE_E_UNKNOWNTEAM
+20407: CHANGE_E_CURRENTTEAM
+```
+Whenever a player changes team successfully, server sends update to all players in that lobby
+```c++
+402|strlen(data)|UPDATE_LOBBY_CHANGETEAM#<team_number>#<request_player_ingame_id>#<team-player-string>#[<player_ingame_id>#<player_name>#<player_state>]*
 ```
 ### Attack castle
 ```c++
-12|strlen(data)|<castle_id>#<question_id>#<answer_id>
+300|strlen(data)|<castle_id>#<question_id>#<answer_id>
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-19|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
-
-120: ATK_CST_SUCCESS
-121: ATK_CST_E_TOOLATE // Answer the question too late
-122: ATK_CST_E_TOOWEAK // Enemy build a better wall
-123: ATK_CST_E_YOURS // Your castle
-124: ATK_CST_E_NOTPLAYING
-125: ATK_CST_E_WRONG
-126: ATK_CST_E_FORMAT
+401|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+```
+Result code:
+```
+//30000: ATK_CST_SUCCESS // Using UPDATE_MINE_ATK_CST_R
+30001: ATK_CST_E_TOOLATE // Answer the question too late
+30002: ATK_CST_E_TOOWEAK // Enemy build a better wall
+30003: ATK_CST_E_YOURS // Guess your teammate got it first
+30004: ATK_CST_E_NOTPLAYING	// Either game or player is not playing
+30005: ATK_CST_E_FORMAT
+//30006: ATK_CST_E_WRONG // Using UPDATE_MINE_ATK_CST_W
 ```
 
 ### Attack mine
 ```c++
-13|strlen(data)|<mine_id>#<type>#<question_id>#<answer_id>
+301|strlen(data)|<mine_id>#<type>#<question_id>#<answer_id>
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-19|strlen(data)|UPDATE_GAME_ATK_MINE_W/R#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
-
-130: ATK_MINE_SUCCESS
-131: ATK_MINE_E_TOOLATE	// Answer the question too late
-132: ATK_MINE_E_NOTPLAYING
-133: ATK_MINE_E_WRONG
-134: ATK_MINE_E_FORMAT
+401|strlen(data)|UPDATE_GAME_ATK_MINE_W/R#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+```
+``` C++
+//30100: ATK_MINE_SUCCESS // Using UPDATE_MINE_ATK_MINE_R
+30101: ATK_MINE_E_TOOLATE // Answer the question too late
+30102: ATK_MINE_E_NOTPLAYING // Either game or player is not playing
+30103: ATK_MINE_E_FORMAT
+//30104: ATK_MINE_E_WRONG // Using UPDATE_MINE_ATK_MINE_W
 ```
 ### Buy weapon
 ```c++
-14|strlen(data)|<weapon_id>
-
-140: BUY_WEAPON_SUCCESS
-141: BUY_WEAPON_E_NOTENOUGH	// Not enough resources
-142: BUY_WEAPON_E_WEAKER // Can't buy a weaker weapon
-143: BUY_WEAPON_E_NOTPLAYING
+302|strlen(data)|<weapon_id>
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-19|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+```
+Result code:
+``` C++
+//30200: BUY_WEAPON_SUCCESS // Using UPDATE_GAME_BUY_WPN
+30201: BUY_WEAPON_E_NOTENOUGH // Guess your teammate bought it first
+30202: BUY_WEAPON_E_WEAKER // Can't buy a weaker weapon
+30203: BUY_WEAPON_E_NOTPLAYING // Either game or player is not playing
+30204: BUY_WEAPON_E_FORMAT
 ```
 ### Buy wall
 ```c++
-15|strlen(data)|<castle_id>#<wall_id>
-
-150: BUY_WALL_SUCCESS
-151: BUY_WALL_E_NOTENOUGH
-152: BUY_WALL_E_WEAKER // Can't by weaker wall
-153: BUY_WALL_E_GONE // Your castle is gone
-154: BUY_WALL_E_NOTPLAYING
+303|strlen(data)|<castle_id>#<wall_id>
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-19|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 `castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4, when receive need to subtract 48
+Result code: 
+``` C++
+//30300: BUY_WALL_SUCCESS // Using UPDATE_GAME_BUY_WALL
+30301: BUY_WALL_E_NOTENOUGH	// Guess your teammate bought it first
+30302: BUY_WALL_E_WEAKER // Can't buy a weaker wall
+30303: BUY_WALL_E_GONE // Castle has been taken by enemy
+30304: BUY_WALL_E_NOTPLAYING // Either game or player is not playing
+30305: BUY_WALL_E_FORMAT
+```
 ### Timely update
 ```c++
-18|strlen(data)|[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+400|strlen(data)|[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
