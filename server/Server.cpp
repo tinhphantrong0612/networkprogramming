@@ -203,7 +203,7 @@ void Swap(PLAYER emptyPlayer, PLAYER lastPlayer, WSAEVENT emptyEvent, WSAEVENT l
 int Communicate(PLAYER player) {
 	int received;
 	int length;
-	char opcode[3];
+	char opcode[4];
 	char *buff = (char *)malloc(BUFF_SIZE);
 
 	received = Receive(player, buff, HEADER_SIZE, 0); // Receive header
@@ -213,8 +213,9 @@ int Communicate(PLAYER player) {
 	buff[HEADER_SIZE] = 0;
 	opcode[0] = buff[0];
 	opcode[1] = buff[1];
-	opcode[2] = 0;
-	length = ((buff[2] + 256) % 256) * 256 + (buff[3] + 256) % 256; // Calculate payload length
+	opcode[2] = buff[2];
+	opcode[3] = 0;
+	length = ((buff[HEADER_SIZE - 2] + 256) % 256) * 256 + (buff[HEADER_SIZE-1] + 256) % 256; // Calculate payload length
 	received = receiveAndProcessPayload(player, opcode, length, buff);
 	return received;
 }
@@ -358,11 +359,12 @@ int setResponseAndSend(PLAYER player, char *opcode, char *responsePayload, int r
 	// Add opcode
 	buff[0] = opcode[0];
 	buff[1] = opcode[1];
+	buff[2] = opcode[2];
 	// Calculate payload length
-	buff[2] = responsePayloadLen / 256;
-	buff[3] = responsePayloadLen % 256;
-	strcpy_s(buff + 4, BUFF_SIZE, responsePayload);
-	printf("Response to player [%s:%d] %s request: %s\n", player->IP, player->port, opcode, buff + 4);
+	buff[3] = responsePayloadLen / 256;
+	buff[4] = responsePayloadLen % 256;
+	strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
+	printf("Response to player [%s:%d] %s request: %s\n", player->IP, player->port, opcode, buff + 5);
 	return Send(player, buff, 4 + responsePayloadLen, 0);
 }
 
@@ -377,11 +379,12 @@ void setResponse(char *opcode, char *responsePayload, int responsePayloadLen, ch
 	// Add header
 	buff[0] = opcode[0];
 	buff[1] = opcode[1];
+	buff[2] = opcode[2];
 	// Calculate payload length
-	buff[2] = responsePayloadLen / 256;
-	buff[3] = responsePayloadLen % 256;
+	buff[3] = responsePayloadLen / 256;
+	buff[4] = responsePayloadLen % 256;
 	// Add payload to buffer
-	strcpy_s(buff + 4, BUFF_SIZE, responsePayload);
+	strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
 }
 
 /* The handleLogin function handle login request from a player
@@ -476,10 +479,10 @@ int handleCreateGame(PLAYER player, char *opcode, char *buff) {
 		}
 		if (i == GAME_NUM) return setResponseAndSend(player, opcode, CREATE_E_FULLGAME, strlen(CREATE_E_FULLGAME), buff);
 		long long gameId = games[i]->id;
-		strcpy_s(buff + 4, BUFF_SIZE, CREATE_SUCCESS);
+		strcpy_s(buff + 5, BUFF_SIZE, CREATE_SUCCESS);
 		buff[BUFFLEN] = '#';
 		_i64toa_s(gameId, buff + 8, BUFF_SIZE, 10);
-		return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+		return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 	}
 }
 
@@ -492,10 +495,10 @@ int handleCreateGame(PLAYER player, char *opcode, char *buff) {
 int handleGetLobby(PLAYER player, char *opcode, char *buff) {
 	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, LOBBY_E_NOTAUTH, strlen(LOBBY_E_NOTAUTH), buff);
 	else {
-		strcpy_s(buff + 4, BUFF_SIZE, LOBBY_SUCCESS);
+		strcpy_s(buff + 5, BUFF_SIZE, LOBBY_SUCCESS);
 		buff[BUFFLEN] = '#';
 		getLobbyList(buff + 8);
-		return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+		return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 	}
 }
 
@@ -551,12 +554,12 @@ void getTeamPlayerString(GAME game, char *buff) {
 */
 void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + 4, BUFF_SIZE, responseCode); // 7 bytes
+	strcpy_s(buff + 5, BUFF_SIZE, responseCode); // 7 bytes
 	buff[BUFFLEN] = '#'; // 8 bytes
-	buff[22] = game->teamNum + 48;
-	buff[23] = '#';
-	buff[24] = requestPlayer + 48;
-	buff[25] = '#';
+	buff[BUFFLEN] = game->teamNum + 48;
+	buff[BUFFLEN] = '#';
+	buff[BUFFLEN] = requestPlayer + 48;
+	buff[BUFFLEN] = '#';
 	getTeamPlayerString(game, buff + BUFFLEN);
 	buff[BUFFLEN] = '#';
 	for (int i = 0; i < PLAYER_NUM; i++) {
@@ -580,7 +583,7 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 */
 void informGameRoomChange(GAME game, int index, char *opcode, char *responseCode, char *buff) {
 	getGameRoomChangeSuccessResponse(game, index, responseCode, buff);
-	setResponse(opcode, buff + 4, strlen(buff + 4), buff);
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 }
 
@@ -594,7 +597,7 @@ void informGameRoomChange(GAME game, int index, char *opcode, char *responseCode
 */
 void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, char* responseCode, char * buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + 4, BUFF_SIZE, responseCode);
+	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
@@ -603,7 +606,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	getGameProperties(game, buff + BUFFLEN);
 	buff[BUFFLEN] = '#';
 	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
-	setResponse(opcode, buff + 4, strlen(buff + 4), buff);
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 }
 
@@ -619,7 +622,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 */
 void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, char *opcode, char* responseCode, char * buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + 4, BUFF_SIZE, responseCode);
+	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
@@ -628,7 +631,7 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	getGameProperties(game, buff + BUFFLEN);
 	buff[BUFFLEN] = '#';
 	getMineQuestion(game->mines[mineId], HARD_QUESTION_FILE, resourceType, buff + BUFFLEN);
-	setResponse(opcode, buff + 4, strlen(buff + 4), buff);
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 }
 
@@ -641,14 +644,14 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 */
 void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, char *responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + 4, BUFF_SIZE, responseCode);
+	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = weaponId + 48;
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
 	getGameProperties(game, buff + BUFFLEN);
-	setResponse(opcode, buff + 4, strlen(buff + 4), buff);
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 };
 
@@ -661,14 +664,14 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 */
 void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *opcode, char *responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + 4, BUFF_SIZE, responseCode);
+	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = castleId * 5 + wallId + 48;
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
 	getGameProperties(game, buff + BUFFLEN);
-	setResponse(opcode, buff + 4, strlen(buff + 4), buff);
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 };
 
@@ -679,10 +682,12 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 * @return	Nothing
 */
 void sendNewCastleQuestion(GAME game, int castleId, char *buff) {
-	memset(buff + 4, 0, BUFF_SIZE - 4);
+	memset(buff + 5, 0, BUFF_SIZE - 5);
+	strcpy_s(buff + BUFFLEN, BUFF_SIZE, UPDATE_GAME_CSTQUEST);
+	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = castleId + 48;
 	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
-	setResponse(UPDATE_GAME, buff + 4, strlen(buff + 4), buff);
+	setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 }
 
@@ -694,10 +699,12 @@ void sendNewCastleQuestion(GAME game, int castleId, char *buff) {
 * @return	Nothing
 */
 void sendNewMineQuestion(GAME game, int mineId, int type, char *buff) {
-	memset(buff + 4, 0, BUFF_SIZE - 4);
+	memset(buff + 5, 0, BUFF_SIZE - 5);
+	strcpy_s(buff + BUFFLEN, BUFF_SIZE, UPDATE_GAME_MINEQUEST);
+	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = mineId * 3 + type + 48;
 	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, type, buff + BUFFLEN);
-	setResponse(UPDATE_GAME, buff + 4, strlen(buff + 4), buff);
+	setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 }
 
@@ -747,16 +754,16 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 			}
 		}
 		if (i == GAME_NUM || game == NULL) {
-			strcpy_s(buff + 4, BUFF_SIZE, JOIN_E_NOGAME);
+			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_NOGAME);
 			buff[BUFFLEN] = '#';
 			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 		}
 		if (game->gameState != WAITING) {
-			strcpy_s(buff + 4, BUFF_SIZE, JOIN_E_PLAYING);
+			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_PLAYING);
 			buff[BUFFLEN] = '#';
 			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 		}
 		for (i = 0; i < PLAYER_NUM; i++) {
 			if (game->players[i] == NULL) {
@@ -765,16 +772,16 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 			else countPlayer++;
 		}
 		if (countPlayer == game->teamNum * 3) {
-			strcpy_s(buff + 4, BUFF_SIZE, JOIN_E_FULLGAME);
+			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_FULLGAME);
 			buff[BUFFLEN] = '#';
 			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 		}
 		if ((team < 0) || (team > game->teamNum - 1)) {
-			strcpy_s(buff + 4, BUFF_SIZE, JOIN_E_NOTEAM);
+			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_NOTEAM);
 			buff[BUFFLEN] = '#';
 			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 		}
 		for (i = 0; i < 3; i++) {
 			if (game->teams[team]->players[i] == NULL) {
@@ -783,10 +790,10 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 			}
 		}
 		if (i == 3) {
-			strcpy_s(buff + 4, BUFF_SIZE, JOIN_E_FULLTEAM);
+			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_FULLTEAM);
 			buff[BUFFLEN] = '#';
 			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 4, strlen(buff + 4), buff);
+			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 		}
 		// Add player to team
 		game->teams[team]->players[emptyPlaceInTeam] = player;
@@ -897,7 +904,8 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 		}
 		if (i == PLAYER_NUM) emptyGame(game);
 		else if (game->host == player->gameIndex) game->host = i; // Update host if player is host
-		informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_DISCONNECT, buff);
+		setResponseAndSend(player, opcode, QUIT_SUCCESS, strlen(QUIT_SUCCESS), buff);
+		informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, player->account, AUTHORIZED);
 		return 1;
 	}
@@ -946,10 +954,10 @@ int handleStartGame(PLAYER player, char *opcode, char * buff) {
 			}
 		}
 		_beginthreadex(NULL, NULL, &timelyUpdate, (void *)game, 0, 0);
-		strcpy_s(buff + 4, BUFF_SIZE, UPDATE_GAME_START);
-		setResponse(UPDATE_GAME, buff + 4, strlen(buff + 4), buff);
+		strcpy_s(buff + 5, BUFF_SIZE, UPDATE_GAME_START);
+		setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 		sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
-		memset(buff + 4, 0, BUFF_SIZE - 4);
+		memset(buff + 5, 0, BUFF_SIZE - 5);
 		for (i = 0; i < CASTLE_NUM; i++) {
 			sendNewCastleQuestion(game, i, buff);
 		}
