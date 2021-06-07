@@ -108,7 +108,7 @@ void clearPlayerInfo(PLAYER player, map<string, pair<string, int>> accountMap) {
 		else {
 			if (player->gameIndex == game->host) game->host = i;
 			char buff[BUFF_SIZE];
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_DISCONNECT, buff);
+			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
 		}
 	}
 	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
@@ -126,7 +126,7 @@ void calculateACastle(CASTLE castle, char *buff) {
 	strcat_s(buff, BUFF_SIZE, "#");
 	buff[2] = castle->wall->type + 48; // Wall type
 	strcat_s(buff, BUFF_SIZE, "#");
-	_itoa_s(castle->wall->defense, buff + 4, BUFF_SIZE, 10);
+	_itoa_s(castle->wall->defense, buff + 5, BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 }
 
