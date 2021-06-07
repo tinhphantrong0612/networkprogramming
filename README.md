@@ -103,10 +103,12 @@ CANNON_IRON				1800
 190: UPDATE_GAME_START
 191: UDPATE_GAME_CASTQUEST
 192: UPDATE_GAME_MINEQUEST
-193: UPDATE_GAME_ATTACK_CASTLE
-194: UPDATE_GAME_ATTACK_MINE
-195: UPDATE_GAME_BUY_WPN
-196: UPDATE_GAME_BUY_WALL
+193: UPDATE_GAME_ATTACK_CST_R
+194: UPDATE_GAME_ATTACK_MINE_R
+195: UPDATE_GAME_ATTACK_CST_W
+196: UPDATE_GAME_ATTACK_MINE_W
+197: UPDATE_GAME_BUY_WPN
+198: UPDATE_GAME_BUY_WALL
 
 200: UPDATE_LOBBY_DISCONNECT
 201: UPDATE_LOBBY_JOIN
@@ -286,7 +288,7 @@ Only when player is not in any game.
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-19|strlen(data)|UPDATE_GAME_ATK_CST#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+19|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 
 120: ATK_CST_SUCCESS
 121: ATK_CST_E_TOOLATE // Answer the question too late
@@ -303,7 +305,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-19|strlen(data)|UPDATE_GAME_ATK_MINE#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+19|strlen(data)|UPDATE_GAME_ATK_MINE_W/R#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 
 130: ATK_MINE_SUCCESS
 131: ATK_MINE_E_TOOLATE	// Answer the question too late
