@@ -1,5 +1,8 @@
 #pragma once
 // *** Server constant ***
+// Macros
+#define BUFFLEN (4 + strlen(buff + 4))
+
 // Buffer size
 #define BUFF_SIZE				8192
 #define ACCOUNT_SIZE			50
@@ -28,6 +31,13 @@
 // Game state
 #define WAITING					0
 #define ONGOING					1
+#define FINISHED				2
+
+// Mine resources
+#define RESOURCE_NUM			3
+#define WOOD					0
+#define STONE					1
+#define IRON					2
 
 // Outgame - Request header
 #define LOGIN					"01" // username	| password
@@ -79,6 +89,8 @@
 #define CHANGE_E_FULL			"063"
 #define CHANGE_E_READY			"064"
 #define CHANGE_E_PLAYING		"065"
+#define CHANGE_E_UNKNOWNTEAM	"066"
+#define CHANGE_E_CURRENTTEAM	"067"
 
 #define READY_SUCCESS			"070"
 #define READY_E_NOTAUTH			"071"
@@ -105,6 +117,7 @@
 #define START_E_NOTALLREADY		"103"
 #define START_E_PLAYING			"104"
 #define START_E_NOTHOST			"105"
+#define START_E_ONETEAM			"106"
 
 #define LOGOUT_SUCCESS			"110"
 #define LOGOUT_E_NOTAUTH		"111"
@@ -115,6 +128,11 @@
 #define ATTACK_MINE				"13"
 #define BUY_WEAPON				"14" // weaponType
 #define BUY_WALL				"15" // wallType	| castleIndex
+#define CASTLE_QUEST			"16"
+#define MINE_QUEST				"17"
+#define TIMELY_UPDATE			"18"
+#define UPDATE_GAME				"19"
+#define UPDATE_LOBBY			"20"
 
 // Ingame - Response header
 #define ATK_CST_SUCCESS			"120"
@@ -122,21 +140,43 @@
 #define ATK_CST_E_TOOWEAK		"122" // Enemy build a better wall
 #define ATK_CST_E_YOURS			"123" // Guess your teammate got it first
 #define ATK_CST_E_NOTPLAYING	"124" // Either game or player is not playing
+#define ATK_CST_E_WRONG			"125"
+#define ATK_CST_E_FORMAT		"126"
 
 #define ATK_MINE_SUCCESS		"130"
 #define ATK_MINE_E_TOOLATE		"131" // Answer the question too late
 #define ATK_MINE_E_NOTPLAYING	"132" // Either game or player is not playing
+#define ATK_MINE_E_WRONG		"133"
+#define ATK_MINE_E_FORMAT		"134"
 
 #define BUY_WEAPON_SUCCESS		"140"
 #define BUY_WEAPON_E_NOTENOUGH	"141" // Guess your teammate bought it first
 #define BUY_WEAPON_E_WEAKER		"142" // Can't buy a weaker weapon
 #define BUY_WEAPON_E_NOTPLAYING	"143" // Either game or player is not playing
+#define BUY_WEAPON_E_FORMAT		"144"
 
 #define BUY_WALL_SUCCESS		"150"
 #define BUY_WALL_E_NOTENOUGH	"151" // Guess your teammate bought it first
 #define BUY_WALL_E_WEAKER		"152" // Can't buy a weaker wall
 #define BUY_WALL_E_GONE			"153" // Castle has been taken by enemy
 #define BUY_WALL_E_NOTPLAYING	"154" // Either game or player is not playing
+#define BUY_WALL_E_FORMAT		"155"
+
+#define UPDATE_GAME_START		"190"
+#define UPDATE_GAME_CASTQUEST	"191"
+#define UPDATE_GAME_MINEQUEST	"192"
+#define UPDATE_GAME_ATK_CST_R	"193"
+#define UPDATE_GAME_ATK_MINE_R	"194"
+#define UPDATE_GAME_ATK_CST_W	"195"
+#define UPDATE_GAME_ATK_MINE_W	"196"
+#define UPDATE_GAME_BUY_WPN		"197"
+#define UPDATE_GAME_BUY_WALL	"198"
+
+#define UPDATE_LOBBY_DISCONNECT	"200"
+#define UPDATE_LOBBY_JOIN		"201"
+#define UPDATE_LOBBY_CHANGETEAM	"202"
+#define UPDATE_LOBBY_READY		"203"
+#define UPDATE_LOBBY_UNREADY	"204"
 
 // *** Game logic constant ***
 // Amount
