@@ -2,7 +2,7 @@
 ## The resquest/response structure
 | Code | Length | Payload|
 |---|---|---|
-|2 bytes|2 bytes| 8000 bytes|
+|3 bytes|2 bytes| 8000 bytes|
 
 ## SOME CONSTANT
 ```c++
