@@ -4,7 +4,6 @@
 #include "util.h"
 
 Lobby::Lobby() {
-	printf("Chua co thong tin gi ca");
 }
 
 Lobby::Lobby(int id, int team_number) : id{ id }, team_number{team_number} {
@@ -75,16 +74,6 @@ Player Lobby::join_lobby_response(char* payload) {
 		player.game_id = response.id;
 		player.team_id = response.team_players[player.game_id];
 		player.state = UNREADY;
-
-		this->team_number = response.team_number;
-		this->id = response.id;
-		this->state = WAITING;
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
-			this->team_players[i] = response.team_players[i];
-		}
 	}
 
 	return player;
@@ -114,5 +103,51 @@ void Lobby::quit_lobby_response(char* payload) {
 	}
 }
 
+void Lobby::update_lobby_response(char* payload) {
+	Update_lobby response = update_lobby_data(payload);
+	this->id = response.game_id; // Response chua co game_id
+	this->team_number = response.team_number;
+	this->player_size = response.player_number;
+	if (!strcmp(response.result_code, UPDATE_LOBBY_JOIN)) {
+		this->state = WAITING;
+		// Update team and player
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+	}
+	else if (!strcmp(response.result_code, UPDATE_LOBBY_QUIT)) {
+		// Update team and player
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+	}
+	else if (!strcmp(response.result_code, UPDATE_LOBBY_READY)) {
+		// Update player
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+	}
+	else if (!strcmp(response.result_code, UPDATE_LOBBY_UNREADY)) {
+		// Update player
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+	}
+	else if (!strcmp(response.result_code, UPDATE_LOBBY_CHANGETEAM)) {
+		// Update team and player
+		for (int i = 0; i < response.player_number; i++) {
+			this->players[i] = response.players[i];
+		}
+		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
+			this->team_players[i] = response.team_players[i];
+		}
+	}
 
+}
 

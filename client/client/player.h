@@ -19,6 +19,8 @@ public:
 	void change_team_request(Socket& socket, int team_id);
 	void attack_castle_request(Socket& socket, int castle_id, int question_id, int answer_id);
 	void attack_mine_request(Socket& socket, int mine_id, int type, int question_id, int answer_id);
+	void buy_weapon_request(Socket& socket, int weapon_id);
+	void buy_wall_request(Socket& socket, int wall_id);
 
 	void ready_response(char* payload);
 	void unready_response(char* payload);

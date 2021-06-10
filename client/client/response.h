@@ -65,3 +65,15 @@ struct Mine_question {
 	int type;
 	Question questions[MAX_QUESTION];
 };
+
+struct Update_lobby {
+	char result_code[RESULT_CODE_SIZE + 1];
+	int game_id;
+	int team_number;
+	int request_player_id;
+	int team_players[MAX_NUM_PLAYER];
+	Player players[MAX_NUM_PLAYER];
+
+	//Extra info
+	int player_number;
+};

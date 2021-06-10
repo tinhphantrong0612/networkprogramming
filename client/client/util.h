@@ -24,6 +24,9 @@ Start_game start_game_data(char* payload);
 
 void resolve_team_player_str(char* string, int team_number, int team_player[]);
 
+Update_lobby update_lobby_data(char* payload);
+
+
 // Get question
 Castle_question castle_question_data(char* payload);
 Mine_question mine_question_data(char* payload);

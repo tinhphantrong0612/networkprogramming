@@ -29,6 +29,8 @@
 #define TEAM_NUM_SIZE 1 // for teamnumber str
 #define CASTLE_ID_SIZE 1	// for castle id str
 #define MINE_ID_SIZE 1	// for mine id str
+#define WEAPON_ID_SIZE 1	// for weapon id str
+#define WALL_ID_SIZE 1	// for wall id str
 #define QUESTION_ID_SIZE 3 // for question id str
 #define ANSWER_ID_SIZE 3 // for question id str
 #define TYPE_SIZE 1
@@ -248,6 +250,7 @@
 #define UPDATE_GAME_BUY_WPN "40107"
 #define UPDATE_GAME_BUY_WALL "40108"
 
+// Update lobby
 #define UPDATE_LOBBY_QUIT "40200"
 #define UPDATE_LOBBY_JOIN "40201"
 #define UPDATE_LOBBY_CHANGETEAM "40202"

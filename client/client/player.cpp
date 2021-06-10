@@ -96,3 +96,19 @@ void Player::attack_mine_request(Socket& socket, int mine_id, int type, int ques
 	socket.tcp_send(ATTACK_MINE, payload);
 
 }
+
+void Player::buy_weapon_request(Socket& socket, int weapon_id) {
+	char payload[PAYLOAD_SIZE + 1] = "";
+	char weapon_id_str[WEAPON_ID_SIZE + 1];
+	_itoa_s(weapon_id, weapon_id_str, WEAPON_ID_SIZE + 1, 10);
+	strcpy_s(payload, PAYLOAD_SIZE + 1, weapon_id_str);
+	socket.tcp_send(BUY_WEAPON, payload);
+}
+
+void Player::buy_wall_request(Socket& socket, int wall_id) {
+	char payload[PAYLOAD_SIZE + 1] = "";
+	char wall_id_str[WALL_ID_SIZE + 1];
+	_itoa_s(wall_id, wall_id_str, WALL_ID_SIZE + 1, 10);
+	strcpy_s(payload, PAYLOAD_SIZE + 1, wall_id_str);
+	socket.tcp_send(BUY_WALL, payload);
+}

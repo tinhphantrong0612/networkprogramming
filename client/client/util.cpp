@@ -215,6 +215,53 @@ void resolve_team_player_str(char* string, int team_number, int* member_team) {
 	}
 }
 
+
+Update_lobby update_lobby_data(char* payload) {
+	Update_lobby result;
+	char* next_token;
+	// Get result code
+	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get result code
+	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	result.game_id = atoi(token);
+
+	// Get team number
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_number = atoi(token);
+
+	// Get request player id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.request_player_id = atoi(token);
+
+	// Get team player str
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	resolve_team_player_str(token, result.team_number, result.team_players);
+
+	int player_ingame_id;
+	char player_name[USERNAME_LEN];
+	int player_state;
+	int i = 0;
+
+	// Get player detail info
+	while (token) {
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		player_ingame_id = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		strcpy_s(player_name, USERNAME_LEN, token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		player_state = atoi(token);
+		result.players[i] = Player{ player_ingame_id, player_name, result.game_id, result.team_players[player_ingame_id], player_state };
+		i++;
+	}
+
+	result.player_number = i;
+
+	return result;
+}
+
+
 Castle_question castle_question_data(char* payload) {
 	Castle_question result;
 
