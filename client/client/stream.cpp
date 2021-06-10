@@ -2,11 +2,6 @@
 #include "stream.h"
 #include "util.h"
 
-Socket::Socket() {
-	strcpy_s(this->ip_address, INET_ADDRSTRLEN, DEFAULT_IP);
-	this->port_number = DEFAULT_PORT;
-}
-
 Socket::Socket(int port_number, char* ip_address) : port_number{ port_number }{
 	strcpy_s(this->ip_address, INET_ADDRSTRLEN, ip_address);
 
@@ -15,6 +10,11 @@ Socket::Socket(int port_number, char* ip_address) : port_number{ port_number }{
 		printf("Can't create socket for client with error: %d\n", WSAGetLastError());
 	}
 }
+
+Socket::Socket() : Socket(DEFAULT_PORT, DEFAULT_IP) {
+
+}
+
 
 Socket::~Socket() {
 	closesocket(this->client_socket);

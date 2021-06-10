@@ -22,9 +22,9 @@ User::~User() {
 
 void User::login_request(Socket& socket, char* username, char* password) {
 	// Send login request
-	char mess[PAYLOAD_SIZE + 1] = "";
-	auth_payload(username, password, mess);
-	socket.tcp_send(LOGIN, mess);
+	char payload[PAYLOAD_SIZE + 1] = "";
+	auth_payload(username, password, payload);
+	socket.tcp_send(LOGIN, payload);
 	strcpy_s(this->username, USERNAME_LEN, username);
 }
 
@@ -33,9 +33,9 @@ void User::signup_request(Socket& socket, char* username, char* password1, char*
 		throw ValidationError("The confirm password doesn't match");	// Dòng này thay thông báo của UI
 	}
 	// Send signup request
-	char mess[PAYLOAD_SIZE + 1] = "";
-	auth_payload(username, password1, mess);
-	socket.tcp_send(SIGNUP, mess);
+	char payload[PAYLOAD_SIZE + 1] = "";
+	auth_payload(username, password1, payload);
+	socket.tcp_send(SIGNUP, payload);
 }
 
 void User::login_response(char* payload) {

@@ -1,11 +1,12 @@
 #pragma once
 
 //Buffer size
-#define PAYLOAD_SIZE 16384
+#define PAYLOAD_SIZE 8000
 #define BUFF_SIZE 32000
 #define PAYLOAD_LEN_SIZE 2
-#define CODE_SIZE 4
+#define CODE_SIZE 3
 
+#define RESULT_CODE_SIZE 5
 #define USERNAME_LEN 256
 #define ERROR_MESS_LEN 1024
 #define NAME_LENGTH 256
@@ -25,6 +26,7 @@
 
 #define GAME_ID_SIZE 13	// for game id str
 #define TEAM_ID_SIZE 1	// for team id str
+#define TEAM_NUM_SIZE 1 // for teamnumber str
 #define CASTLE_ID_SIZE 1	// for castle id str
 #define MINE_ID_SIZE 1	// for mine id str
 #define QUESTION_ID_SIZE 3 // for question id str
@@ -34,7 +36,7 @@
 #define DEFAULT_PORT 5500
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_USRNAME ""
-#define DELIM_RESPONSE " "
+#define DELIM_REQ_RES "#"
 
 // State
 // User state

@@ -61,11 +61,13 @@ void receive_data(Socket& socket) {
 		// Lobby goi start_game_response
 		// Chuyen sang trang thai vao game
 	}
+	/**
 	else if (!strcmp(code, UPDATE_CASTLE_QUESTION)) {
 		// Question goi update_castle_question
 	}
 	else if (!strcmp(code, UPDATE_CASTLE_QUESTION)) {
 		// Question goi update_mine_question
 	}
+	**/
 
 }
