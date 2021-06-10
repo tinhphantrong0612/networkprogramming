@@ -31,6 +31,7 @@
 #define MINE_ID_SIZE 1	// for mine id str
 #define QUESTION_ID_SIZE 3 // for question id str
 #define ANSWER_ID_SIZE 3 // for question id str
+#define TYPE_SIZE 1
 
 // default value
 #define DEFAULT_PORT 5500

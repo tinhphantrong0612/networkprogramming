@@ -26,24 +26,33 @@ void pack(char* code, char* payload, char* mess) {
 }
 
 void auth_payload(char* username, char* password, char* payload) {
-	strcat_s(payload, PAYLOAD_SIZE, username);
-	strcat_s(payload, PAYLOAD_SIZE, DELIM_REQ_RES);
-	strcat_s(payload, PAYLOAD_SIZE, password);
+	strcat_s(payload, PAYLOAD_SIZE + 1, username);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, password);
 }
 
 void join_lobby_payload(char* game_id, char* team_id, char* payload) {
-	strcat_s(payload, PAYLOAD_SIZE, game_id);
-	strcat_s(payload, PAYLOAD_SIZE, DELIM_REQ_RES);
-	strcat_s(payload, PAYLOAD_SIZE, team_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, game_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, team_id);
 }
 
 void attack_castle_payload(char* castle_id, char* question_id, char* answer_id, char* payload) {
-	strcat_s(payload, PAYLOAD_SIZE, castle_id);
-	strcat_s(payload, PAYLOAD_SIZE, DELIM_REQ_RES);
-	strcat_s(payload, PAYLOAD_SIZE, question_id);
-	strcat_s(payload, PAYLOAD_SIZE, DELIM_REQ_RES);
-	strcat_s(payload, PAYLOAD_SIZE, answer_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, castle_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, question_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, answer_id);
+}
 
+void attack_mine_payload(char* mine_id, char* type, char* question_id, char* answer_id, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE + 1, mine_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, type);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, question_id);
+	strcat_s(payload, PAYLOAD_SIZE + 1, DELIM_REQ_RES);
+	strcat_s(payload, PAYLOAD_SIZE + 1, answer_id);
 }
 
 Auth auth_data(char* payload) {
