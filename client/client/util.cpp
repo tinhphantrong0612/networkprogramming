@@ -25,18 +25,26 @@ void pack(char* code, char* payload, char* mess) {
 
 }
 
-void auth_payload(char* username, char* password, char* mess) {
-	strcat_s(mess, PAYLOAD_SIZE, username);
-	strcat_s(mess, PAYLOAD_SIZE, " ");
-	strcat_s(mess, PAYLOAD_SIZE, password);
+void auth_payload(char* username, char* password, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, username);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, password);
 }
 
-void join_lobby_payload(char* game_id, char* team_id, char* mess) {
-	strcat_s(mess, PAYLOAD_SIZE, game_id);
-	strcat_s(mess, PAYLOAD_SIZE, " ");
-	strcat_s(mess, PAYLOAD_SIZE, team_id);
+void join_lobby_payload(char* game_id, char* team_id, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, game_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, team_id);
 }
 
+void attack_castle_payload(char* castle_id, char* question_id, char* answer_id, char* payload) {
+	strcat_s(payload, PAYLOAD_SIZE, castle_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, question_id);
+	strcat_s(payload, PAYLOAD_SIZE, " ");
+	strcat_s(payload, PAYLOAD_SIZE, answer_id);
+
+}
 
 Auth auth_data(char* payload) {
 	return Auth{payload};
@@ -98,6 +106,9 @@ Join_lobby join_lobby_data(char* payload) {
 
 	// Get game id of this client
 	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	if (!token) {
+		return result;
+	}
 	result.id = atoi(token);
 
 	// Get team number
@@ -136,6 +147,30 @@ Change_team change_team_data(char* payload) {
 	return Change_team(join_lobby_data(payload));
 }
 
+Ready ready_data(char* payload) {
+	return Ready(join_lobby_data(payload));
+}
+
+Unready unready_data(char* payload) {
+	return Unready(join_lobby_data(payload));
+}
+
+Quit_lobby quit_lobby_data(char* payload) {
+	return Quit_lobby(join_lobby_data(payload));
+}
+
+Start_game start_game_data(char* payload) {
+	char* next_token;
+	// Get result code
+	char result_code[CODE_SIZE + 1];
+	char* token = strtok_s(payload, DELIM_RESPONSE, &next_token);
+	strcpy_s(result_code, CODE_SIZE + 1, token);
+	// Get game id
+	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	int game_id = atoi(token);
+	return Start_game{ result_code, game_id };
+}
+
 void resolve_team_player_str(char* string, int team_number, int* member_team) {
 	for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
 		if (string[i] == 'x') {
@@ -145,4 +180,105 @@ void resolve_team_player_str(char* string, int team_number, int* member_team) {
 			member_team[i] = string[i] - '0';
 		}
 	}
+}
+
+Castle_question castle_question_data(char* payload) {
+	Castle_question result;
+
+	char* next_token;
+	// Get game id
+	char* token = strtok_s(payload, DELIM_RESPONSE, &next_token);
+	result.id = atoi(token);
+
+	// Get castle id
+	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	result.castle_id = atoi(token);
+
+	int i = 0;
+	int question_id;
+	char question[QUESTION_LENGTH];
+	char answer1[ANSWER_LENGTH];
+	char answer2[ANSWER_LENGTH];
+	char answer3[ANSWER_LENGTH];
+	char answer4[ANSWER_LENGTH];
+
+	while (token) {
+		// Get question id
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		question_id = atoi(token);
+		// Get question
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(question, QUESTION_LENGTH + 1, token);
+
+		// Get answer
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer1, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer2, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer3, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer4, ANSWER_LENGTH + 1, token);
+
+		result.questions[i] = Question(question_id, question, answer1, answer2, answer3, answer4);
+		i++;
+	}
+
+	return result;
+}
+
+Mine_question mine_question_data(char* payload) {
+	Mine_question result;
+
+	char* next_token;
+	// Get game id
+	char* token = strtok_s(payload, DELIM_RESPONSE, &next_token);
+	result.id = atoi(token);
+
+	// Get mine id
+	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+	result.mine_id = atoi(token);
+
+	token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+
+	// Get mine type
+	result.type = atoi(token);
+
+	int i = 0;
+	int question_id;
+	char question[QUESTION_LENGTH];
+	char answer1[ANSWER_LENGTH];
+	char answer2[ANSWER_LENGTH];
+	char answer3[ANSWER_LENGTH];
+	char answer4[ANSWER_LENGTH];
+
+	while (token) {
+		// Get question id
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		question_id = atoi(token);
+		// Get question
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(question, QUESTION_LENGTH + 1, token);
+
+		// Get answer
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer1, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer2, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer3, ANSWER_LENGTH + 1, token);
+
+		token = strtok_s(NULL, DELIM_RESPONSE, &next_token);
+		strcpy_s(answer4, ANSWER_LENGTH + 1, token);
+
+		result.questions[i] = Question(question_id, question, answer1, answer2, answer3, answer4);
+		i++;
+	}
+
+	return result;
 }
