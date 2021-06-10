@@ -1,7 +1,7 @@
 #pragma once
 #include "constant.h"
 
-class Mine {
+class Wall {
 	int	id;
 	int	defense;
 	char name[NAME_LENGTH];
