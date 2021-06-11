@@ -23,13 +23,9 @@ struct Get_lobby {
 struct Join_lobby {
 	char result_code[RESULT_CODE_SIZE + 1];
 	int id;
-	int ingame_id;
+	int player_id;
 	int team_number;
-	int team_players[MAX_NUM_PLAYER];
-	Player players[MAX_NUM_PLAYER];
-
-	//Extra info
-	int player_number;
+	int team_id;
 };
 
 struct Ready{

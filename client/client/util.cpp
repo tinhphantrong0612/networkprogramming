@@ -117,39 +117,20 @@ Join_lobby join_lobby_data(char* payload) {
 
 	// Get game id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	if (!token) {
-		return result;
-	}
 	result.id = atoi(token);
 
 	// Get team number
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_number = atoi(token);
 
-	// Get team memeber string
+	// Get player id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	int team_players[MAX_NUM_PLAYER];
-	resolve_team_player_str(token, result.team_number, team_players);
+	result.player_id = atoi(token);
 
-	int player_ingame_id;
-	char player_name[USERNAME_LEN];
-	int player_state;
-	int i = 0;
-
-	// Get player detail info
-	while (token) {
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		player_ingame_id = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(player_name, USERNAME_LEN, token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		player_state = atoi(token);
-		result.players[i] = Player{ player_ingame_id, player_name, result.id, team_players[player_ingame_id], player_state };
-
-		i++;
-	}
-	result.player_number = i;
-
+	// Get team_id of the player
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+		
 	return result;
 }
 
