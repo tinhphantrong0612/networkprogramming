@@ -2,7 +2,6 @@
 
 #include "team.h"
 #include "mine.h"
-#include "lobby.h"
 
 class Game {
 public:
