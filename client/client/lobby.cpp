@@ -4,6 +4,7 @@
 #include "util.h"
 
 Lobby::Lobby() {
+
 }
 
 Lobby::Lobby(int id, int team_number) : id{ id }, team_number{team_number} {
@@ -18,7 +19,7 @@ Lobby::~Lobby() {
 
 }
 
-
+// All request param is input
 
 void Lobby::create_lobby_request(Socket& socket, int team_number) {
 	// Send create lobby request
@@ -28,11 +29,21 @@ void Lobby::create_lobby_request(Socket& socket, int team_number) {
 
 }
 
-void Lobby::create_lobby_response(char* payload) {
+
+// Input param: payload, username
+Player Lobby::create_lobby_response(char* payload, char* username) {
 	Create_lobby response = create_lobby_data(payload);
 	if (!strcmp(response.result_code, CREATE_SUCCESS)){
 		this->id = response.id;
 		this->team_number = team_number;
+		this->state = WAITING;
+		return Player(0, username, this->id, 0, UNREADY);
+	}
+	else if (!strcmp(response.result_code, CREATE_E_INVALIDTEAM)) {
+		printf("Max team number of a game is 4\n");	// Dòng này thay thế bằng thông báo UI
+	}
+	else {
+		printf("Invalid operation\n");	// Dòng này thay thế bằng thông báo UI
 	}
 }
 
@@ -41,6 +52,8 @@ void Lobby::get_lobby_request(Socket& socket) {
 	socket.tcp_send(GET_LOBBY, "");
 }
 
+// Input is payload
+// Output is lobbies and size of the lobby
 void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 	//Receive lobby request
 	Get_lobby response = get_lobby_data(payload);
@@ -49,11 +62,13 @@ void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 		for (int i = 0; i < response.size; i++) {
 			lobbies[i] = response.lobbies[i];
 		}
-
+	}
+	else {
+		printf("Invalid operation\n");	// Dòng này thay thế bằng thông báo UI
 	}
 }
 
-void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id, Player& player) {
+void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id) {
 	char game_id_str[GAME_ID_SIZE + 1];
 	char team_id_str[TEAM_ID_SIZE + 1];
 	_itoa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);
@@ -65,18 +80,19 @@ void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id, Player&
 
 }
 
-Player Lobby::join_lobby_response(char* payload) {
+// Input param: payload, username
+Player Lobby::join_lobby_response(char* payload, char* username) {
 	//Receive lobby request
-	Player player;
 	Join_lobby response = join_lobby_data(payload);
-	if (strcmp(response.result_code, JOIN_SUCCESS)) {
-		player.id = response.ingame_id;
-		player.game_id = response.id;
-		player.team_id = response.team_players[player.game_id];
-		player.state = UNREADY;
+	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
+		this->id = response.id;
+		this->team_number = response.team_number;
+		return Player(response.player_id, username, response.id, response.team_id, UNREADY);
 	}
-
-	return player;
+	else if (!strcmp(response.result_code, JOIN_E_PLAYING) || !strcmp(response.result_code, JOIN_E_FULLTEAM)) {
+		printf("This lobby is already full or ingame\n"); // Dòng này thay thế bằng thông báo UI
+	}
+	return Player();
 
 }
 

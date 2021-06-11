@@ -4,13 +4,10 @@
 
 class User {
 public:
-	int id;
 	char username[USERNAME_LEN];
-	int state = USER_NONAUTH;
+	int state;
 
 	User();
-	User(char* username);
-	User(char* username, int state);
 	void login_request(Socket& socket, char* username, char* password);
 	void signup_request(Socket& socket, char* username, char* password1, char* password2);
 	void logout_request(Socket& socket);

@@ -560,8 +560,6 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = requestPlayer + 48;
 	buff[BUFFLEN] = '#';
-	getTeamPlayerString(game, buff + BUFFLEN);
-	buff[BUFFLEN] = '#';
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
 			buff[BUFFLEN] = i + 48;
@@ -569,6 +567,8 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 			strcpy_s(buff + BUFFLEN, BUFF_SIZE, game->players[i]->account);
 			buff[BUFFLEN] = '#';
 			buff[BUFFLEN] = game->players[i]->state + 48;
+			buff[BUFFLEN] = '#';
+			buff[BUFFLEN] = game->players[i]->teamIndex + 48;
 			buff[BUFFLEN] = '#';
 		}
 	};

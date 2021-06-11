@@ -15,13 +15,3 @@ Question::Question(int id, char* question, char* answer1, char* answer2, char* a
 	strcpy_s(this->answer3, ANSWER_LENGTH + 1, answer3);
 	strcpy_s(this->answer4, ANSWER_LENGTH + 1, answer4);
 }
-
-Question* Question::update_castle_question(char* payload) {
-	Castle_question response = castle_question_data(payload);
-	return response.questions;
-}
-
-Question* Question::update_mine_question(char* payload) {
-	Mine_question response = mine_question_data(payload);
-	return response.questions;
-}
