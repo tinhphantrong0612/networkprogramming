@@ -2,6 +2,7 @@
 #include "stream.h"
 #include "auth.h"
 #include "player.h"
+#include "game.h"
 
 class Lobby {
 public:
@@ -27,6 +28,6 @@ public:
 	void get_lobby_response(char* payload, Lobby* lobbies, int& size);
 	Player join_lobby_response(char* payload, char* username);
 	void quit_lobby_response(char* payload);
-	void start_game_response(char* payload);
+	Game start_game_response(char* payload);
 	void update_lobby_response(char* payload);
 };

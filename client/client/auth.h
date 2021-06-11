@@ -4,7 +4,7 @@
 
 class User {
 public:
-	char username[USERNAME_LEN];
+	char username[USERNAME_LEN + 1];
 	int state;
 
 	User();
