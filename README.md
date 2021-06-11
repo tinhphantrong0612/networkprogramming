@@ -305,7 +305,7 @@ Whenever a player changes team successfully, server sends update to all players 
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-401|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+401|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `castle_id` is target castle, 0 to 2, subtract 48 when receive  
@@ -358,7 +358,7 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive    
 `weapon_id` is target castle, 0 to 3, subtract 48 when receive  
@@ -384,7 +384,7 @@ Result code:
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4, when receive need to subtract 48
