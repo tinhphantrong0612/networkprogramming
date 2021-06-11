@@ -315,7 +315,7 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 		game->castles[i]->wall = (WALL)malloc(sizeof(_wall));
 		game->castles[i]->wall->type = NO_WALL;
 		game->castles[i]->wall->defense = NO_WALL_DEF;
-		game->castles[i]->occupiedBy = -1;
+		game->castles[i]->occupiedBy = 4;
 	}
 	for (int i = 0; i < MINE_NUM; i++) {
 		game->mines[i] = (MINE)malloc(sizeof(_mine));
