@@ -215,7 +215,7 @@ int Communicate(PLAYER player) {
 	opcode[1] = buff[1];
 	opcode[2] = buff[2];
 	opcode[3] = 0;
-	length = ((buff[HEADER_SIZE - 2] + 256) % 256) * 256 + (buff[HEADER_SIZE-1] + 256) % 256; // Calculate payload length
+	length = ((buff[HEADER_SIZE - 2] + 256) % 256) * 256 + (buff[HEADER_SIZE - 1] + 256) % 256; // Calculate payload length
 	received = receiveAndProcessPayload(player, opcode, length, buff);
 	return received;
 }
@@ -548,7 +548,7 @@ void getTeamPlayerString(GAME game, char *buff) {
 /* The getGameRoomChangeSuccessResponse function create a response to send to all players in a room whenever someone join, leave, ready or unready
 * @param	game				[IN]		Game
 * @param	requestPlayer		[IN]		Place of request player in game
-* @param	responseCode		[IN]		Response code for request 
+* @param	responseCode		[IN]		Response code for request
 * @param	buff				[IN/OUT]	Buffer to store result
 * @return	Nothing
 */
@@ -603,7 +603,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = castleId + 48;
 	buff[BUFFLEN] = '#';
-	getGameProperties(game, buff + BUFFLEN);
+	getAttackCastleGameProperties(game, buff + BUFFLEN);
 	buff[BUFFLEN] = '#';
 	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
@@ -628,7 +628,7 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = mineId * 3 + resourceType + 48;
 	buff[BUFFLEN] = '#';
-	getGameProperties(game, buff + BUFFLEN);
+	getAttackMineGameProperties(game, buff + BUFFLEN);
 	buff[BUFFLEN] = '#';
 	getMineQuestion(game->mines[mineId], HARD_QUESTION_FILE, resourceType, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
@@ -650,7 +650,7 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
-	getGameProperties(game, buff + BUFFLEN);
+	getBuyWeaponGameProperties(game, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 };
@@ -670,7 +670,7 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	buff[BUFFLEN] = '#';
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[BUFFLEN] = '#';
-	getGameProperties(game, buff + BUFFLEN);
+	getBuyWallGameProperties(game, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
 };
@@ -742,7 +742,7 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 		char *space = strchr(buff, '#');
 		if (space == NULL) return setResponseAndSend(player, opcode, JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
 		int distance = int(space - buff);
-		if (distance != 13) return setResponseAndSend(player, opcode, JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
+		if (distance != 13 || *(space + 2) != 0) return setResponseAndSend(player, opcode, JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
 		space[0] = 0;
 		long long gameId = _atoi64(buff);
 		int team = atoi(space + 1);
@@ -753,48 +753,23 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 				game = games[i];
 			}
 		}
-		if (i == GAME_NUM || game == NULL) {
-			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_NOGAME);
-			buff[BUFFLEN] = '#';
-			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
-		}
-		if (game->gameState != WAITING) {
-			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_PLAYING);
-			buff[BUFFLEN] = '#';
-			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
-		}
+		if (i == GAME_NUM || game == NULL) return setResponseAndSend(player, opcode, JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
+		if (game->gameState != WAITING) return setResponseAndSend(player, opcode, JOIN_E_PLAYING, strlen(JOIN_E_PLAYING), buff);
 		for (i = 0; i < PLAYER_NUM; i++) {
 			if (game->players[i] == NULL) {
 				emptyPlaceInGame = i;
 			}
 			else countPlayer++;
 		}
-		if (countPlayer == game->teamNum * 3) {
-			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_FULLGAME);
-			buff[BUFFLEN] = '#';
-			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
-		}
-		if ((team < 0) || (team > game->teamNum - 1)) {
-			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_NOTEAM);
-			buff[BUFFLEN] = '#';
-			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
-		}
+		if (countPlayer == game->teamNum * 3) return setResponseAndSend(player, opcode, JOIN_E_FULLGAME, strlen(JOIN_E_FULLGAME), buff);
+		if ((team < 0) || (team > game->teamNum - 1)) return setResponseAndSend(player, opcode, JOIN_E_NOTEAM, strlen(JOIN_E_NOTEAM), buff);
 		for (i = 0; i < 3; i++) {
 			if (game->teams[team]->players[i] == NULL) {
 				emptyPlaceInTeam = i;
 				break;
 			}
 		}
-		if (i == 3) {
-			strcpy_s(buff + 5, BUFF_SIZE, JOIN_E_FULLTEAM);
-			buff[BUFFLEN] = '#';
-			getLobbyList(buff + 8);
-			return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
-		}
+		if (i == 3)	return setResponseAndSend(player, opcode, JOIN_E_FULLTEAM, strlen(JOIN_E_FULLTEAM), buff);
 		// Add player to team
 		game->teams[team]->players[emptyPlaceInTeam] = player;
 		// Add player to game
@@ -1143,17 +1118,20 @@ int handleBuyWall(PLAYER player, char *opcode, char *buff) {
 			if (team->basedResources[WOOD] < FENCE_WOOD || team->basedResources[STONE] < FENCE_STONE || team->basedResources[IRON] < FENCE_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, FENCE, FENCE_DEF, FENCE_WOOD, FENCE_STONE, FENCE_IRON);
 			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff);
-		} else if (wallId == WOOD_WALL) {
+		}
+		else if (wallId == WOOD_WALL) {
 			if (castle->wall->defense >= WOOD_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
 			if (team->basedResources[WOOD] < WOOD_WALL_WOOD || team->basedResources[STONE] < WOOD_WALL_STONE || team->basedResources[IRON] < WOOD_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, WOOD_WALL, WOOD_WALL_DEF, WOOD_WALL_WOOD, WOOD_WALL_STONE, WOOD_WALL_IRON);
 			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff);
-		} else if (wallId == STONE_WALL) {
+		}
+		else if (wallId == STONE_WALL) {
 			if (castle->wall->defense >= STONE_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
 			if (team->basedResources[WOOD] < STONE_WALL_WOOD || team->basedResources[STONE] < STONE_WALL_STONE || team->basedResources[IRON] < STONE_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, STONE_WALL, STONE_WALL_DEF, STONE_WALL_WOOD, STONE_WALL_STONE, STONE_WALL_IRON);
 			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff);
-		} else if (wallId == LEGEND_WALL) {
+		}
+		else if (wallId == LEGEND_WALL) {
 			if (castle->wall->defense >= LEGEND_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
 			if (team->basedResources[WOOD] < LEGEND_WALL_WOOD || team->basedResources[STONE] < LEGEND_WALL_STONE || team->basedResources[IRON] < LEGEND_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, LEGEND_WALL, LEGEND_WALL_DEF, LEGEND_WALL_WOOD, LEGEND_WALL_STONE, LEGEND_WALL_IRON);
