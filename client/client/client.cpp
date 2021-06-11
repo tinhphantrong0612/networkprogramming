@@ -14,7 +14,6 @@ int main(int argc, char* argv[])
 	int port_number = atoi(argv[2]);
 	char* ip_address = argv[1];
 
-
 	return 0;
 }
 

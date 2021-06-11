@@ -53,18 +53,6 @@ struct Start_game {
 	char result_code[RESULT_CODE_SIZE + 1];
 };
 
-struct Castle_question {
-	int id;
-	int castle_id;
-	Question questions[MAX_QUESTION];
-};
-
-struct Mine_question {
-	int id;
-	int mine_id;
-	int type;
-	Question questions[MAX_QUESTION];
-};
 
 struct Update_lobby {
 	char result_code[RESULT_CODE_SIZE + 1];
@@ -76,4 +64,44 @@ struct Update_lobby {
 
 	//Extra info
 	int player_number;
+};
+
+struct Update_game {
+	char result_code[RESULT_CODE_SIZE + 1];
+};
+
+struct Update_question : public Update_game {
+	int question_id;
+	char question[QUESTION_LENGTH];
+	char answer1[ANSWER_LENGTH];
+	char answer2[ANSWER_LENGTH];
+	char answer3[ANSWER_LENGTH];
+	char answer4[ANSWER_LENGTH];
+};
+
+struct Update_castle_ques : public Update_question {
+	int castle_id;
+};
+
+struct Update_mine_ques : public Update_question {
+	int mine_id;
+};
+
+struct Castle_info {
+	int occupied_by;	// team_id
+	int wall_type;
+	int wall_def;
+};
+
+struct Mine_info {
+	int wood;
+	int iron;
+	int stone;
+};
+
+struct Update_resource : public Update_game {
+	int request_player_id;
+	int castle_id;
+	Castle_info castle_info[MAX_CASTLE_OF_GAME];
+
 };
