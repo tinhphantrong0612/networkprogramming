@@ -4,6 +4,7 @@
 #include "util.h"
 
 Lobby::Lobby() {
+
 }
 
 Lobby::Lobby(int id, int team_number) : id{ id }, team_number{team_number} {
@@ -18,7 +19,7 @@ Lobby::~Lobby() {
 
 }
 
-
+// All request param is input
 
 void Lobby::create_lobby_request(Socket& socket, int team_number) {
 	// Send create lobby request
@@ -28,12 +29,23 @@ void Lobby::create_lobby_request(Socket& socket, int team_number) {
 
 }
 
-void Lobby::create_lobby_response(char* payload) {
+
+// Input param: payload, username
+Player Lobby::create_lobby_response(char* payload, char* username) {
 	Create_lobby response = create_lobby_data(payload);
 	if (!strcmp(response.result_code, CREATE_SUCCESS)){
 		this->id = response.id;
 		this->team_number = team_number;
+		this->state = WAITING;
+		return Player(0, username, this->id, 0, UNREADY);
 	}
+	else if (!strcmp(response.result_code, CREATE_E_INVALIDTEAM)) {
+		printf("Max team number of a game is 4\n");	// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");	// This line replace by UI notification
+	}
+	return Player();
 }
 
 
@@ -41,6 +53,8 @@ void Lobby::get_lobby_request(Socket& socket) {
 	socket.tcp_send(GET_LOBBY, "");
 }
 
+// Input is payload
+// Output is lobbies and size of the lobby
 void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 	//Receive lobby request
 	Get_lobby response = get_lobby_data(payload);
@@ -49,11 +63,13 @@ void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 		for (int i = 0; i < response.size; i++) {
 			lobbies[i] = response.lobbies[i];
 		}
-
+	}
+	else {
+		printf("Invalid operation\n");	// This line replace by UI notification
 	}
 }
 
-void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id, Player& player) {
+void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id) {
 	char game_id_str[GAME_ID_SIZE + 1];
 	char team_id_str[TEAM_ID_SIZE + 1];
 	_itoa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);
@@ -65,31 +81,49 @@ void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id, Player&
 
 }
 
-Player Lobby::join_lobby_response(char* payload) {
+// Input param: payload, username
+Player Lobby::join_lobby_response(char* payload, char* username) {
 	//Receive lobby request
-	Player player;
 	Join_lobby response = join_lobby_data(payload);
-	if (strcmp(response.result_code, JOIN_SUCCESS)) {
-		player.id = response.ingame_id;
-		player.game_id = response.id;
-		player.team_id = response.team_players[player.game_id];
-		player.state = UNREADY;
+	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
+		this->id = response.id;
+		this->team_number = response.team_number;
+		return Player(response.player_id, username, response.id, response.team_id, UNREADY);
+	}
+	else if (!strcmp(response.result_code, JOIN_E_FORMAT)
+		|| !strcmp(response.result_code, JOIN_E_NOGAME)
+		|| !strcmp(response.result_code, JOIN_E_NOTEAM)) {
+		printf("Wrong game id or team id\n");	// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, JOIN_E_PLAYING) || !strcmp(response.result_code, JOIN_E_FULLTEAM)) {
+		printf("This lobby is already full or ingame\n"); // This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");	 // This line replace by UI notification
 	}
 
-	return player;
-
+	return Player();
 }
 
 void Lobby::start_game_request(Socket& socket) {
 	socket.tcp_send(START_GAME, "");
 }
 
-void Lobby::start_game_response(char* payload) {
+Game Lobby::start_game_response(char* payload) {
 	Start_game response = start_game_data(payload);
 
 	if (!strcmp(response.result_code, START_SUCCESS)) {
-		printf("Gogogogogo");	// Dòng này chuyển UI vào game
+		this->state = INGAME;
+		printf("Gogogogogo");	// This line switch to game UI
+		return Game(this->id, this->team_number, this->players, this->player_size);
 	}
+	else if (!strcmp(response.result_code, START_E_NOTHOST)) {
+		printf("You are not the host");		// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
+	}
+	return Game();
 }
 
 void Lobby::quit_lobby_request(Socket& socket) {
@@ -99,7 +133,13 @@ void Lobby::quit_lobby_request(Socket& socket) {
 void Lobby::quit_lobby_response(char* payload) {
 	Quit_lobby response = quit_lobby_data(payload);
 	if (!strcmp(response.result_code, QUIT_SUCCESS)) {
-		printf("Quit success\n");	//Dòng này thay bằng thông báo UI chuyển sang phòng chờ
+		printf("Quit success\n");	/// This line replace by UI notification and go to waiting room
+	}
+	else if (!strcmp(response.result_code, QUIT_E_READY)) {
+		printf("All players are not ready");	// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
 	}
 }
 

@@ -107,5 +107,11 @@
     <ClCompile Include="team.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="castle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

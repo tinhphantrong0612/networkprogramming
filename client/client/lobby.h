@@ -2,6 +2,7 @@
 #include "stream.h"
 #include "auth.h"
 #include "player.h"
+#include "game.h"
 
 class Lobby {
 public:
@@ -19,14 +20,14 @@ public:
 
 	void create_lobby_request(Socket& socket, int team_number);
 	void get_lobby_request(Socket& socket);
-	void join_lobby_request(Socket& socket, int game_id, int team_id, Player& player);
+	void join_lobby_request(Socket& socket, int game_id, int team_id);
 	void quit_lobby_request(Socket& socket);
 	void start_game_request(Socket& socket);
 
-	void create_lobby_response(char* payload);
+	Player create_lobby_response(char* payload, char* username);
 	void get_lobby_response(char* payload, Lobby* lobbies, int& size);
-	Player join_lobby_response(char* payload);
+	Player join_lobby_response(char* payload, char* username);
 	void quit_lobby_response(char* payload);
-	void start_game_response(char* payload);
+	Game start_game_response(char* payload);
 	void update_lobby_response(char* payload);
 };

@@ -98,11 +98,13 @@
     <ClInclude Include="weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="castle.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="auth.cpp" />
     <ClCompile Include="except.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="lobby.cpp" />
+    <ClCompile Include="mine.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="question.cpp" />
     <ClCompile Include="response.cpp" />

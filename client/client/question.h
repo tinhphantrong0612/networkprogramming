@@ -13,6 +13,4 @@ public:
 	Question();
 	Question(int id, char* question, char* answer1, char* answer2, char* answer3, char* answer4);
 
-	static Question* update_castle_question(char* payload);
-	static Question* update_mine_question(char* payload);
 };

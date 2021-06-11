@@ -117,39 +117,20 @@ Join_lobby join_lobby_data(char* payload) {
 
 	// Get game id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	if (!token) {
-		return result;
-	}
 	result.id = atoi(token);
 
 	// Get team number
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_number = atoi(token);
 
-	// Get team memeber string
+	// Get player id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	int team_players[MAX_NUM_PLAYER];
-	resolve_team_player_str(token, result.team_number, team_players);
+	result.player_id = atoi(token);
 
-	int player_ingame_id;
-	char player_name[USERNAME_LEN];
-	int player_state;
-	int i = 0;
-
-	// Get player detail info
-	while (token) {
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		player_ingame_id = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(player_name, USERNAME_LEN, token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		player_state = atoi(token);
-		result.players[i] = Player{ player_ingame_id, player_name, result.id, team_players[player_ingame_id], player_state };
-
-		i++;
-	}
-	result.player_number = i;
-
+	// Get team_id of the player
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+		
 	return result;
 }
 
@@ -257,108 +238,6 @@ Update_lobby update_lobby_data(char* payload) {
 	}
 
 	result.player_number = i;
-
-	return result;
-}
-
-
-Castle_question castle_question_data(char* payload) {
-	Castle_question result;
-
-	char* next_token;
-	// Get game id
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	result.id = atoi(token);
-
-	// Get castle id
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.castle_id = atoi(token);
-
-	int i = 0;
-	int question_id;
-	char question[QUESTION_LENGTH];
-	char answer1[ANSWER_LENGTH];
-	char answer2[ANSWER_LENGTH];
-	char answer3[ANSWER_LENGTH];
-	char answer4[ANSWER_LENGTH];
-
-	while (token) {
-		// Get question id
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		question_id = atoi(token);
-		// Get question
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(question, QUESTION_LENGTH + 1, token);
-
-		// Get answer
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer1, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer2, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer3, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer4, ANSWER_LENGTH + 1, token);
-
-		result.questions[i] = Question(question_id, question, answer1, answer2, answer3, answer4);
-		i++;
-	}
-
-	return result;
-}
-
-Mine_question mine_question_data(char* payload) {
-	Mine_question result;
-
-	char* next_token;
-	// Get game id
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	result.id = atoi(token);
-
-	// Get mine id
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.mine_id = atoi(token);
-
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-
-	// Get mine type
-	result.type = atoi(token);
-
-	int i = 0;
-	int question_id;
-	char question[QUESTION_LENGTH];
-	char answer1[ANSWER_LENGTH];
-	char answer2[ANSWER_LENGTH];
-	char answer3[ANSWER_LENGTH];
-	char answer4[ANSWER_LENGTH];
-
-	while (token) {
-		// Get question id
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		question_id = atoi(token);
-		// Get question
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(question, QUESTION_LENGTH + 1, token);
-
-		// Get answer
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer1, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer2, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer3, ANSWER_LENGTH + 1, token);
-
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(answer4, ANSWER_LENGTH + 1, token);
-
-		result.questions[i] = Question(question_id, question, answer1, answer2, answer3, answer4);
-		i++;
-	}
 
 	return result;
 }
