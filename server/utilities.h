@@ -24,7 +24,7 @@ void loadAccountMap(char *fileName) {
 
 void addNewAccount(char *fileName, char *username, char *password) {
 	FILE *accountFile;
-	fopen_s(&accountFile, fileName, "w");
+	fopen_s(&accountFile, fileName, "a");
 	fprintf_s(accountFile, "%s %s\n", username, password);
 	fclose(accountFile);
 }
