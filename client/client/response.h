@@ -42,8 +42,8 @@ struct Quit_lobby : public Response  {
 };
 
 struct Start_game : public Response  {
-};
 
+};
 
 struct Update_lobby : public Response  {
 	int game_id;
@@ -78,11 +78,11 @@ struct Update_game : public Response  {
 
 struct Update_question : public Update_game {
 	int question_id;
-	char question[QUESTION_LENGTH];
-	char answer1[ANSWER_LENGTH];
-	char answer2[ANSWER_LENGTH];
-	char answer3[ANSWER_LENGTH];
-	char answer4[ANSWER_LENGTH];
+	char question[QUESTION_LENGTH + 1];
+	char answer1[ANSWER_LENGTH + 1];
+	char answer2[ANSWER_LENGTH + 1];
+	char answer3[ANSWER_LENGTH + 1];
+	char answer4[ANSWER_LENGTH + 1];
 };
 
 struct Update_castle_ques : public Update_question {

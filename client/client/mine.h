@@ -1,5 +1,6 @@
 #pragma once
 #include "constant.h"
+#include "question.h"
 
 class Mine {
 public:
@@ -8,6 +9,8 @@ public:
 	int wood;
 	int stone;
 	int iron;
+	Question question;
+
 	Mine();
 	Mine(int id, int type);
 };

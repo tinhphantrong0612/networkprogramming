@@ -8,7 +8,14 @@ Game::Game(){
 
 }
 
-Game::Game(int id, int team_number, Player* players, int player_number) : id{ id }, team_number{ team_number } {
+
+Game::Game(int id, int team_number, Player* players, int player_number){
+	init_game(id, team_number, players, player_number);
+}
+
+void Game::init_game(int id, int team_number, Player* players, int player_number) {
+	this->id = id;
+	this->team_number = team_number;
 	for (int i = 0; i < this->team_number; i++) {
 		teams[i] = Team(i);
 	}
@@ -50,5 +57,21 @@ void Game::update_timely_response(char* payload) {
 		this->teams[i].wood = response.wood_team[i];
 		this->teams[i].stone = response.stone_team[i];
 		this->teams[i].iron = response.iron_team[i];
+	}
+}
+
+void Game::update_game_response(char* payload, Lobby& lobby) {
+	Update_game response = update_game_data(payload);
+	if (!strcmp(response.result_code, UPDATE_GAME_START)) {
+		this->init_game(lobby.id, lobby.team_number, lobby.players, lobby.player_number);
+		printf("Let's go baby");	// This line switch to game UI
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_CSTQUEST)) {
+		Update_castle_ques res = update_castle_ques_data(payload);
+		this->castles[res.castle_id].question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_CSTQUEST)) {
+		Update_mine_ques res = update_mine_ques_data(payload);
+		this->mines[res.mine_id].question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
 }

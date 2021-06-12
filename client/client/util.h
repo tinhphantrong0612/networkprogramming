@@ -34,4 +34,7 @@ Attack_mine attack_mine_data(char* payload);
 
 
 // Update game
+Update_game update_game_data(char* payload);
+Update_castle_ques update_castle_ques_data(char* payload);
+Update_mine_ques update_mine_ques_data(char* payload);
 Update_timely update_timely_data(char* payload);
