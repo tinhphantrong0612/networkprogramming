@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < GAME_NUM; i++) {
 		games[i] = (GAME)malloc(sizeof(_game));
-		emptyGame(games[i]);
+		createEmptyGame(games[i]);
 	}
 	while (1) {
 		//wait for network events on all socket
@@ -156,8 +156,7 @@ int main(int argc, char* argv[])
 				if (index != nEvents - 1) Swap(players[index], players[nEvents - 1], events[index], events[nEvents - 1]); // Swap last event and socket with the empties
 				nEvents--;
 				continue;
-			}
-			WSAResetEvent(events[index]);
+			};
 			continue;
 		}
 
@@ -332,6 +331,10 @@ int receiveAndProcessPayload(PLAYER player, char *opcode, int length, char *buff
 		printf("Handle attack castle from player [%s:%d]: %s\n", player->IP, player->port, buff);
 		ret = handleAttackCastle(player, opcode, buff);
 	}
+	else if (strcmp(opcode, ATTACK_MINE) == 0) {
+		printf("Handle attack mine from player [%s:%d]: %s\n", player->IP, player->port, buff);
+		ret = handleAttackMine(player, opcode, buff);
+	}
 	else if (strcmp(opcode, BUY_WEAPON) == 0) {
 		printf("Handle buy weapon from player [%s:%d]: %s\n", player->IP, player->port, buff);
 		ret = handleBuyWeapon(player, opcode, buff);
@@ -341,7 +344,8 @@ int receiveAndProcessPayload(PLAYER player, char *opcode, int length, char *buff
 		ret = handleBuyWall(player, opcode, buff);
 	}
 	else {
-		ret = setResponseAndSend(player, "XX", "WHAT", 4, buff);
+		printf("Unknown header from player [%s:%d]: %s\n", player->IP, player->port, buff);
+		ret = setResponseAndSend(player, opcode, 0, 0, buff);
 	}
 	return ret;
 }
@@ -362,7 +366,7 @@ int setResponseAndSend(PLAYER player, char *opcode, char *responsePayload, int r
 	// Calculate payload length
 	buff[3] = responsePayloadLen / 256;
 	buff[4] = responsePayloadLen % 256;
-	strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
+	if (responsePayload != 0) strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
 	printf("Response to player [%s:%d] %s request: %s\n", player->IP, player->port, opcode, buff + 5);
 	return Send(player, buff, 5 + responsePayloadLen, 0);
 }
@@ -614,7 +618,6 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getAttackCastleGameProperties(game, buff + BUFFLEN);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
@@ -643,7 +646,6 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getAttackMineGameProperties(game, buff + BUFFLEN);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getMineQuestion(game->mines[mineId], HARD_QUESTION_FILE, resourceType, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
@@ -706,6 +708,7 @@ void sendNewCastleQuestion(GAME game, int castleId, char *buff) {
 	strcpy_s(buff + BUFFLEN, BUFF_SIZE, UPDATE_GAME_CSTQUEST);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
 	setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
@@ -725,6 +728,7 @@ void sendNewMineQuestion(GAME game, int mineId, int type, char *buff) {
 	int temp = BUFFLEN;
 	buff[BUFFLEN] = mineId * 3 + type + 48;
 	buff[temp + 1] = 0;
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, type, buff + BUFFLEN);
 	setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 	sendToAllPlayersInGameRoom(game, BUFFLEN, buff);
