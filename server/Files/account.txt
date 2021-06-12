@@ -1,0 +1,6 @@
+tinhpt 1
+tungbt 1
+longbh 1
+aaa 1
+a 1
+b 1
