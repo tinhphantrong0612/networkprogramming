@@ -26,3 +26,5 @@ void resolve_team_player_str(char* string, int team_number, int team_player[]);
 
 Update_lobby update_lobby_data(char* payload);
 
+// Update game
+Update_timely update_timely_data(char* payload);

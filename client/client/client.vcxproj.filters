@@ -113,5 +113,8 @@
     <ClCompile Include="castle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
