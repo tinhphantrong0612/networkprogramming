@@ -2,7 +2,6 @@
 #include "game.h"
 #include "response.h"
 #include "util.h"
-#include "wall.h"
 
 Game::Game(){
 
