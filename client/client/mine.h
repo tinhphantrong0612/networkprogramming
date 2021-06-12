@@ -1,12 +1,16 @@
 #pragma once
 #include "constant.h"
+#include "question.h"
 
 class Mine {
 public:
 	int id;
-	int game_id;
 	int type;
-	int amount;
+	int wood;
+	int stone;
+	int iron;
+	Question question;
+
 	Mine();
-	Mine(int id, int game_id, int type, int amount);
+	Mine(int id, int type);
 };

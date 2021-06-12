@@ -2,6 +2,7 @@
 
 #include "team.h"
 #include "mine.h"
+#include "lobby.h"
 
 class Game {
 public:
@@ -14,4 +15,7 @@ public:
 
 	Game();
 	Game(int id, int team_number, Player* players, int player_size);
+	void init_game(int id, int team_number, Player* players, int player_number);
+	void update_timely_response(char* payload);
+	void update_game_response(char * payload, Lobby& lobby);
 };

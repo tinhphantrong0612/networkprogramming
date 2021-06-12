@@ -109,13 +109,12 @@ void Lobby::start_game_request(Socket& socket) {
 	socket.tcp_send(START_GAME, "");
 }
 
-Game Lobby::start_game_response(char* payload) {
+void Lobby::start_game_response(char* payload) {
 	Start_game response = start_game_data(payload);
 
 	if (!strcmp(response.result_code, START_SUCCESS)) {
 		this->state = INGAME;
-		printf("Gogogogogo");	// This line switch to game UI
-		return Game(this->id, this->team_number, this->players, this->player_size);
+		printf("Wating to create game"); // This line replace by UI notification
 	}
 	else if (!strcmp(response.result_code, START_E_NOTHOST)) {
 		printf("You are not the host");		// This line replace by UI notification
@@ -123,7 +122,6 @@ Game Lobby::start_game_response(char* payload) {
 	else {
 		printf("Invalid operation\n");		// This line replace by UI notification
 	}
-	return Game();
 }
 
 void Lobby::quit_lobby_request(Socket& socket) {
@@ -147,7 +145,7 @@ void Lobby::update_lobby_response(char* payload) {
 	Update_lobby response = update_lobby_data(payload);
 	this->id = response.game_id; // Response chua co game_id
 	this->team_number = response.team_number;
-	this->player_size = response.player_number;
+	this->player_number = response.player_number;
 	if (!strcmp(response.result_code, UPDATE_LOBBY_JOIN)) {
 		this->state = WAITING;
 		// Update team and player

@@ -55,6 +55,7 @@ void attack_mine_payload(char* mine_id, char* type, char* question_id, char* ans
 	strcat_s(payload, PAYLOAD_SIZE + 1, answer_id);
 }
 
+
 Auth auth_data(char* payload) {
 	Auth result;
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
@@ -79,7 +80,7 @@ Get_lobby get_lobby_data(char* payload) {
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
 	int id;
 	int team_number;
-	char team_players[TEAM_PLAYER_NUM_STR];
+	char team_players[TEAM_PLAYER_NUM_STR + 1];
 
 	// Get list lobby 
 	int i = 0;
@@ -94,7 +95,7 @@ Get_lobby get_lobby_data(char* payload) {
 
 		// Get team player
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(team_players, TEAM_PLAYER_NUM_STR, token);
+		strcpy_s(team_players, TEAM_PLAYER_NUM_STR + 1, token);
 
 		Lobby lobby{ id, team_number };
 		resolve_team_player_str(team_players, lobby.team_number, lobby.team_players);
@@ -137,51 +138,56 @@ Join_lobby join_lobby_data(char* payload) {
 
 Change_team change_team_data(char* payload) {
 	Change_team result;
-	char *next_token;
-
-	//Get result code
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
 
 Ready ready_data(char* payload) {
 	Ready result;
-	char *next_token;
-
-	//Get result code
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
 
 Unready unready_data(char* payload) {
 	Unready result;
-	char *next_token;
-
-	//Get result code
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
 
 Quit_lobby quit_lobby_data(char* payload) {
 	Quit_lobby result;
-	char *next_token;
-
-	//Get result code
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
 
 Start_game start_game_data(char* payload) {
 	Start_game result;
-	char *next_token;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
 
-	//Get result code
-	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+Buy_weapon buy_weapon_data(char* payload) {
+	Buy_weapon result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Buy_wall buy_wall_data(char* payload) {
+	Buy_wall result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Attack_castle attack_castle_data(char* payload) {
+	Attack_castle result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Attack_mine attack_mine_data(char* payload) {
+	Attack_mine result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
 
@@ -221,7 +227,7 @@ Update_lobby update_lobby_data(char* payload) {
 	resolve_team_player_str(token, result.team_number, result.team_players);
 
 	int player_ingame_id;
-	char player_name[USERNAME_LEN];
+	char player_name[USERNAME_LEN + 1];
 	int player_state;
 	int i = 0;
 
@@ -230,7 +236,7 @@ Update_lobby update_lobby_data(char* payload) {
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 		player_ingame_id = atoi(token);
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		strcpy_s(player_name, USERNAME_LEN, token);
+		strcpy_s(player_name, USERNAME_LEN + 1, token);
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 		player_state = atoi(token);
 		result.players[i] = Player{ player_ingame_id, player_name, result.game_id, result.team_players[player_ingame_id], player_state };
@@ -240,4 +246,123 @@ Update_lobby update_lobby_data(char* payload) {
 	result.player_number = i;
 
 	return result;
+}
+
+Update_game update_game_data(char* payload) {
+	Update_game result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Update_castle_ques update_castle_ques_data(char* payload) {
+	Update_castle_ques result;
+	char *next_token;
+
+	//Get result code
+	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get castle_id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.castle_id = atoi(token);
+
+	// Get question_id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.question_id = atoi(token);
+
+	// Get question
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.question, RESULT_CODE_SIZE + 1, token);
+
+	// Get answer
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer1, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer2, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer3, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer4, RESULT_CODE_SIZE + 1, token);
+
+	return result;
+}
+
+Update_mine_ques update_mine_ques_data(char* payload) {
+	Update_mine_ques result;
+	char *next_token;
+
+	//Get result code
+	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get mine_id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.mine_id = atoi(token);
+
+	// Get question_id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.question_id = atoi(token);
+
+	// Get question
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.question, RESULT_CODE_SIZE + 1, token);
+
+	// Get answer
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer1, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer2, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer3, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer4, RESULT_CODE_SIZE + 1, token);
+
+	return result;
+}
+
+Update_timely update_timely_data(char* payload) {
+	Update_timely result;
+	char* next_token;
+	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+
+	// Get castle info
+	for (int i = 0; i < MAX_CASTLE_OF_GAME; i++) {
+		result.occupied[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.wall_type[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.wall_def[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	}
+
+	// Get mine info
+	for (int i = 0; i < MAX_MINE_OF_GAME; i++) {
+		result.wood_mine[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.stone_mine[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.iron_mine[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	}
+
+	// Get team info
+	for (int i = 0; i < MAX_TEAM_OF_GAME; i++) {
+		result.weapon_type[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.weapon_atk[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.gold_team[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.wood_team[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.stone_team[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		result.iron_team[i] = atoi(token);
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		if (!token)
+			break;
+	}
+
+	return result;
+
 }
