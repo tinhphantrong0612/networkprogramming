@@ -1,8 +1,6 @@
 ﻿#include "stdafx.h"
 #include "util.h"
 #include "auth.h"
-#include "except.h"
-
 
 User::User() : state{ USER_NONAUTH } {
 	strcpy_s(this->username, USERNAME_LEN, DEFAULT_USRNAME);
@@ -22,7 +20,7 @@ void User::login_request(Socket& socket, char* username, char* password) {
 
 void User::signup_request(Socket& socket, char* username, char* password1, char* password2) {
 	if (strcmp(password1, password2)) {
-		throw ValidationError("The confirm password doesn't match");	// This line replace by UI notification
+		printf("The confirm password doesn't match");	// This line replace by UI notification
 	}
 	// Send signup request
 	char payload[PAYLOAD_SIZE + 1] = "";

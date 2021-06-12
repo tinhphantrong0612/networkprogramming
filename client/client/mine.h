@@ -5,7 +5,9 @@ class Mine {
 public:
 	int id;
 	int type;
-	int amount;
+	int wood;
+	int stone;
+	int iron;
 	Mine();
-	Mine(int id, int type, int amount);
+	Mine(int id, int type);
 };

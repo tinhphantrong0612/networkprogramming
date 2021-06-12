@@ -5,53 +5,47 @@
 #include "player.h"
 #include "question.h"
 
-struct Auth {
+struct Response {
 	char result_code[RESULT_CODE_SIZE + 1];
 };
 
-struct Create_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Auth: public Response {
+};
+
+struct Create_lobby : public Response  {
 	int id;
 };
 
-struct Get_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Get_lobby : public Response {
 	Lobby lobbies[MAX_LOBBY];
 	int size;
 };
 
-struct Join_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Join_lobby : public Response  {
 	int id;
 	int player_id;
 	int team_number;
 	int team_id;
 };
 
-struct Ready{
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Ready : public Response {
 };
 
-struct Unready : public Join_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Unready : public Response{
 };
 
-struct Change_team : public Join_lobby{
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Change_team : public Response {
 };
 
 
-struct Quit_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Quit_lobby : public Response  {
 };
 
-struct Start_game {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Start_game : public Response  {
 };
 
 
-struct Update_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Update_lobby : public Response  {
 	int game_id;
 	int team_number;
 	int request_player_id;
@@ -62,8 +56,24 @@ struct Update_lobby {
 	int player_number;
 };
 
-struct Update_game {
-	char result_code[RESULT_CODE_SIZE + 1];
+
+struct Buy_wall : public Response{
+
+};
+
+struct Buy_weapon : public Response {
+
+};
+
+struct Attack_castle : public Response {
+
+};
+
+struct Attack_mine : public Response {
+
+};
+
+struct Update_game : public Response  {
 };
 
 struct Update_question : public Update_game {

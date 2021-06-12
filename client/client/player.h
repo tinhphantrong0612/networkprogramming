@@ -25,5 +25,8 @@ public:
 	void ready_response(char* payload);
 	void unready_response(char* payload);
 	void change_team_response(char* payload, int& team_id);
-
+	void attack_castle_reponse(char* payload);
+	void attack_mine_response(char* payload);
+	void buy_weapon_response(char* payload);
+	void buy_wall_response(char* payload);
 };
