@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 			//Release socket and event if an error occurs
 			if (ret <= 0) {
 				closesocket(players[index]->socket);
-				clearPlayerInfo(players[index], accountMap);
+				clearPlayerInfo(players[index], buff);
 				WSACloseEvent(events[index]);
 				if (index != nEvents - 1) Swap(players[index], players[nEvents - 1], events[index], events[nEvents - 1]); // Swap last event and socket with the empties
 				nEvents--;
@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
 			}
 			//Release socket and event
 			closesocket(players[index]->socket);
-			clearPlayerInfo(players[index], accountMap);
+			clearPlayerInfo(players[index], buff);
 			WSACloseEvent(events[index]);
 			if (index != nEvents - 1) Swap(players[index], players[nEvents - 1], events[index], events[nEvents - 1]);
 			nEvents--;
@@ -562,11 +562,15 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#"); // 8 bytes
 	_itoa_s(game->teamNum, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(requestPlayer, buff + BUFFLEN, BUFF_SIZE, 10);
+	int temp = BUFFLEN;
+	buff[BUFFLEN] = requestPlayer + 48;
+	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
+			temp = BUFFLEN;
 			_itoa_s(i, buff + BUFFLEN, BUFF_SIZE, 10);
+			buff[temp + 1] = 0;
 			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			strcpy_s(buff + BUFFLEN, BUFF_SIZE, game->players[i]->account);
 			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -603,7 +607,9 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(playerIndex, buff + BUFFLEN, BUFF_SIZE, 10);
+	int temp = BUFFLEN;
+	buff[BUFFLEN] = playerIndex + 48;
+	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -628,9 +634,11 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(playerIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	int temp = BUFFLEN;
+	buff[BUFFLEN] = playerIndex + 48;
+	buff[temp + 1] = 0;
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	temp = BUFFLEN;
 	buff[BUFFLEN] = mineId * 3 + resourceType + 48;
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -652,7 +660,9 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(playerIndex, buff + BUFFLEN, BUFF_SIZE, 10);
+	int temp = BUFFLEN;
+	buff[BUFFLEN] = playerIndex + 48;
+	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(weaponId, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -672,9 +682,11 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + 5, BUFF_SIZE, responseCode);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(playerIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	int temp = BUFFLEN;
+	buff[BUFFLEN] = playerIndex + 48;
+	buff[temp + 1] = 0;
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	temp = BUFFLEN;
 	buff[BUFFLEN] = castleId * 5 + wallId + 48;
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -730,7 +742,7 @@ void sendToAllPlayersInGameRoom(GAME game, int responseLen, char *buff) {
 			if (Send(game->players[i], buff, responseLen, 0) == SOCKET_ERROR) {
 				PLAYER otherPlayer = game->players[i];
 				closesocket(otherPlayer->socket);
-				clearPlayerInfo(otherPlayer, accountMap);
+				clearPlayerInfo(otherPlayer, buff);
 				WSACloseEvent(events[otherPlayer->index]);
 				if (otherPlayer->index != nEvents - 1) Swap(otherPlayer, players[nEvents - 1], events[game->players[i]->index], events[nEvents - 1]); // Swap last event and socket with the empties
 				nEvents--;
@@ -756,18 +768,19 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 		sharp[0] = 0;
 		long long gameId = _atoi64(buff);
 		int team = atoi(sharp + 1);
-		int i, emptyPlaceInTeam, emptyPlaceInGame, countPlayer = 0;
+		int i, emptyPlaceInTeam, emptyPlaceInGame = -1, countPlayer = 0;
 		GAME game = NULL;
 		for (i = 0; i < GAME_NUM; i++) {
 			if (games[i]->id == gameId) {
 				game = games[i];
+				break;
 			}
 		}
 		if (i == GAME_NUM || game == NULL) return setResponseAndSend(player, opcode, JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
 		if (game->gameState != WAITING) return setResponseAndSend(player, opcode, JOIN_E_PLAYING, strlen(JOIN_E_PLAYING), buff);
 		for (i = 0; i < PLAYER_NUM; i++) {
 			if (game->players[i] == NULL) {
-				emptyPlaceInGame = i;
+				if (emptyPlaceInGame == -1) emptyPlaceInGame = i;
 			}
 			else countPlayer++;
 		}
@@ -1180,4 +1193,32 @@ int handleBuyWall(PLAYER player, char *opcode, char *buff) {
 		}
 		return 1;
 	}
+}
+
+/* The updatePlayerInfo function clear a player info
+* @param	player			[IN/OUT]	Player
+* @return	nothing
+*/
+void clearPlayerInfo(PLAYER player, char *buff) {
+	// Remove player from game and team
+	if (player->game != NULL) {
+		GAME game = player->game;
+		int i;
+		game->players[player->gameIndex] = NULL;
+		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
+		for (i = 0; i < PLAYER_NUM; i++) {
+			if (game->players[i] != NULL) {
+				break;
+			}
+		}
+		if (i == PLAYER_NUM) emptyGame(game);
+		else {
+			if (player->gameIndex == game->host) game->host = i;
+			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
+		}
+	}
+	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
+	if (it != accountMap.end()) it->second.second = NOT_AUTHORIZED;
+	updatePlayerInfo(player, 0, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
+	return;
 }

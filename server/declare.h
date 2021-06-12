@@ -18,6 +18,7 @@ void			loadAccountMap(char *);
 void			addNewAccount(char *, char *, char *);
 void			Swap(PLAYER, PLAYER, WSAEVENT, WSAEVENT);
 void			sendToAllPlayersInGameRoom(GAME, int, char *);
+void			clearPlayerInfo(PLAYER, char *);
 int				Communicate(PLAYER, char *);
 int				Send(PLAYER, char *, int, int);
 int				Receive(PLAYER, char *, int, int);
