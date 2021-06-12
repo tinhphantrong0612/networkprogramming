@@ -39,6 +39,9 @@
 #define STONE					1
 #define IRON					2
 
+// Universal
+#define UNKNOWN_HEADER			"000"
+
 // Outgame - Request header
 #define LOGIN					"100"
 #define SIGNUP					"101"
