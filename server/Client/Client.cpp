@@ -41,7 +41,7 @@ unsigned __stdcall receiveThread(void * param) {
 				}
 			}
 			buff[received] = 0;
-			printf("Response: %s\n", buff);
+			printf("Response: %s\nChoose: ", buff);
 		}
 	}
 }
@@ -86,24 +86,34 @@ int main(int argc, char *argv[])
 
 	// Step 5: Communicate with server
 	char *buff = (char *)malloc(BUFF_SIZE);
-	int ret, msgLen, sent, received, func;
-	_beginthreadex(NULL, NULL, &receiveThread, (void*) client, 0, 0);
+	int ret, msgLen, sent, func;
+	_beginthreadex(NULL, NULL, &receiveThread, (void*)client, 0, 0);
 
 	while (1) {
 		// Send message
-		printf("Choose function:\n1. Login\n2. Sign Up\n3. Log out\n4. Create Game\n5. Get Lobby\n6. Join Game\nYou choose: ");
+		printf("Choose function:\n1. Login\t2. Sign Up\t3. Log out\n4. Create Game\t5. Get Lobby\t6. Join Game\n7. Ready\t8. Unready\t9. Start Game\n10. Quit\t11. Change team\t12. Attack Castle\n13. Attack Mine\t14. Buy weapon\t15. Buy wall\nYou choose: ");
 		gets_s(buff, BUFF_SIZE);
-		if (buff[0] == 49) strcpy_s(buff, BUFF_SIZE, "100");
-		else if (buff[0] == 50) strcpy_s(buff, BUFF_SIZE, "101");
-		else if (buff[0] == 51) strcpy_s(buff, BUFF_SIZE, "102");
-		else if (buff[0] == 52) strcpy_s(buff, BUFF_SIZE, "103");
-		else if (buff[0] == 53) strcpy_s(buff, BUFF_SIZE, "104");
-		else if (buff[0] == 54) strcpy_s(buff, BUFF_SIZE, "105");
+		func = atoi(buff);
+		if (func == 1) strcpy_s(buff, BUFF_SIZE, "100");
+		else if (func == 2) strcpy_s(buff, BUFF_SIZE, "101");
+		else if (func == 3) strcpy_s(buff, BUFF_SIZE, "102");
+		else if (func == 4) strcpy_s(buff, BUFF_SIZE, "103");
+		else if (func == 5) strcpy_s(buff, BUFF_SIZE, "104");
+		else if (func == 6) strcpy_s(buff, BUFF_SIZE, "105");
+		else if (func == 7) strcpy_s(buff, BUFF_SIZE, "200");
+		else if (func == 8) strcpy_s(buff, BUFF_SIZE, "201");
+		else if (func == 9) strcpy_s(buff, BUFF_SIZE, "202");
+		else if (func == 10) strcpy_s(buff, BUFF_SIZE, "203");
+		else if (func == 11) strcpy_s(buff, BUFF_SIZE, "204");
+		else if (func == 12) strcpy_s(buff, BUFF_SIZE, "300");
+		else if (func == 13) strcpy_s(buff, BUFF_SIZE, "301");
+		else if (func == 14) strcpy_s(buff, BUFF_SIZE, "302");
+		else if (func == 15) strcpy_s(buff, BUFF_SIZE, "303");
 		printf("Send to server: ");
 		gets_s(buff + 5, BUFF_SIZE);
-
-		buff[3] = strlen(buff + 5) / 256;
-		buff[4] = strlen(buff + 5) % 256;
+		msgLen = strlen(buff + 5);
+		buff[3] = msgLen / 256;
+		buff[4] = msgLen % 256;
 
 		msgLen = strlen(buff + 5) + 5; // number of bytes left after send
 		sent = 0; // Number of sent bytes
