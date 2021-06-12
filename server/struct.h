@@ -94,6 +94,8 @@ void updatePlayerInfo(PLAYER player, SOCKET socket, char *IP, int port, int team
 * @return	buff
 */
 void calculateACastle(CASTLE castle, char *buff) {
+	_itoa_s(castle->index, buff + strlen(buff), BUFF_SIZE, 10);
+	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(castle->occupiedBy, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(castle->wall->type, buff + strlen(buff), BUFF_SIZE, 10);
@@ -108,6 +110,8 @@ void calculateACastle(CASTLE castle, char *buff) {
 * @return	buff
 */
 void calculateAMine(MINE mine, char *buff) {
+	_itoa_s(mine->index, buff + strlen(buff), BUFF_SIZE, 10);
+	strcat_s(buff, BUFF_SIZE, "#");
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		_itoa_s(mine->resources[i], buff + strlen(buff), BUFF_SIZE, 10);
 		strcat_s(buff, BUFF_SIZE, "#");
@@ -217,7 +221,7 @@ void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	}
 	fgets(buff, BUFF_SIZE, file); // Get question
 	castle->answer = buff[0] - 48; // Get answer
-	strcpy_s(buff, BUFF_SIZE, buff + 2);
+	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
 
 void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
@@ -232,7 +236,7 @@ void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	}
 	fgets(buff, BUFF_SIZE, file); // Get question
 	mine->answer[type] = buff[0] - 48; // Get answer
-	strcpy_s(buff, BUFF_SIZE, buff + 2);
+	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
 
 void createEmptyGame(GAME game) {
