@@ -88,34 +88,6 @@ void updatePlayerInfo(PLAYER player, SOCKET socket, char *IP, int port, int team
 	else strcpy_s(player->account, ACCOUNT_SIZE, account);
 }
 
-/* The updatePlayerInfo function clear a player info
-* @param	player			[IN/OUT]	Player
-* @return	nothing
-*/
-void clearPlayerInfo(PLAYER player, map<string, pair<string, int>> accountMap) {
-	// Remove player from game and team
-	if (player->game != NULL) {
-		GAME game = player->game;
-		int i;
-		game->players[player->gameIndex] = NULL;
-		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
-		for (i = 0; i < PLAYER_NUM; i++) {
-			if (game->players[i] != NULL) {
-				break;
-			}
-		}
-		if (i == PLAYER_NUM) emptyGame(game);
-		else {
-			if (player->gameIndex == game->host) game->host = i;
-			char buff[BUFF_SIZE];
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
-		}
-	}
-	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
-	if (it != accountMap.end())it->second.second = NOT_AUTHORIZED;
-	updatePlayerInfo(player, 0, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
-}
-
 /* The calculateACastle function calculate a castle's properties into a buffer
 * @param	castle			[IN]		Castle
 * @param	buff			[IN/OUT]	Calculate result
