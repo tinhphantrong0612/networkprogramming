@@ -5,15 +5,22 @@ Game::Game(){
 
 }
 
-Game::Game(Lobby& lobby) {
-	this->id = lobby.id;
-	this->state = INGAME;
-	this->team_number = lobby.team_number;
+Game::Game(int id, int team_number, Player* players, int player_number) : id{ id }, team_number{ team_number } {
 	for (int i = 0; i < this->team_number; i++) {
-		team[i] = Team(i);
+		teams[i] = Team(i);
 	}
-	for (int i = 0; i < lobby.player_size; i++) {
-		int team_id = lobby.players[i].team_id;
-		team[team_id].add_player(lobby.players[i]);
+
+	for (int i = 0; i < player_number; i++) {
+		int team_id = players[i].team_id;
+		teams[team_id].add_player(players[i]);
+	}
+
+	for (int i = 0; i < MAX_MINE_OF_GAME; i++) {
+		int type = i / 2;
+		mines[i] = Mine(i, this->id, type, 0);
+	}
+
+	for (int i = 0; i < MAX_CASTLE_OF_GAME; i++) {
+		castles[i] = Castle(i, this->id);
 	}
 }

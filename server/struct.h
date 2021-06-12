@@ -163,7 +163,7 @@ void calculateATeam(TEAM team, char *buff) {
 /* The calculateGame function calculate a game's info into a buffer
 * @param	game			[IN]		Game
 * @param	buff			[IN/OUT]	Calculate result
-* @return	buff
+* @return	nothing
 */
 void getGameProperties(GAME game, char *buff) {
 	// Start with three castles
@@ -175,6 +175,59 @@ void getGameProperties(GAME game, char *buff) {
 		calculateAMine(game->mines[i], buff + strlen(buff));
 	}
 	// Then each team
+	for (int i = 0; i < TEAM_NUM; i++) {
+		calculateATeam(game->teams[i], buff + +strlen(buff));
+	}
+}
+
+/* The getAttackCastleGameProperties function calculate attack castle info to send back
+* @param	game			[IN]		Game
+* @param	buff			[IN/OUT]	Calculate result
+* @return	nothing
+*/
+void getAttackCastleGameProperties(GAME game, char *buff) {
+	for (int i = 0; i < CASTLE_NUM; i++) {
+		calculateACastle(game->castles[i], buff + strlen(buff));
+	}
+	for (int i = 0; i < TEAM_NUM; i++) {
+		calculateATeam(game->teams[i], buff + +strlen(buff));
+	}
+}
+
+/* The getAttackMineGameProperties function calculate attack mine info to send back
+* @param	game			[IN]		Game
+* @param	buff			[IN/OUT]	Calculate result
+* @return	nothing
+*/
+void getAttackMineGameProperties(GAME game, char *buff) {
+	for (int i = 0; i < MINE_NUM; i++) {
+		calculateAMine(game->mines[i], buff + strlen(buff));
+	}
+	for (int i = 0; i < TEAM_NUM; i++) {
+		calculateATeam(game->teams[i], buff + +strlen(buff));
+	}
+}
+
+/* The getBuyWeaponGameProperties function calculate buy weapon info to send back
+* @param	game			[IN]		Game
+* @param	buff			[IN/OUT]	Calculate result
+* @return	nothing
+*/
+void getBuyWeaponGameProperties(GAME game, char *buff) {
+	for (int i = 0; i < TEAM_NUM; i++) {
+		calculateATeam(game->teams[i], buff + +strlen(buff));
+	}
+}
+
+/* The getBuyWallGameProperties function calculate buy weapon info to send back
+* @param	game			[IN]		Game
+* @param	buff			[IN/OUT]	Calculate result
+* @return	nothing
+*/
+void getBuyWallGameProperties(GAME game, char *buff) {
+	for (int i = 0; i < CASTLE_NUM; i++) {
+		calculateACastle(game->castles[i], buff + strlen(buff));
+	}
 	for (int i = 0; i < TEAM_NUM; i++) {
 		calculateATeam(game->teams[i], buff + +strlen(buff));
 	}
@@ -262,7 +315,7 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 		game->castles[i]->wall = (WALL)malloc(sizeof(_wall));
 		game->castles[i]->wall->type = NO_WALL;
 		game->castles[i]->wall->defense = NO_WALL_DEF;
-		game->castles[i]->occupiedBy = -1;
+		game->castles[i]->occupiedBy = 4;
 	}
 	for (int i = 0; i < MINE_NUM; i++) {
 		game->mines[i] = (MINE)malloc(sizeof(_mine));

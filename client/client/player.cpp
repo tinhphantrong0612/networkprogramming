@@ -1,16 +1,17 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <stdlib.h>
 #include <string.h>
 #include "player.h"
 #include "stream.h"
 #include "util.h"
 
-Player::Player() {
+Player::Player() : id{ 0 }, game_id{ 0 }, team_id{ 0 }, state{ UNREADY } {
+	strcpy_s(username, USERNAME_LEN, DEFAULT_USRNAME);
 
 };
 
 
-Player::Player(int id, char* username, int game_id, int team_id, int state) : id{ id }, game_id{game_id}, team_id{ team_id }, state{ state } {
+Player::Player(int id, char* username, int game_id, int team_id, int state) : id{ id }, game_id{ game_id }, team_id{ team_id }, state{ state } {
 	strcpy_s(this->username, USERNAME_LEN, username);
 }
 
@@ -24,8 +25,14 @@ void Player::ready_request(Socket& socket) {
 
 void Player::ready_response(char* payload) {
 	Ready response = ready_data(payload);
-	if (strcmp(response.result_code, READY_SUCCESS)) {
+	if (!strcmp(response.result_code, READY_SUCCESS)) {
 		this->state = READY;
+	}
+	else if (!strcmp(response.result_code, READY_E_ALREADY)) {
+		printf("You're already ready");		// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
 	}
 
 }
@@ -37,11 +44,16 @@ void Player::unready_request(Socket& socket) {
 void Player::unready_response(char* payload) {
 	Player player;
 	Unready response = unready_data(payload);
-	if (strcmp(response.result_code, UNREADY_SUCCESS)) {
+	if (!strcmp(response.result_code, UNREADY_SUCCESS)) {
 		player.state = UNREADY;
 	}
+	else if (!strcmp(response.result_code, READY_E_ALREADY)) {
+		printf("You're already ready");		// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
+	}
 }
-
 
 void Player::change_team_request(Socket& socket, int team_id) {
 	// Send team id
@@ -50,12 +62,27 @@ void Player::change_team_request(Socket& socket, int team_id) {
 	socket.tcp_send(CHANGE_TEAM, team_id_str);
 }
 
-
+// Input param: payload, team_id
 void Player::change_team_response(char* payload, int& team_id) {
 	Player player;
 	Change_team response = change_team_data(payload);
-	if (strcmp(response.result_code, JOIN_SUCCESS)) {
+	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
 		player.team_id = team_id;
+	}
+	else if (!strcmp(response.result_code, CHANGE_E_CURRENTTEAM)) {
+		printf("You're already at this team");		// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, CHANGE_E_FULL)) {
+		printf("The team you want to change is full");		// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, CHANGE_E_READY)) {
+		printf("You can't change team while you're ready");		// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, CHANGE_E_UNKNOWNTEAM)) {
+		printf("Invalid team");		// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
 	}
 }
 

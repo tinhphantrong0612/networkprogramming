@@ -181,6 +181,7 @@ Result code:
 ``` C++
 10400: LOBBY_SUCCESS
 10401: LOBBY_E_NOTAUTH
+10402: LOBBY_E_INGAME
 ```
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
@@ -206,10 +207,6 @@ Result code:
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
 402|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
-```
-`JOIN_E_NOGAME`, `JOIN_E_FULLGAME`, `JOIN_E_NOTEAM`, `JOIN_E_FULLTEAM` and `JOIN_E_PLAYING` response will have lobby list attach to update lobby list  
-```c++
-105|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
 ```
 ### Ready
 ```c++
@@ -309,15 +306,14 @@ Whenever a player changes team successfully, server sends update to all players 
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-401|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<wood>#<stone>#<iron>]*6#[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+401|strlen(data)|UPDATE_GAME_ATK_CST_W/R#<request_player_ingame_id>#<castle_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `castle_id` is target castle, 0 to 2, subtract 48 when receive  
 `[<occupied_by>#<wall_type>#<wall_def>]*3` is three castle's info  
-	- `occupied_by` is team that occupied the castle, -1 to 3, with -1 is unoccupied, subtract 48 when receive  
+	- `occupied_by` is team that occupied the castle, 0 to 4, 4 is unoccupied, subtract 48 when receive  
 	- `wall_type` is type of wall at that castle, 0 to 4, subtract 48 when receive  
 	- `wall_def` is defense of the wall, atoi when receive  
-`[<wood>#<stone>#<iron>]*6` is 6 mine's info, atoi when receive  
 `[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4` is 4 castle info  
 	- `weapon_id` is similar to `wall_type`
 	- `weapon_atk` is similar to `wall_def`
@@ -340,14 +336,10 @@ Result code:
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-401|strlen(data)|UPDATE_GAME_ATK_MINE_W/R#<request_player_ingame_id>#<mine_type_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
+401|strlen(data)|UPDATE_GAME_ATK_MINE_W/R#<request_player_ingame_id>#<mine_type_id>#[<wood>#<stone>#<iron>]*6#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
-`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron, when receive need to subtract 48
-`[<occupied_by>#<wall_type>#<wall_def>]*3` is three castle's info  
-	- `occupied_by` is team that occupied the castle, -1 to 3, with -1 is unoccupied, subtract 48 when receive  
-	- `wall_type` is type of wall at that castle, 0 to 4, subtract 48 when receive  
-	- `wall_def` is defense of the wall, atoi when receive  
+`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron, when receive need to subtract 48  
 `[<wood>#<stone>#<iron>]*6` is 6 mine's info, atoi when receive  
 `[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4` is 4 castle info  
 	- `weapon_id` is similar to `wall_type`
@@ -367,15 +359,14 @@ Whenever a player answers a castle question, server sends result and new questio
 ```
 Whenever a player answers a castle question, server sends result and new question to all players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<weapon_id>#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive    
 `weapon_id` is target castle, 0 to 3, subtract 48 when receive  
 `[<occupied_by>#<wall_type>#<wall_def>]*3` is three castle's info  
-	- `occupied_by` is team that occupied the castle, -1 to 3, with -1 is unoccupied, subtract 48 when receive   
+	- `occupied_by` is team that occupied the castle, 0 to 4, with 4 is unoccupied, subtract 48 when receive   
 	- `wall_type` is type of wall at that castle, 0 to 4, subtract 48 when receive  
 	- `wall_def` is defense of the wall, atoi when receive  
-`[<wood>#<stone>#<iron>]*6` is 6 mine's info, atoi when receive  
 `[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4` is 4 castle info  
 	- `weapon_id` is similar to `wall_type`
 	- `weapon_atk` is similar to `wall_def`
@@ -394,15 +385,14 @@ Result code:
 ```
 Whenever a player answers a castle question, server sends result and new question to players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
+401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_wall_id>#[<occupied_by>#<wall_type>#<wall_def>]*3#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*4
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4, when receive need to subtract 48
 `[<occupied_by>#<wall_type>#<wall_def>]*3` is three castle's info  
-	- `occupied_by` is team that occupied the castle, -1 to 3, with -1 is unoccupied, subtract 48 when receive  
+	- `occupied_by` is team that occupied the castle, 0 to 4, with 4 is unoccupied, subtract 48 when receive  
 	- `wall_type` is type of wall at that castle, 0 to 4, subtract 48 when receive  
 	- `wall_def` is defense of the wall, atoi when receive  
-`[<wood>#<stone>#<iron>]*6` is 6 mine's info, atoi when receive  
 `[<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>]*4` is 4 castle info  
 	- `weapon_id` is similar to `wall_type`
 	- `weapon_atk` is similar to `wall_def`
@@ -421,7 +411,7 @@ Result code:
 400|strlen(data)|[<occupied_by>#<wall_type>#<wall_def>]*#[<wood>#<stone>#<iron>]*#[<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>]*
 ```
 `[<occupied_by>#<wall_type>#<wall_def>]*3` is three castle's info  
-	- `occupied_by` is team that occupied the castle, -1 to 3, with -1 is unoccupied, subtract 48 when receive  
+	- `occupied_by` is team that occupied the castle, 0 to 4, with 4 is unoccupied, subtract 48 when receive  
 	- `wall_type` is type of wall at that castle, 0 to 4, subtract 48 when receive  
 	- `wall_def` is defense of the wall, atoi when receive  
 `[<wood>#<stone>#<iron>]*6` is 6 mine's info, atoi when receive  

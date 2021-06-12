@@ -1,4 +1,4 @@
-# Các hàm trong client
+﻿# Các hàm trong client
 ## Request
 ### Login/Signup/Logout
 - Khởi tạo User mặc định

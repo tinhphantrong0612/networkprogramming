@@ -1,7 +1,7 @@
 #pragma once
 // *** Server constant ***
 // Macros
-#define BUFFLEN (5 + strlen(buff + 5))
+#define BUFFLEN 5 + strlen(buff + 5)
 
 // Buffer size
 #define BUFF_SIZE				8192
@@ -89,6 +89,7 @@
 
 #define LOBBY_SUCCESS			"10400" // lobbylist
 #define LOBBY_E_NOTAUTH			"10401" // nothing
+#define LOBBY_E_INGAME			"10402"
 
 //#define JOIN_SUCCESS			"10500" // Using UPDATE_LOBBY_JOIN instead
 #define JOIN_E_NOTAUTH			"10501" // nothing

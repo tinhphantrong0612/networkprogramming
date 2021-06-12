@@ -40,11 +40,12 @@ Player Lobby::create_lobby_response(char* payload, char* username) {
 		return Player(0, username, this->id, 0, UNREADY);
 	}
 	else if (!strcmp(response.result_code, CREATE_E_INVALIDTEAM)) {
-		printf("Max team number of a game is 4\n");	// Dòng này thay thế bằng thông báo UI
+		printf("Max team number of a game is 4\n");	// This line replace by UI notification
 	}
 	else {
-		printf("Invalid operation\n");	// Dòng này thay thế bằng thông báo UI
+		printf("Invalid operation\n");	// This line replace by UI notification
 	}
+	return Player();
 }
 
 
@@ -64,7 +65,7 @@ void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 		}
 	}
 	else {
-		printf("Invalid operation\n");	// Dòng này thay thế bằng thông báo UI
+		printf("Invalid operation\n");	// This line replace by UI notification
 	}
 }
 
@@ -89,23 +90,40 @@ Player Lobby::join_lobby_response(char* payload, char* username) {
 		this->team_number = response.team_number;
 		return Player(response.player_id, username, response.id, response.team_id, UNREADY);
 	}
-	else if (!strcmp(response.result_code, JOIN_E_PLAYING) || !strcmp(response.result_code, JOIN_E_FULLTEAM)) {
-		printf("This lobby is already full or ingame\n"); // Dòng này thay thế bằng thông báo UI
+	else if (!strcmp(response.result_code, JOIN_E_FORMAT)
+		|| !strcmp(response.result_code, JOIN_E_NOGAME)
+		|| !strcmp(response.result_code, JOIN_E_NOTEAM)) {
+		printf("Wrong game id or team id\n");	// This line replace by UI notification
 	}
-	return Player();
+	else if (!strcmp(response.result_code, JOIN_E_PLAYING) || !strcmp(response.result_code, JOIN_E_FULLTEAM)) {
+		printf("This lobby is already full or ingame\n"); // This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");	 // This line replace by UI notification
+	}
 
+	return Player();
 }
 
 void Lobby::start_game_request(Socket& socket) {
 	socket.tcp_send(START_GAME, "");
 }
 
-void Lobby::start_game_response(char* payload) {
+Game Lobby::start_game_response(char* payload) {
 	Start_game response = start_game_data(payload);
 
 	if (!strcmp(response.result_code, START_SUCCESS)) {
-		printf("Gogogogogo");	// Dòng này chuyển UI vào game
+		this->state = INGAME;
+		printf("Gogogogogo");	// This line switch to game UI
+		return Game(this->id, this->team_number, this->players, this->player_size);
 	}
+	else if (!strcmp(response.result_code, START_E_NOTHOST)) {
+		printf("You are not the host");		// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
+	}
+	return Game();
 }
 
 void Lobby::quit_lobby_request(Socket& socket) {
@@ -115,7 +133,13 @@ void Lobby::quit_lobby_request(Socket& socket) {
 void Lobby::quit_lobby_response(char* payload) {
 	Quit_lobby response = quit_lobby_data(payload);
 	if (!strcmp(response.result_code, QUIT_SUCCESS)) {
-		printf("Quit success\n");	//Dòng này thay bằng thông báo UI chuyển sang phòng chờ
+		printf("Quit success\n");	/// This line replace by UI notification and go to waiting room
+	}
+	else if (!strcmp(response.result_code, QUIT_E_READY)) {
+		printf("All players are not ready");	// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
 	}
 }
 
