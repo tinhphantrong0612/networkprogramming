@@ -101,3 +101,23 @@ struct Update_resource : public Update_game {
 	Castle_info castle_info[MAX_CASTLE_OF_GAME];
 
 };
+
+struct Update_timely{
+	// Castle info
+	int occupied[MAX_CASTLE_OF_GAME];
+	int wall_type[MAX_CASTLE_OF_GAME];
+	int wall_def[MAX_CASTLE_OF_GAME];
+
+	// Mine info
+	int wood_mine[MAX_MINE_OF_GAME];
+	int stone_mine[MAX_MINE_OF_GAME];
+	int iron_mine[MAX_MINE_OF_GAME];
+
+	// Team info
+	int weapon_type[MAX_TEAM_OF_GAME];
+	int weapon_atk[MAX_TEAM_OF_GAME];
+	int gold_team[MAX_TEAM_OF_GAME];
+	int wood_team[MAX_TEAM_OF_GAME];
+	int stone_team[MAX_TEAM_OF_GAME];
+	int iron_team[MAX_TEAM_OF_GAME];
+};

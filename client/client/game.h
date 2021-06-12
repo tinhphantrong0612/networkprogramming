@@ -14,4 +14,5 @@ public:
 
 	Game();
 	Game(int id, int team_number, Player* players, int player_size);
+	void update_timely_response(char* payload);
 };
