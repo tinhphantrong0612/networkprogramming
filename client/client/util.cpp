@@ -55,10 +55,14 @@ void attack_mine_payload(char* mine_id, char* type, char* question_id, char* ans
 	strcat_s(payload, PAYLOAD_SIZE + 1, answer_id);
 }
 
-Auth auth_data(char* payload) {
-	Auth result;
+Response response_data(char* payload) {
+	Response result;
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
+}
+
+Auth auth_data(char* payload) {
+	return (Auth)response_data();
 }
 
 Create_lobby create_lobby_data(char* payload) {
