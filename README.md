@@ -75,6 +75,8 @@
 1800: CANNON_IRON				
 ```
 ``` C++
+// Universal
+000: UNKNOWN_HEADER - response 000|length|<none>
 // Outgame - Request header
 100: LOGIN
 101: SIGNUP
