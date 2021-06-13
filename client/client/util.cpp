@@ -483,13 +483,18 @@ Update_buy_wall update_buy_wall_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.player_id = atoi(token);
 
-	// Get team id
+	// Get castle id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_id = atoi(token);
+	result.castle_id = atoi(token);
+
 
 	// Get wall type id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.wall_type_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
 
 	// Get wood
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);

@@ -144,7 +144,9 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 			printf("Player %d of team %d has bought wall %d", res.player_id, res.team_id, res.wall_type_id);	// This line replace by UI notification
 		}
 		Team& team = this->teams[res.team_id];
+		Castle& castle = this->castles[res.castle_id];
 		team.wall = get_wall(res.wall_type_id);
+		castle.wall = get_wall(res.wall_type_id);
 		team.wood = res.wood;
 		team.stone = res.stone;
 		team.iron = res.iron;
