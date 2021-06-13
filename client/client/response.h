@@ -108,26 +108,46 @@ struct Update_mine_attack : public Update_question {
 	int player_id;
 	int team_id;
 	int mine_id;
+	int type;
+	int resource;
 };
 
 struct Update_buy_weapon : public Update_game {
 	int player_id;
 	int team_id;
 	int weapon_type_id;
+	int wood; 
+	int stone;
+	int iron;
 };
 
 struct Update_buy_wall : public Update_game {
 	int player_id;
 	int team_id;
 	int wall_type_id;
+	int wood;
+	int stone;
+	int iron;
 };
 
 
 
 struct Update_timely{
+	// Castle info
+	int occupied[MAX_CASTLE_OF_GAME];
+	int wall_type[MAX_CASTLE_OF_GAME];
+	int wall_def[MAX_CASTLE_OF_GAME];
+
 	// Mine info
 	int wood_mine[MAX_MINE_OF_GAME];
 	int stone_mine[MAX_MINE_OF_GAME];
 	int iron_mine[MAX_MINE_OF_GAME];
 
+	// Team info
+	int weapon_type[MAX_TEAM_OF_GAME];
+	int weapon_atk[MAX_TEAM_OF_GAME];
+	int gold_team[MAX_TEAM_OF_GAME];
+	int wood_team[MAX_TEAM_OF_GAME];
+	int stone_team[MAX_TEAM_OF_GAME];
+	int iron_team[MAX_TEAM_OF_GAME];
 };

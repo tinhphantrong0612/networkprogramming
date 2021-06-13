@@ -37,11 +37,25 @@ void Game::init_game(unsigned long long id, int team_number, Player* players, in
 
 void Game::update_timely_response(char* payload) {
 	Update_timely response = update_timely_data(payload);
+	for (int i = 0; i < MAX_CASTLE_OF_GAME; i++) {
+		this->castles[i].occupied_by = response.occupied[i];
+		this->castles[i].wall = get_wall(response.wall_type[i]);
+		this->castles[i].wall.defense = response.wall_def[i];
+	}
 
 	for (int i = 0; i < MAX_MINE_OF_GAME; i++) {
 		this->mines[i].wood = response.wood_mine[i];
 		this->mines[i].stone = response.stone_mine[i];
 		this->mines[i].iron = response.iron_mine[i];
+	}
+
+	for (int i = 0; i < team_number; i++) {
+		this->teams[i].weapon = get_weapon(response.weapon_type[i]);
+		this->teams[i].weapon.attack = response.weapon_atk[i];
+		this->teams[i].gold = response.gold_team[i];
+		this->teams[i].wood = response.wood_team[i];
+		this->teams[i].stone = response.stone_team[i];
+		this->teams[i].iron = response.iron_team[i];
 	}
 
 }
@@ -98,12 +112,17 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		Team& team = this->teams[team_id];
 		if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
 			printf("The player: %d of team %d has exploited successfully mine %d \n", player_id, team_id, mine_id);	// This line replace by UI notification
-			team.stone += mine.stone;
-			team.iron += mine.iron;
-			team.wood += mine.wood;
-			mine.iron = 0;
-			mine.stone = 0;
-			mine.wood = 0;
+			switch (res.type) {
+				case WOOD:
+					team.wood += res.resource;
+					break;
+				case STONE:
+					team.stone += res.resource;
+					break;
+				case IRON:
+					team.iron += res.resource;
+					break;
+			}
 		}
 
 		mine.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
@@ -115,6 +134,9 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		}
 		Team& team = this->teams[res.team_id];
 		team.weapon = get_weapon(res.weapon_type_id);
+		team.wood = res.wood;
+		team.stone = res.stone;
+		team.iron = res.iron;
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
 		Update_buy_wall res = update_buy_wall_data(payload);
@@ -123,6 +145,9 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		}
 		Team& team = this->teams[res.team_id];
 		team.wall = get_wall(res.wall_type_id);
+		team.wood = res.wood;
+		team.stone = res.stone;
+		team.iron = res.iron;
 	}
 
 }
