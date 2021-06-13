@@ -22,7 +22,7 @@ struct Get_lobby : public Response {
 };
 
 struct Join_lobby : public Response  {
-	int id;
+	unsigned long long id;
 	int player_id;
 	int team_number;
 	int team_id;
@@ -46,7 +46,7 @@ struct Start_game : public Response  {
 };
 
 struct Update_lobby : public Response  {
-	int game_id;
+	unsigned long long game_id;
 	int team_number;
 	int request_player_id;
 	int team_players[MAX_NUM_PLAYER];

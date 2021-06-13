@@ -8,11 +8,11 @@ Game::Game(){
 }
 
 
-Game::Game(int id, int team_number, Player* players, int player_number){
+Game::Game(unsigned long long id, int team_number, Player* players, int player_number){
 	init_game(id, team_number, players, player_number);
 }
 
-void Game::init_game(int id, int team_number, Player* players, int player_number) {
+void Game::init_game(unsigned long long id, int team_number, Player* players, int player_number) {
 	this->id = id;
 	this->team_number = team_number;
 	for (int i = 0; i < this->team_number; i++) {
