@@ -13,8 +13,8 @@ void pack(char* code, char* payload, char* mess) {
 	// Cast payload length -> string
 	char payload_len[PAYLOAD_LEN_SIZE + 1];
 	int len = strlen(payload);
-	int first_byte = len / 256;
-	int second_byte = len % 256;
+	char first_byte = (char)len / 256;
+	char second_byte = (char)len % 256;
 	payload_len[0] = first_byte;
 	payload_len[1] = second_byte;
 
@@ -102,6 +102,9 @@ Get_lobby get_lobby_data(char* payload) {
 		result.lobbies[i] = lobby;
 
 		i++;
+		if (!next_token) {
+			break;
+		}
 	}
 	result.size = i;
 
@@ -241,6 +244,9 @@ Update_lobby update_lobby_data(char* payload) {
 		player_state = atoi(token);
 		result.players[i] = Player{ player_ingame_id, player_name, result.game_id, result.team_players[player_ingame_id], player_state };
 		i++;
+		if (!next_token) {
+			break;
+		}
 	}
 
 	result.player_number = i;
@@ -318,6 +324,62 @@ Update_mine_ques update_mine_ques_data(char* payload) {
 	strcpy_s(result.answer4, RESULT_CODE_SIZE + 1, token);
 
 	return result;
+}
+
+
+Update_castle_attack update_castle_attack_data(char* payload) {
+	Update_castle_attack result;
+	char* next_token;
+	char* token;
+
+	// Get result code
+	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get player id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.player_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
+	// Get castle id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.castle_id = atoi(token);
+
+	// Get wall type id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.wall_type_id = atoi(token);
+
+	// Get wall def
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.wall_def = atoi(token);
+
+	// Get weapon type id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.weapon_type_id = atoi(token);
+
+	// Get weapon attack
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.weapon_atk = atoi(token);
+
+	// Get question
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.question, RESULT_CODE_SIZE + 1, token);
+
+	// Get answer
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer1, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer2, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer3, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer4, RESULT_CODE_SIZE + 1, token);
+
+	return result;
+
 }
 
 Update_timely update_timely_data(char* payload) {

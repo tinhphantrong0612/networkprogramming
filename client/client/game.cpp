@@ -59,7 +59,7 @@ void Game::update_timely_response(char* payload) {
 	}
 }
 
-void Game::update_game_response(char* payload, Lobby& lobby) {
+void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 	Update_game response = update_game_data(payload);
 	if (!strcmp(response.result_code, UPDATE_GAME_START)) {
 		this->init_game(lobby.id, lobby.team_number, lobby.players, lobby.player_number);
@@ -73,4 +73,34 @@ void Game::update_game_response(char* payload, Lobby& lobby) {
 		Update_mine_ques res = update_mine_ques_data(payload);
 		this->mines[res.mine_id].question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_CST_R)) {
+		Update_castle_attack res = update_castle_attack_data(payload);
+		int castle_id = res.castle_id;
+		int player_id = res.player_id;
+		int team_id = res.team_id;
+		Castle& castle = this->castles[castle_id];
+		Team& team = this->teams[team_id];
+		if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W)) {
+			if (player_id != player.id) {
+				printf("The player: %d of team %d has taken castle %d of team %d but fail\n",
+					player_id, team_id, castle_id, this->castles[castle_id].occupied_by);	// This line replace by UI notification
+			}
+		}
+		else {
+			if (player_id != player.id) {
+				printf("The player: %d of team %d has taken successfully castle %d of team %d\n",
+					player_id, team_id, castle_id, castle.occupied_by);	// This line replace by UI notification
+			}
+
+			castle.occupied_by = team_id;
+			castle.wall = get_wall(res.wall_type_id);
+			castle.wall.defense = res.wall_def;
+
+			team.add_castle(castle);
+			team.weapon = get_weapon(res.weapon_type_id);
+			team.weapon.attack = res.weapon_atk;
+		}
+		castle.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+
 }
