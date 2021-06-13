@@ -365,7 +365,7 @@ Whenever a player answers a mine question, server sends result and new question 
 ```
 Whenever a player buy weapon success, server sends result to all players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<team_id>#<weapon_type>#<weapon_atk>#<gold>#<wood>#<stone>#<iron>#
+401|strlen(data)|UPDATE_GAME_BUY_WEAPON#<request_player_ingame_id>#<team_id>#<weapon_type>#<wood>#<stone>#<iron>#
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `<team_id>#<weapon_type>#<weapon_atk># <gold>#<wood>#<stone>#<iron>` is buyer team info  
@@ -386,7 +386,7 @@ Result code:
 ```
 Whenever a player buy a new wall success, server sends result to players
 ```c++
-401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_id>#<occupied_by>#<wall_type>#<wall_def>#<team_id>#<wood>#<stone>#<iron>
+401|strlen(data)|UPDATE_GAME_BUY_WALL#<request_player_ingame_id>#<castle_id>#<wall_type>#<team_id>#<wood>#<stone>#<iron>
 ```
 `request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
 `castle_wall_id` = `castle_id * 5 + wall_id`, `castle_id` from 0 to 2, `wall_id` from 0 to 4, when receive need to subtract 48
