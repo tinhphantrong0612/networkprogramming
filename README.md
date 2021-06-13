@@ -276,7 +276,6 @@ And sends questions to all players in that lobby
 401|strlen(data)|UPDATE_GAME_CASTQUEST#<castle_id>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 401|strlen(data)|UPDATE_GAME_MINEQUEST#<mine_id>#<type>#<question_id>#<question>#<answer>#<answer>#<answer>#<answer>
 ```
-`mine_type_id` = `mine_id * 3 + type`, `mine_id` from 0 to 5, `type` from 0 to 2, Wood->stone->iron, when receive need to subtract 48
 ### Quit Game
 ```c++
 14|strlen(data)|<none>
