@@ -3,7 +3,12 @@
 | Code | Length | Payload|
 |---|---|---|
 |3 bytes|2 bytes| 8000 bytes|
-
+## Length Calculate
+``` c++
+int first_byte = payload_len / 255 + 1;
+int second_byte = payload_len % 255 + 1;
+payload_len = (first_byte - 1) * 255 + second_byte - 1;
+```
 ## SOME CONSTANT
 ```c++
 0: WOOD
@@ -187,7 +192,7 @@ Result code:
 ```
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
-Example: "04xx040#1622867470450#2#0x100x11xxxx#1622867475670#3#0x20xx11xx2x#"
+Example: "104xx10400#1622867470450#2#0x100x11xxxx#1622867475670#3#0x20xx11xx2x#"
 ### Join lobby
 ```c++
 105|strlen(data)|<game_id>#<team_id>
