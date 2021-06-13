@@ -674,7 +674,13 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	calculateATeam(game->teams[game->players[playerIndex]->teamIndex], buff + BUFFLEN);
+	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	_itoa_s(weaponId, buff + BUFFLEN, BUFF_SIZE, 10);
+	for (int i = 0; i < RESOURCE_NUM; i++) {
+		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+		_itoa_s(game->teams[game->players[playerIndex]->teamIndex]->basedResources[i], buff + BUFFLEN, BUFF_SIZE, 10);
+	}
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 };
@@ -694,7 +700,10 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	calculateACastle(game->castles[castleId], buff + BUFFLEN);
+	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	_itoa_s(game->castles[castleId]->wall->type, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
