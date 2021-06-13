@@ -475,15 +475,6 @@ Update_timely update_timely_data(char* payload) {
 	char* next_token;
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 
-	// Get castle info
-	for (int i = 0; i < MAX_CASTLE_OF_GAME; i++) {
-		result.occupied[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.wall_type[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.wall_def[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	}
 
 	// Get mine info
 	for (int i = 0; i < MAX_MINE_OF_GAME; i++) {
@@ -493,24 +484,6 @@ Update_timely update_timely_data(char* payload) {
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 		result.iron_mine[i] = atoi(token);
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	}
-
-	// Get team info
-	for (int i = 0; i < MAX_TEAM_OF_GAME; i++) {
-		result.weapon_type[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.weapon_atk[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.gold_team[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.wood_team[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.stone_team[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		result.iron_team[i] = atoi(token);
-		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		if (!token)
-			break;
 	}
 
 	return result;

@@ -122,41 +122,11 @@ struct Update_buy_wall : public Update_game {
 };
 
 
-struct Castle_info {
-	int occupied_by;	// team_id
-	int wall_type;
-	int wall_def;
-};
-
-struct Mine_info {
-	int wood;
-	int iron;
-	int stone;
-};
-
-struct Update_resource : public Update_game {
-	int request_player_id;
-	int castle_id;
-	Castle_info castle_info[MAX_CASTLE_OF_GAME];
-
-};
 
 struct Update_timely{
-	// Castle info
-	int occupied[MAX_CASTLE_OF_GAME];
-	int wall_type[MAX_CASTLE_OF_GAME];
-	int wall_def[MAX_CASTLE_OF_GAME];
-
 	// Mine info
 	int wood_mine[MAX_MINE_OF_GAME];
 	int stone_mine[MAX_MINE_OF_GAME];
 	int iron_mine[MAX_MINE_OF_GAME];
 
-	// Team info
-	int weapon_type[MAX_TEAM_OF_GAME];
-	int weapon_atk[MAX_TEAM_OF_GAME];
-	int gold_team[MAX_TEAM_OF_GAME];
-	int wood_team[MAX_TEAM_OF_GAME];
-	int stone_team[MAX_TEAM_OF_GAME];
-	int iron_team[MAX_TEAM_OF_GAME];
 };

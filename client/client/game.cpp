@@ -37,11 +37,6 @@ void Game::init_game(unsigned long long id, int team_number, Player* players, in
 
 void Game::update_timely_response(char* payload) {
 	Update_timely response = update_timely_data(payload);
-	for (int i = 0; i < MAX_CASTLE_OF_GAME; i++) {
-		this->castles[i].occupied_by = response.occupied[i];
-		this->castles[i].wall = get_wall(response.wall_type[i]);
-		this->castles[i].wall.defense = response.wall_def[i];
-	}
 
 	for (int i = 0; i < MAX_MINE_OF_GAME; i++) {
 		this->mines[i].wood = response.wood_mine[i];
@@ -49,14 +44,6 @@ void Game::update_timely_response(char* payload) {
 		this->mines[i].iron = response.iron_mine[i];
 	}
 
-	for (int i = 0; i < team_number; i++) {
-		this->teams[i].weapon = get_weapon(response.weapon_type[i]);
-		this->teams[i].weapon.attack = response.weapon_atk[i];
-		this->teams[i].gold = response.gold_team[i];
-		this->teams[i].wood = response.wood_team[i];
-		this->teams[i].stone = response.stone_team[i];
-		this->teams[i].iron = response.iron_team[i];
-	}
 }
 
 void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
@@ -82,14 +69,14 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		Team& team = this->teams[team_id];
 		if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W)) {
 			if (player_id != player.id) {
-				printf("The player: %d of team %d has taken castle %d of team %d but fail\n",
-					player_id, team_id, castle_id, castle.occupied_by);	// This line replace by UI notification
+				printf("The player: %d of team %d has taken castle %d but fail\n",
+					player_id, team_id, castle_id);	// This line replace by UI notification
 			}
 		}
 		else {
 			if (player_id != player.id) {
-				printf("The player: %d of team %d has taken successfully castle %d of team %d\n",
-					player_id, team_id, castle_id, castle.occupied_by);	// This line replace by UI notification
+				printf("The player: %d of team %d has taken successfully castle %d\n",
+					player_id, team_id, castle_id);	// This line replace by UI notification
 			}
 
 			castle.occupied_by = team_id;
