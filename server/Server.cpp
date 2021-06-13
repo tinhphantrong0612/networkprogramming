@@ -506,7 +506,6 @@ int handleGetLobby(PLAYER player, char *opcode, char *buff) {
 	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, LOBBY_E_INGAME, strlen(LOBBY_E_INGAME), buff);
 	else {
 		strcpy_s(buff + 5, BUFF_SIZE, LOBBY_SUCCESS);
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 		getLobbyList(buff);
 		return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 	}
@@ -519,6 +518,7 @@ int handleGetLobby(PLAYER player, char *opcode, char *buff) {
 void getLobbyList(char *buff) {
 	for (int i = 0; i < GAME_NUM; i++) {
 		if (games[i]->id != 0 && games[i]->gameState == WAITING) {
+			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			getGameInfo(games[i], buff);
 		}
 	}
@@ -545,14 +545,12 @@ void getGameInfo(GAME game, char *buff) {
 void getTeamPlayerString(GAME game, char *buff) {
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] == NULL) {
-			buff[i] = 'x';
+			strcat_s(buff, BUFF_SIZE, "x");
 		}
 		else {
-			buff[i] = game->players[i]->teamIndex + 48;
+			_itoa_s(game->players[i]->gameIndex, buff, BUFF_SIZE, 10);
 		}
 	}
-	buff[PLAYER_NUM] = '#';
-	buff[PLAYER_NUM + 1] = 0;
 }
 
 /* The getGameRoomChangeSuccessResponse function create a response to send to all players in a room whenever someone join, leave, ready or unready
@@ -571,9 +569,9 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 	int temp = BUFFLEN;
 	buff[BUFFLEN] = requestPlayer + 48;
 	buff[temp + 1] = 0;
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
+			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			temp = BUFFLEN;
 			_itoa_s(i, buff + BUFFLEN, BUFF_SIZE, 10);
 			buff[temp + 1] = 0;
@@ -583,7 +581,6 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 			_itoa_s(game->players[i]->state, buff + BUFFLEN, BUFF_SIZE, 10);
 			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			_itoa_s(game->players[i]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 		}
 	};
 }
