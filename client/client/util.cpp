@@ -127,13 +127,14 @@ Join_lobby join_lobby_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_number = atoi(token);
 
+	// Get team_id of the player
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
 	// Get player id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.player_id = atoi(token);
 
-	// Get team_id of the player
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_id = atoi(token);
 		
 	return result;
 }
@@ -340,13 +341,18 @@ Update_castle_attack update_castle_attack_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.player_id = atoi(token);
 
+	// Get castle id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.castle_id = atoi(token);
+
+	// Get occupied_by
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
 	// Get team id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_id = atoi(token);
 
-	// Get castle id
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.castle_id = atoi(token);
 
 	// Get wall type id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
