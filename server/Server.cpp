@@ -215,7 +215,7 @@ int Communicate(PLAYER player, char * buff, char *reserveBuff) {
 	opcode[1] = buff[1];
 	opcode[2] = buff[2];
 	opcode[3] = 0;
-	if (buff[HEADER_SIZE - 2] == 0) return SOCKET_ERROR;
+	if (buff[HEADER_SIZE - 2] == 0 || (buff[HEADER_SIZE -2] + 255) % 256 > 16) return SOCKET_ERROR;
 	length = ((buff[HEADER_SIZE - 2] + 255) % 256) * 255 + (buff[HEADER_SIZE - 1] + 255) % 256; // Calculate payload length
 	received = receiveAndProcessPayload(player, opcode, length, buff, reserveBuff);
 	return received;
@@ -731,9 +731,9 @@ void sendNewMineQuestion(GAME game, int mineId, int type, char *buff, char *rese
 	memset(buff + 5, 0, BUFF_SIZE - 5);
 	strcpy_s(buff + BUFFLEN, BUFF_SIZE, UPDATE_GAME_MINEQUEST);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	int temp = BUFFLEN;
-	buff[BUFFLEN] = mineId * 3 + type + 48;
-	buff[temp + 1] = 0;
+	_itoa_s(mineId, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	_itoa_s(type, buff + BUFFLEN, BUFF_SIZE, 10);
 	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, type, buff + BUFFLEN);
 	setResponse(UPDATE_GAME, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
