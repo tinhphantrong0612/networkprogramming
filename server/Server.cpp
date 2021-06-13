@@ -215,7 +215,8 @@ int Communicate(PLAYER player, char * buff, char *reserveBuff) {
 	opcode[1] = buff[1];
 	opcode[2] = buff[2];
 	opcode[3] = 0;
-	length = ((buff[HEADER_SIZE - 2] + 256) % 256) * 256 + (buff[HEADER_SIZE - 1] + 256) % 256; // Calculate payload length
+	if (buff[HEADER_SIZE - 2] == 0) return SOCKET_ERROR;
+	length = ((buff[HEADER_SIZE - 2] + 255) % 256) * 255 + (buff[HEADER_SIZE - 1] + 255) % 256; // Calculate payload length
 	received = receiveAndProcessPayload(player, opcode, length, buff, reserveBuff);
 	return received;
 }
@@ -365,8 +366,8 @@ int setResponseAndSend(PLAYER player, char *opcode, char *responsePayload, int r
 	buff[1] = opcode[1];
 	buff[2] = opcode[2];
 	// Calculate payload length
-	buff[3] = responsePayloadLen / 256;
-	buff[4] = responsePayloadLen % 256;
+	buff[3] = responsePayloadLen / 255 + 1;
+	buff[4] = responsePayloadLen % 255 + 1;
 	if (responsePayload != 0) strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
 	printf("Response to player [%s:%d] %s request: %s\n", player->IP, player->port, opcode, buff + 5);
 	return Send(player, buff, 5 + responsePayloadLen, 0);
@@ -385,8 +386,8 @@ void setResponse(char *opcode, char *responsePayload, int responsePayloadLen, ch
 	buff[1] = opcode[1];
 	buff[2] = opcode[2];
 	// Calculate payload length
-	buff[3] = responsePayloadLen / 256;
-	buff[4] = responsePayloadLen % 256;
+	buff[3] = responsePayloadLen / 255 + 1;
+	buff[4] = responsePayloadLen % 255 + 1;
 	// Add payload to buffer
 	strcpy_s(buff + 5, BUFF_SIZE, responsePayload);
 }

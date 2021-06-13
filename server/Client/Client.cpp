@@ -27,7 +27,7 @@ unsigned __stdcall receiveThread(void * param) {
 			return 0;
 		}
 		else {
-			msgLen = (((buff[3] + 256) % 256) * 256) + (buff[4] + 256) % 256;
+			msgLen = (((buff[3] + 255) % 256) * 255) + (buff[4] + 255) % 256;
 			received = 0;
 
 			while (received < msgLen) {
@@ -112,8 +112,8 @@ int main(int argc, char *argv[])
 		printf("Send to server: ");
 		gets_s(buff + 5, BUFF_SIZE);
 		msgLen = strlen(buff + 5);
-		buff[3] = msgLen / 256;
-		buff[4] = msgLen % 256;
+		buff[3] = msgLen / 255 + 1;
+		buff[4] = msgLen % 255 + 1;
 
 		msgLen = strlen(buff + 5) + 5; // number of bytes left after send
 		sent = 0; // Number of sent bytes
