@@ -38,5 +38,8 @@ Update_game update_game_data(char* payload);
 Update_castle_ques update_castle_ques_data(char* payload);
 Update_mine_ques update_mine_ques_data(char* payload);
 Update_castle_attack update_castle_attack_data(char* payload);
+Update_mine_attack update_mine_attack_data(char* payload);
+Update_buy_weapon update_buy_weapon_data(char* payload);
+Update_buy_wall update_buy_wall_data(char* payload);
 
 Update_timely update_timely_data(char* payload);

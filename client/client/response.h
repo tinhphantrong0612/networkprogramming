@@ -103,6 +103,25 @@ struct Update_castle_attack : public Update_question {
 	int weapon_atk;
 };
 
+struct Update_mine_attack : public Update_question {
+	int player_id;
+	int team_id;
+	int mine_id;
+};
+
+struct Update_buy_weapon : public Update_game {
+	int player_id;
+	int team_id;
+	int weapon_type_id;
+};
+
+struct Update_buy_wall : public Update_game {
+	int player_id;
+	int team_id;
+	int wall_type_id;
+};
+
+
 struct Castle_info {
 	int occupied_by;	// team_id
 	int wall_type;

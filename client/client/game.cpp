@@ -83,7 +83,7 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W)) {
 			if (player_id != player.id) {
 				printf("The player: %d of team %d has taken castle %d of team %d but fail\n",
-					player_id, team_id, castle_id, this->castles[castle_id].occupied_by);	// This line replace by UI notification
+					player_id, team_id, castle_id, castle.occupied_by);	// This line replace by UI notification
 			}
 		}
 		else {
@@ -101,6 +101,41 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 			team.weapon.attack = res.weapon_atk;
 		}
 		castle.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
+		Update_mine_attack res = update_mine_attack_data(payload);
+		int mine_id = res.mine_id;
+		int player_id = res.player_id;
+		int team_id = res.team_id;
+		Mine& mine = this->mines[mine_id];
+		Team& team = this->teams[team_id];
+		if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
+			printf("The player: %d of team %d has exploited successfully mine %d \n", player_id, team_id, mine_id);	// This line replace by UI notification
+			team.stone += mine.stone;
+			team.iron += mine.iron;
+			team.wood += mine.wood;
+			mine.iron = 0;
+			mine.stone = 0;
+			mine.wood = 0;
+		}
+
+		mine.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WPN)) {
+		Update_buy_weapon res = update_buy_weapon_data(payload);
+		if (player.id != res.player_id) {
+			printf("Player %d of team %d has bought weapon %d", res.player_id, res.team_id, res.weapon_type_id);	// This line replace by UI notification
+		}
+		Team& team = this->teams[res.team_id];
+		team.weapon = get_weapon(res.weapon_type_id);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
+		Update_buy_wall res = update_buy_wall_data(payload);
+		if (player.id != res.player_id) {
+			printf("Player %d of team %d has bought wall %d", res.player_id, res.team_id, res.wall_type_id);	// This line replace by UI notification
+		}
+		Team& team = this->teams[res.team_id];
+		team.wall = get_wall(res.wall_type_id);
 	}
 
 }

@@ -382,6 +382,94 @@ Update_castle_attack update_castle_attack_data(char* payload) {
 
 }
 
+Update_mine_attack update_mine_attack_data(char* payload) {
+	Update_mine_attack result;
+	char* next_token;
+	char* token;
+
+	// Get result code
+	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get player id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.player_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
+	// Get mine id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.mine_id = atoi(token);
+
+	// Get question
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.question, RESULT_CODE_SIZE + 1, token);
+
+	// Get answer
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer1, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer2, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer3, RESULT_CODE_SIZE + 1, token);
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.answer4, RESULT_CODE_SIZE + 1, token);
+
+	return result;
+	
+}
+
+Update_buy_weapon update_buy_weapon_data(char* payload) {
+	Update_buy_weapon result;
+	char* next_token;
+	char* token;
+
+	// Get result code
+	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get player id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.player_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
+	// Get weapon type id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.weapon_type_id = atoi(token);
+
+	return result;
+}
+
+Update_buy_wall update_buy_wall_data(char* payload) {
+	Update_buy_wall result;
+	char* next_token;
+	char* token;
+
+	// Get result code
+	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get player id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.player_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
+	// Get weapon type id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.wall_type_id = atoi(token);
+
+	return result;
+}
+
+
 Update_timely update_timely_data(char* payload) {
 	Update_timely result;
 	char* next_token;
