@@ -181,7 +181,7 @@ Result code:
 ```
 ### Get lobby
 ```c++
-104|strlen(data)|<null> 
+104|strlen(data)|<null>
 104|strlen(data)|<result_code>#[<game_id>#<team_number>#<team-player-string>]*
 ```
 Result code:
@@ -190,6 +190,7 @@ Result code:
 10401: LOBBY_E_NOTAUTH
 10402: LOBBY_E_INGAME
 ```
+In `10400` case, if there is no room, return `104xx10400`  
 `game_id` is 13 bytes, `team_number` is 1 bytes, `team-player-string` is 12 bytes  
 `<team-player-string>` example: player 0, 3, 4 in team 0, player 2, 6, 7 in team 1, player 8, 10 in team 2 and 11 in team 3 then `<team-player-string>` is `0x100x112x23`  
 Example: "104xx10400#1622867470450#2#0x100x11xxxx#1622867475670#3#0x20xx11xx2x#"
