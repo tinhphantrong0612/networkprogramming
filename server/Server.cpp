@@ -215,7 +215,7 @@ int Communicate(PLAYER player, char * buff, char *reserveBuff) {
 	opcode[1] = buff[1];
 	opcode[2] = buff[2];
 	opcode[3] = 0;
-	if (buff[HEADER_SIZE - 2] == 0 || (buff[HEADER_SIZE -2] + 255) % 256 > 16) return SOCKET_ERROR;
+	if (buff[HEADER_SIZE - 2] == 0 || (buff[HEADER_SIZE - 2] + 255) % 256 > 16) return SOCKET_ERROR;
 	length = ((buff[HEADER_SIZE - 2] + 255) % 256) * 255 + (buff[HEADER_SIZE - 1] + 255) % 256; // Calculate payload length
 	received = receiveAndProcessPayload(player, opcode, length, buff, reserveBuff);
 	return received;
@@ -324,6 +324,10 @@ int receiveAndProcessPayload(PLAYER player, char *opcode, int length, char *buff
 	else if (strcmp(opcode, START_GAME) == 0) {
 		printf("Handle start game request from player [%s:%d]: %s\n", player->IP, player->port, buff);
 		ret = handleStartGame(player, opcode, buff, reserveBuff);
+	}
+	else if (strcmp(opcode, KICK) == 0) {
+		printf("Handle kick request from player [%s:%d]: %s\n", player->IP, player->port, buff);
+		ret = handleKick(player, opcode, buff);
 	}
 	else if (strcmp(opcode, LOGOUT) == 0) {
 		printf("Handle log out request from player [%s:%d]: %s\n", player->IP, player->port, buff);
@@ -616,7 +620,10 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	calculateACastle(game->castles[castleId], buff + BUFFLEN);
+	_itoa_s(game->castles[castleId]->wall->type, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	_itoa_s(game->castles[castleId]->wall->defense, buff + BUFFLEN, BUFF_SIZE, 10);
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	TEAM team = game->teams[game->players[playerIndex]->teamIndex];
 	_itoa_s(team->weapon->type, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
@@ -649,8 +656,6 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	_itoa_s(resourceType, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(game->teams[game->players[playerIndex]->teamIndex]->basedResources[resourceType], buff + BUFFLEN, BUFF_SIZE, 10);
 	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, resourceType, buff + BUFFLEN);
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
@@ -674,10 +679,6 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(weaponId, buff + BUFFLEN, BUFF_SIZE, 10);
-	for (int i = 0; i < RESOURCE_NUM; i++) {
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-		_itoa_s(game->teams[game->players[playerIndex]->teamIndex]->basedResources[i], buff + BUFFLEN, BUFF_SIZE, 10);
-	}
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 };
@@ -702,10 +703,6 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	_itoa_s(game->castles[castleId]->wall->type, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-	for (int i = 0; i < RESOURCE_NUM; i++) {
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-		_itoa_s(game->teams[game->players[playerIndex]->teamIndex]->basedResources[i], buff + BUFFLEN, BUFF_SIZE, 10);
-	}
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 };
@@ -836,7 +833,14 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 		int temp = BUFFLEN;
 		buff[BUFFLEN] = emptyPlaceInGame + 48;
 		buff[temp + 1] = 0;
-		setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
+		if (setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff) == SOCKET_ERROR) {
+			WSACloseEvent(events[player->index]);
+			closesocket(player->socket);
+			clearPlayerInfo(player, buff);
+			if (player->index != nEvents - 1) Swap(player, players[nEvents - 1], events[player->index], events[nEvents - 1]); // Swap last event and socket with the empties
+			nEvents--;
+			return 1;
+		};
 		informGameRoomChange(game, emptyPlaceInGame, UPDATE_LOBBY, UPDATE_LOBBY_JOIN, buff);
 		return 1;
 	}
@@ -928,8 +932,9 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 	else {
 		int i;
 		GAME game = player->game;
+		int playerIndex = player->gameIndex;
 		// Unlink game to player
-		game->players[player->gameIndex] = NULL;
+		game->players[playerIndex] = NULL;
 		// Unlink team to player
 		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
 		for (i = 0; i < PLAYER_NUM; i++) {
@@ -939,9 +944,16 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 		}
 		if (i == PLAYER_NUM) emptyGame(game);
 		else if (game->host == player->gameIndex) game->host = i; // Update host if player is host
-		setResponseAndSend(player, opcode, QUIT_SUCCESS, strlen(QUIT_SUCCESS), buff);
-		informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, player->account, AUTHORIZED);
+		if (setResponseAndSend(player, QUIT_GAME, QUIT_SUCCESS, strlen(QUIT_SUCCESS), buff) == SOCKET_ERROR) {
+			WSACloseEvent(events[player->index]);
+			closesocket(player->socket);
+			clearPlayerInfo(player, buff);
+			if (player->index != nEvents - 1) Swap(player, players[nEvents - 1], events[player->index], events[nEvents - 1]); // Swap last event and socket with the empties
+			nEvents--;
+			return 1;
+		};
+		informGameRoomChange(game, playerIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
 		return 1;
 	}
 }
@@ -1001,6 +1013,34 @@ int handleStartGame(PLAYER player, char *opcode, char * buff, char *reserveBuff)
 				sendNewMineQuestion(game, i, j, buff, reserveBuff);
 			}
 		}
+		return 1;
+	}
+}
+
+int handleKick(PLAYER player, char *opcode, char *buff) {
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, KICK_E_NOTAUTH, strlen(KICK_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, KICK_E_NOTINGAME, strlen(KICK_E_NOTINGAME), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, KICK_E_PLAYING, strlen(KICK_E_NOTINGAME), buff);
+	else {
+		GAME game = player->game;
+		if (player->gameIndex != game->host) return setResponseAndSend(player, opcode, KICK_E_NOTHOST, strlen(KICK_E_NOTHOST), buff);
+		if (strlen(buff) != 1) return setResponseAndSend(player, opcode, KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
+		int playerIndex = buff[0] - 48;
+		if (playerIndex < 0 || playerIndex > 11) return setResponseAndSend(player, opcode, KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
+		if (playerIndex == game->host) return setResponseAndSend(player, opcode, KICK_E_YOURSELF, strlen(KICK_E_YOURSELF), buff);
+		if (game->players[playerIndex] == NULL) return setResponseAndSend(player, opcode, KICK_E_NOPLAYER, strlen(KICK_E_NOPLAYER), buff);
+		PLAYER otherPlayer = game->players[playerIndex];
+		game->players[playerIndex] = NULL;
+		game->teams[otherPlayer->teamIndex]->players[otherPlayer->placeInTeam] = NULL;
+		updatePlayerInfo(otherPlayer, otherPlayer->socket, otherPlayer->IP, otherPlayer->port, 0, 0, 0, 0, otherPlayer->account, AUTHORIZED);
+		if (setResponseAndSend(otherPlayer, KICK, KICK_SUCCESS, strlen(KICK_SUCCESS), buff) == SOCKET_ERROR) {
+			WSACloseEvent(events[otherPlayer->index]);
+			closesocket(otherPlayer->socket);
+			clearPlayerInfo(otherPlayer, buff);
+			if (otherPlayer->index != nEvents - 1) Swap(otherPlayer, players[nEvents - 1], events[otherPlayer->index], events[nEvents - 1]); // Swap last event and socket with the empties
+			nEvents--;
+		};
+		informGameRoomChange(game, playerIndex, UPDATE_LOBBY, UPDATE_LOBBY_KICK, buff);
 		return 1;
 	}
 }
