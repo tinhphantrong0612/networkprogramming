@@ -37,7 +37,7 @@ Player Lobby::create_lobby_response(char* payload, char* username) {
 		this->id = response.id;
 		this->team_number = team_number;
 		this->state = WAITING;
-		return Player(0, username, this->id, 0, UNREADY);
+		return Player(0, username, 0, UNREADY);
 	}
 	else if (!strcmp(response.result_code, CREATE_E_INVALIDTEAM)) {
 		printf("Max team number of a game is 4\n");	// This line replace by UI notification
@@ -72,7 +72,7 @@ void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 void Lobby::join_lobby_request(Socket& socket, unsigned long long game_id, int team_id) {
 	char game_id_str[GAME_ID_SIZE + 1];
 	char team_id_str[TEAM_ID_SIZE + 1];
-	_itoa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);
+	_i64toa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);
 	_itoa_s(team_id, team_id_str, TEAM_ID_SIZE + 1, 10);
 
 	char payload[PAYLOAD_SIZE + 1] = "";
@@ -82,13 +82,13 @@ void Lobby::join_lobby_request(Socket& socket, unsigned long long game_id, int t
 
 }
 
-// Input param: payload, username
-Player Lobby::join_lobby_response(char* payload, char* username, int team_id, int team_number) {
+// Input param: payload, username, team_id and team_number from the lobby list
+Player Lobby::join_lobby_response(char* payload, char* username, int& team_id, int& team_number) {
 	//Receive lobby request
 	Join_lobby response = join_lobby_data(payload);
 	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
 		this->team_number = team_number;
-		return Player(response.player_id, username, this->id, team_id, UNREADY);
+		return Player(response.player_id, username, team_id, UNREADY);
 	}
 	else if (!strcmp(response.result_code, JOIN_E_FORMAT)
 		|| !strcmp(response.result_code, JOIN_E_NOGAME)
@@ -141,51 +141,46 @@ void Lobby::quit_lobby_response(char* payload) {
 	}
 }
 
+void Lobby::kick_request(Socket& socket, int player_id) {
+	char payload[PAYLOAD_SIZE + 1] = "";
+	char player_id_str[PLAYER_ID_SIZE + 1];
+	_itoa_s(player_id, player_id_str, PLAYER_ID_SIZE + 1, 10);
+	strcat_s(payload, PAYLOAD_SIZE, player_id_str);
+	socket.tcp_send(KICK, payload);
+
+}
+
+void Lobby::kick_response(char* payload, int player_id) {
+	Kick response = kick_data(payload);
+	if (!strcmp(response.result_code, KICK_SUCCESS)) {
+		if (this->host == player_id) {
+			printf("Kick player successful"); // This line replace by UI notification
+		}
+	}
+	else if (!strcmp(response.result_code, KICK_E_NOTHOST)) {
+		printf("You're not host");	// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, KICK_E_YOURSELF)) {
+		printf("You can't kick yourself");	// This line replace by UI notification
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
+	}
+}
+
+
 void Lobby::update_lobby_response(char* payload) {
 	Update_lobby response = update_lobby_data(payload);
-	this->id = response.game_id; // Response chua co game_id
 	this->team_number = response.team_number;
 	this->player_number = response.player_number;
-	if (!strcmp(response.result_code, UPDATE_LOBBY_JOIN)) {
-		this->state = WAITING;
-		// Update team and player
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
-			this->team_players[i] = response.team_players[i];
-		}
+	this->host = response.host;
+
+	for (int i = 0; i < response.player_number; i++) {
+		this->players[i] = response.players[i];
+
 	}
-	else if (!strcmp(response.result_code, UPDATE_LOBBY_QUIT)) {
-		// Update team and player
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
-			this->team_players[i] = response.team_players[i];
-		}
-	}
-	else if (!strcmp(response.result_code, UPDATE_LOBBY_READY)) {
-		// Update player
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-	}
-	else if (!strcmp(response.result_code, UPDATE_LOBBY_UNREADY)) {
-		// Update player
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-	}
-	else if (!strcmp(response.result_code, UPDATE_LOBBY_CHANGETEAM)) {
-		// Update team and player
-		for (int i = 0; i < response.player_number; i++) {
-			this->players[i] = response.players[i];
-		}
-		for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
-			this->team_players[i] = response.team_players[i];
-		}
-	}
+
+
 
 }
 

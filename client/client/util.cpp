@@ -13,13 +13,10 @@ void pack(char* code, char* payload, char* mess) {
 	// Cast payload length -> string
 	char payload_len[PAYLOAD_LEN_SIZE + 1];
 	int len = strlen(payload);
-<<<<<<< HEAD
+
 	int first_byte = len / 256 + 1;
 	int second_byte = len % 256 + 1;
-=======
-	char first_byte = (char)len / 256;
-	char second_byte = (char)len % 256;
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
+
 	payload_len[0] = first_byte;
 	payload_len[1] = second_byte;
 
@@ -72,7 +69,7 @@ Create_lobby create_lobby_data(char* payload) {
 	char *next_token;
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
-	result.id = atoi(strtok_s(NULL, DELIM_REQ_RES, &next_token));
+	result.id = _atoi64(strtok_s(NULL, DELIM_REQ_RES, &next_token));
 	return result;
 }
 
@@ -124,29 +121,10 @@ Join_lobby join_lobby_data(char* payload) {
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
 
-<<<<<<< HEAD
-	// Get player id of this client
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.player_id = atoi(token);
-=======
-	// Get game id of this client
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.id = _atoi64(token);
-
-	// Get team number
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_number = atoi(token);
-
-	// Get team_id of the player
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_id = atoi(token);
-
 	// Get player id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.player_id = atoi(token);
 
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
-		
 	return result;
 }
 
@@ -177,6 +155,12 @@ Quit_lobby quit_lobby_data(char* payload) {
 
 Start_game start_game_data(char* payload) {
 	Start_game result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Kick kick_data(char* payload) {
+	Kick result;
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
 	return result;
 }
@@ -225,13 +209,6 @@ Update_lobby update_lobby_data(char* payload) {
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
 
-<<<<<<< HEAD
-=======
-	// Get result code
-	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	result.game_id = _atoi64(token);
-
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	// Get team number
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_number = atoi(token);
@@ -362,10 +339,6 @@ Update_castle_attack update_castle_attack_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.castle_id = atoi(token);
 
-	// Get occupied_by
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_id = atoi(token);
-
 	// Get wall type id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.wall_type_id = atoi(token);
@@ -472,17 +445,6 @@ Update_buy_weapon update_buy_weapon_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.weapon_type_id = atoi(token);
 
-	// Get wood
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.wood = atoi(token);
-
-	// Get stone
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.stone = atoi(token);
-
-	// Get iron
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.iron = atoi(token);
 
 	return result;
 }
@@ -512,18 +474,6 @@ Update_buy_wall update_buy_wall_data(char* payload) {
 	// Get team id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_id = atoi(token);
-
-	// Get wood
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.wood = atoi(token);
-
-	// Get stone
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.stone = atoi(token);
-
-	// Get iron
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.iron = atoi(token);
 
 	return result;
 }

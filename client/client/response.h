@@ -13,7 +13,7 @@ struct Auth: public Response {
 };
 
 struct Create_lobby : public Response  {
-	int id;
+	unsigned long long id;
 };
 
 struct Get_lobby : public Response {
@@ -21,13 +21,9 @@ struct Get_lobby : public Response {
 	int size;
 };
 
-<<<<<<< HEAD
-struct Join_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
-=======
+
 struct Join_lobby : public Response  {
 	unsigned long long id;
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	int player_id;
 };
 
@@ -48,13 +44,8 @@ struct Start_game : public Response  {
 
 };
 
-<<<<<<< HEAD
-struct Update_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
-=======
+
 struct Update_lobby : public Response  {
-	unsigned long long game_id;
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	int team_number;
 	int request_player_id;
 	int host;
@@ -62,6 +53,10 @@ struct Update_lobby : public Response  {
 
 	//Extra info
 	int player_number;
+};
+
+struct Kick : public Response{
+
 };
 
 
@@ -105,7 +100,6 @@ struct Update_castle_attack : public Update_question {
 	int player_id;
 	int team_id;
 	int castle_id;
-	int occupied_by;
 	int wall_type_id;
 	int wall_def;
 	int weapon_type_id;
@@ -124,18 +118,13 @@ struct Update_buy_weapon : public Update_game {
 	int player_id;
 	int team_id;
 	int weapon_type_id;
-	int wood; 
-	int stone;
-	int iron;
 };
 
 struct Update_buy_wall : public Update_game {
 	int player_id;
+	int castle_id;
 	int team_id;
 	int wall_type_id;
-	int wood;
-	int stone;
-	int iron;
 };
 
 

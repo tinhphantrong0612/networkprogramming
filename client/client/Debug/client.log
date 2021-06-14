@@ -1,71 +1,10 @@
-<<<<<<< HEAD
-﻿Build started 14-Jun-21 4:14:32 PM.
+﻿Build started 14-Jun-21 4:53:24 PM.
      1>Project "E:\Documents\Visual Studio 2013\Projects\network\client\client\client.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt auth.cpp castle.cpp client.cpp except.cpp game.cpp lobby.cpp player.cpp question.cpp response.cpp stream.cpp team.cpp util.cpp wall.cpp
-         wall.cpp
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(16): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(19): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(22): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(25): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
-         team.cpp
-         lobby.cpp
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(40): error C2661: 'Player::Player' : no overloaded function takes 5 arguments
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(91): error C2661: 'Player::Player' : no overloaded function takes 5 arguments
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(148): error C2039: 'game_id' : is not a member of 'Update_lobby'
-                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(158): error C2039: 'team_players' : is not a member of 'Update_lobby'
-                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(167): error C2039: 'team_players' : is not a member of 'Update_lobby'
-                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
-     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(188): error C2039: 'team_players' : is not a member of 'Update_lobby'
-                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
-         castle.cpp
-         Generating Code...
-         Compiling...
-         util.cpp
-         stream.cpp
-         response.cpp
-         question.cpp
-         player.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
          game.cpp
-         auth.cpp
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         except.cpp
-         client.cpp
-     1>Done Building Project "E:\Documents\Visual Studio 2013\Projects\network\client\client\client.vcxproj" (Build target(s)) -- FAILED.
-=======
-﻿Build started 13/06/2021 5:05:00 PM.
-     1>Project "E:\Documents\Visual Studio 2013\network\client\client\client.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt auth.cpp game.cpp lobby.cpp player.cpp question.cpp response.cpp stream.cpp util.cpp
-         util.cpp
-         Generating Code...
-         Compiling...
-         game.cpp
-         Generating Code...
-         Compiling...
-         auth.cpp
-         Generating Code...
-         Compiling...
-         lobby.cpp
-     1>e:\documents\visual studio 2013\network\client\client\lobby.cpp(75): warning C4244: 'argument' : conversion from 'unsigned __int64' to 'int', possible loss of data
-         Generating Code...
-         Compiling...
-         player.cpp
-         Generating Code...
-         Compiling...
-         question.cpp
-         Generating Code...
-         Compiling...
-         response.cpp
-         Generating Code...
-         Compiling...
-         stream.cpp
-         Generating Code...
        Link:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Documents\Visual Studio 2013\network\client\Debug\client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Documents\Visual Studio 2013\network\client\Debug\client.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Documents\Visual Studio 2013\network\client\Debug\client.lib" /MACHINE:X86 Debug\castle.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Documents\Visual Studio 2013\Projects\network\client\Debug\client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Documents\Visual Studio 2013\Projects\network\client\Debug\client.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Documents\Visual Studio 2013\Projects\network\client\Debug\client.lib" /MACHINE:X86 Debug\castle.obj
          Debug\client.obj
          Debug\auth.obj
          Debug\game.obj
@@ -80,14 +19,10 @@
          Debug\util.obj
          Debug\wall.obj
          Debug\weapon.obj
-         client.vcxproj -> E:\Documents\Visual Studio 2013\network\client\Debug\client.exe
-     1>Done Building Project "E:\Documents\Visual Studio 2013\network\client\client\client.vcxproj" (Build target(s)).
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
+         LINK : E:\Documents\Visual Studio 2013\Projects\network\client\Debug\client.exe not found or not built by the last incremental link; performing full link
+         client.vcxproj -> E:\Documents\Visual Studio 2013\Projects\network\client\Debug\client.exe
+     1>Done Building Project "E:\Documents\Visual Studio 2013\Projects\network\client\client\client.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-<<<<<<< HEAD
-Time Elapsed 00:00:03.89
-=======
-Time Elapsed 00:00:03.99
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
+Time Elapsed 00:00:00.86

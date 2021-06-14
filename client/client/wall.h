@@ -8,13 +8,8 @@
 #define LEGEND_WALL_NAME "Legendary Wall"
 
 class Wall {
-<<<<<<< HEAD
-
-public:
-=======
 public:
 	int type;
->>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	int	defense;
 	char name[NAME_LENGTH + 1];
 	int	wood;
