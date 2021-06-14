@@ -19,25 +19,58 @@ using namespace std;
 #include "utilities.h"
 
 map <string, pair<string, int>> accountMap;
-CRITICAL_SECTION				criticalSection;
 GAME							games[GAME_NUM];
 DWORD							nEvents = 0;
 WSAEVENT						events[WSA_MAXIMUM_WAIT_EVENTS];
 PLAYER							players[WSA_MAXIMUM_WAIT_EVENTS];
+DWORD							index;
+WSANETWORKEVENTS				sockEvent;
+char							buff[BUFF_SIZE];
+char							reserveBuff[BUFF_SIZE];
 
 unsigned _stdcall timelyUpdate(void* param) {
+	int loopCount = 1;
+	long long loopTime = 30000;
+	long long delay = 0;
+	GAME currGame = (GAME)param;
+
 	while (1) {
-		printf("Thread function here!");
-		Sleep(30000);
-	}
+		long long currLoop = loopCount * loopTime;
+		if ((getTime() - currGame->startAt) >= currLoop) {
+			if (loopCount >= 479) { //4hr
+				//END GAME
+			} 
+			else {
+				//Enter critical section
+				while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
+				for (int i = 0; i < CASTLE_NUM; i++) {
+					if (currGame->castles[i]->occupiedBy > -1) {
+					currGame->teams[currGame->castles[i]->occupiedBy]->gold += 5; //update 5 gold to the team occupying the castle
+					}
+				}
+				for (int i = 0; i < MINE_NUM; i++) {
+					currGame->mines[i]->resources[WOOD] += 30; //update 30 wood per 30s
+					currGame->mines[i]->resources[STONE] += 15; //update 15 stone per 30s
+					currGame->mines[i]->resources[IRON] += 5; //update 5 iron per 30s
+				}
+
+				resourceUpdate(currGame, TIMELY_UPDATE,)
+
+				//Leave critical section
+				LeaveCriticalSection(&currGame->criticalSection);
+
+				delay = getTime() - currGame->startAt - currLoop;
+				loopCount++;
+			}
+		}
+
+		Sleep(loopTime - delay); //Wait till next update
+	}	
 }
 
 int main(int argc, char* argv[])
 {
-	DWORD				index;
-	WSANETWORKEVENTS	sockEvent;
-	char				buff[BUFF_SIZE];
-	char				reserveBuff[BUFF_SIZE];
+	
 
 	//Step 1: Initiate WinSock
 	WSADATA wsaData;
@@ -506,7 +539,6 @@ int handleGetLobby(PLAYER player, char *opcode, char *buff) {
 	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, LOBBY_E_INGAME, strlen(LOBBY_E_INGAME), buff);
 	else {
 		strcpy_s(buff + 5, BUFF_SIZE, LOBBY_SUCCESS);
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 		getLobbyList(buff);
 		return setResponseAndSend(player, opcode, buff + 5, strlen(buff + 5), buff);
 	}
@@ -519,6 +551,7 @@ int handleGetLobby(PLAYER player, char *opcode, char *buff) {
 void getLobbyList(char *buff) {
 	for (int i = 0; i < GAME_NUM; i++) {
 		if (games[i]->id != 0 && games[i]->gameState == WAITING) {
+			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			getGameInfo(games[i], buff);
 		}
 	}
@@ -545,14 +578,12 @@ void getGameInfo(GAME game, char *buff) {
 void getTeamPlayerString(GAME game, char *buff) {
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] == NULL) {
-			buff[i] = 'x';
+			strcat_s(buff, BUFF_SIZE, "x");
 		}
 		else {
-			buff[i] = game->players[i]->teamIndex + 48;
+			_itoa_s(game->players[i]->gameIndex, buff, BUFF_SIZE, 10);
 		}
 	}
-	buff[PLAYER_NUM] = '#';
-	buff[PLAYER_NUM + 1] = 0;
 }
 
 /* The getGameRoomChangeSuccessResponse function create a response to send to all players in a room whenever someone join, leave, ready or unready
@@ -571,9 +602,9 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 	int temp = BUFFLEN;
 	buff[BUFFLEN] = requestPlayer + 48;
 	buff[temp + 1] = 0;
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
+			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			temp = BUFFLEN;
 			_itoa_s(i, buff + BUFFLEN, BUFF_SIZE, 10);
 			buff[temp + 1] = 0;
@@ -583,7 +614,6 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 			_itoa_s(game->players[i]->state, buff + BUFFLEN, BUFF_SIZE, 10);
 			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 			_itoa_s(game->players[i]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 		}
 	};
 }
@@ -703,6 +733,30 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 };
+
+/* The resourceUpdate function inform resource update to all player
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
+*/
+void resourceUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
+	memset(buff, 0, BUFF_SIZE);
+	for (int i = 0; i < TEAM_NUM; i++) {
+		_itoa_s(game->teams[i]->index, buff + BUFFLEN, BUFF_SIZE, 10);
+		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+		_itoa_s(game->teams[i]->gold, buff + BUFFLEN, BUFF_SIZE, 10);
+		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	}
+	for (int i = 0; i < MINE_NUM; i++) {
+		calculateAMine(game->mines[i], buff + BUFFLEN);
+	}
+	buff[strlen(buff) - 1] = 0;
+	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
+	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
+};
+
 
 /* The sendNewCastleQuestion function send new castle question when game start
 * @param	game				[IN]		Game
