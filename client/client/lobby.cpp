@@ -7,11 +7,11 @@ Lobby::Lobby() {
 
 }
 
-Lobby::Lobby(unsigned long long id, int team_number) : id{ id }, team_number{ team_number } {
+Lobby::Lobby(int id, int team_number) : id{ id }, team_number{team_number} {
 
 }
 
-Lobby::Lobby(unsigned long long id) : id{ id } {
+Lobby::Lobby(int id) : id{id} {
 
 }
 
@@ -69,7 +69,7 @@ void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 	}
 }
 
-void Lobby::join_lobby_request(Socket& socket, unsigned long long game_id, int team_id) {
+void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id) {
 	char game_id_str[GAME_ID_SIZE + 1];
 	char team_id_str[TEAM_ID_SIZE + 1];
 	_itoa_s(game_id, game_id_str, GAME_ID_SIZE + 1, 10);

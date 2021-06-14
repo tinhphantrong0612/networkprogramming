@@ -9,7 +9,6 @@
 
 class Wall {
 public:
-	int type;
 	int	defense;
 	char name[NAME_LENGTH + 1];
 	int	wood;
@@ -17,7 +16,7 @@ public:
 	int	iron;
 
 	Wall();
-	Wall(int type, int defense, char* name, int wood, int stone, int iron);
+	Wall(int defense, char* name, int wood, int stone, int iron);
 };
 
 Wall get_wall(int type);

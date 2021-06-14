@@ -5,13 +5,13 @@ class Player {
 public:
 	int id;
 	char username[USERNAME_LEN];
-	unsigned long long game_id;
+	int game_id;
 	int team_id;
 	int state;
 
 	Player();
 	Player(char * username);
-	Player(int id, char* username, unsigned long long game_id, int team_id, int state);
+	Player(int id, char* username, int game_id, int team_id, int state);
 	~Player();
 
 	void ready_request(Socket& socket);
