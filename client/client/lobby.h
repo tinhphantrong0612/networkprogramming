@@ -7,6 +7,7 @@
 class Lobby {
 public:
 	int id;
+	int host;
 	int team_number;
 	int player_size;
 	Player players[MAX_NUM_PLAYER];
@@ -26,7 +27,7 @@ public:
 
 	Player create_lobby_response(char* payload, char* username);
 	void get_lobby_response(char* payload, Lobby* lobbies, int& size);
-	Player join_lobby_response(char* payload, char* username);
+	Player join_lobby_response(char* payload, char* username, int team_id, int team_number);
 	void quit_lobby_response(char* payload);
 	Game start_game_response(char* payload);
 	void update_lobby_response(char* payload);

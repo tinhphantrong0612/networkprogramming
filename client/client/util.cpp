@@ -13,8 +13,8 @@ void pack(char* code, char* payload, char* mess) {
 	// Cast payload length -> string
 	char payload_len[PAYLOAD_LEN_SIZE + 1];
 	int len = strlen(payload);
-	int first_byte = len / 256;
-	int second_byte = len % 256;
+	int first_byte = len / 256 + 1;
+	int second_byte = len % 256 + 1;
 	payload_len[0] = first_byte;
 	payload_len[1] = second_byte;
 
@@ -115,21 +115,9 @@ Join_lobby join_lobby_data(char* payload) {
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
 
-	// Get game id of this client
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.id = atoi(token);
-
-	// Get team number
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_number = atoi(token);
-
 	// Get player id of this client
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.player_id = atoi(token);
-
-	// Get team_id of the player
-	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	result.team_id = atoi(token);
 		
 	return result;
 }
@@ -204,10 +192,6 @@ Update_lobby update_lobby_data(char* payload) {
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
 
-	// Get result code
-	token = strtok_s(payload, DELIM_REQ_RES, &next_token);
-	result.game_id = atoi(token);
-
 	// Get team number
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.team_number = atoi(token);
@@ -216,13 +200,14 @@ Update_lobby update_lobby_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.request_player_id = atoi(token);
 
-	// Get team player str
+	// Get host
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-	resolve_team_player_str(token, result.team_number, result.team_players);
+	result.host = atoi(token);
 
 	int player_ingame_id;
 	char player_name[USERNAME_LEN];
 	int player_state;
+	int team_id;
 	int i = 0;
 
 	// Get player detail info
@@ -233,8 +218,13 @@ Update_lobby update_lobby_data(char* payload) {
 		strcpy_s(player_name, USERNAME_LEN, token);
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 		player_state = atoi(token);
-		result.players[i] = Player{ player_ingame_id, player_name, result.game_id, result.team_players[player_ingame_id], player_state };
+		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+		team_id = atoi(token);
+		result.players[i] = Player{ player_ingame_id, player_name, team_id, player_state };
 		i++;
+		if (!next_token) {
+			break;
+		}
 	}
 
 	result.player_number = i;

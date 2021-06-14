@@ -1,41 +1,34 @@
-﻿Build started 12-Jun-21 2:31:34 PM.
+﻿Build started 14-Jun-21 4:14:32 PM.
      1>Project "E:\Documents\Visual Studio 2013\Projects\network\client\client\client.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt auth.cpp castle.cpp client.cpp except.cpp game.cpp lobby.cpp player.cpp question.cpp response.cpp stream.cpp team.cpp util.cpp wall.cpp
          wall.cpp
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(16): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
-     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(17): error C2143: syntax error : missing ';' before '}'
-         Generating Code...
-         Compiling...
-         auth.cpp
+     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(16): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
+     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(19): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
+     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(22): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
+     1>e:\documents\visual studio 2013\projects\network\client\client\wall.cpp(25): error C2661: 'Wall::Wall' : no overloaded function takes 6 arguments
+         team.cpp
+         lobby.cpp
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(40): error C2661: 'Player::Player' : no overloaded function takes 5 arguments
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(91): error C2661: 'Player::Player' : no overloaded function takes 5 arguments
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(148): error C2039: 'game_id' : is not a member of 'Update_lobby'
+                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(158): error C2039: 'team_players' : is not a member of 'Update_lobby'
+                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(167): error C2039: 'team_players' : is not a member of 'Update_lobby'
+                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
+     1>e:\documents\visual studio 2013\projects\network\client\client\lobby.cpp(188): error C2039: 'team_players' : is not a member of 'Update_lobby'
+                 e:\documents\visual studio 2013\projects\network\client\client\response.h(50) : see declaration of 'Update_lobby'
+         castle.cpp
          Generating Code...
          Compiling...
          util.cpp
-         team.cpp
-     1>e:\documents\visual studio 2013\projects\network\client\client\team.cpp(4): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
-     1>e:\documents\visual studio 2013\projects\network\client\client\team.cpp(7): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
-     1>e:\documents\visual studio 2013\projects\network\client\client\team.cpp(11): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
          stream.cpp
          response.cpp
          question.cpp
          player.cpp
-         lobby.cpp
          game.cpp
-         castle.cpp
-     1>e:\documents\visual studio 2013\projects\network\client\client\castle.cpp(4): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
-     1>e:\documents\visual studio 2013\projects\network\client\client\castle.cpp(8): error C2248: 'Wall::Wall' : cannot access private member declared in class 'Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(11) : see declaration of 'Wall::Wall'
-                 e:\documents\visual studio 2013\projects\network\client\client\wall.h(4) : see declaration of 'Wall'
+         auth.cpp
          Generating Code...
          Skipping... (no relevant changes detected)
          except.cpp
@@ -44,4 +37,4 @@
 
 Build FAILED.
 
-Time Elapsed 00:00:03.79
+Time Elapsed 00:00:03.89

@@ -5,13 +5,13 @@
 #include "stream.h"
 #include "util.h"
 
-Player::Player() : id{ 0 }, game_id{ 0 }, team_id{ 0 }, state{ UNREADY } {
+Player::Player() : id{ 0 }, team_id{ 0 }, state{ UNREADY } {
 	strcpy_s(username, USERNAME_LEN, DEFAULT_USRNAME);
 
 };
 
 
-Player::Player(int id, char* username, int game_id, int team_id, int state) : id{ id }, game_id{ game_id }, team_id{ team_id }, state{ state } {
+Player::Player(int id, char* username, int team_id, int state) : id{ id }, team_id{ team_id }, state{ state } {
 	strcpy_s(this->username, USERNAME_LEN, username);
 }
 

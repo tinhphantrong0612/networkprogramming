@@ -78,17 +78,17 @@ void Lobby::join_lobby_request(Socket& socket, int game_id, int team_id) {
 	char payload[PAYLOAD_SIZE + 1] = "";
 	join_lobby_payload(game_id_str, team_id_str, payload);
 	socket.tcp_send(JOIN_LOBBY, payload);
+	this->id = game_id;
 
 }
 
 // Input param: payload, username
-Player Lobby::join_lobby_response(char* payload, char* username) {
+Player Lobby::join_lobby_response(char* payload, char* username, int team_id, int team_number) {
 	//Receive lobby request
 	Join_lobby response = join_lobby_data(payload);
 	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
-		this->id = response.id;
-		this->team_number = response.team_number;
-		return Player(response.player_id, username, response.id, response.team_id, UNREADY);
+		this->team_number = team_number;
+		return Player(response.player_id, username, this->id, team_id, UNREADY);
 	}
 	else if (!strcmp(response.result_code, JOIN_E_FORMAT)
 		|| !strcmp(response.result_code, JOIN_E_NOGAME)

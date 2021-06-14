@@ -71,7 +71,7 @@ int Socket::tcp_receive(char* code, char* payload) {
 		ptr += CODE_SIZE;
 		int first_byte = ptr[0];
 		int second_byte = ptr[1];
-		int len = first_byte * 256 + second_byte;
+		int len = (first_byte - 1) * 256 + second_byte - 1;
 		strncpy_s(payload, PAYLOAD_SIZE + 1, ptr + PAYLOAD_LEN_SIZE, len);
 	}
 	else {
