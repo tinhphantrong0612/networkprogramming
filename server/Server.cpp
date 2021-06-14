@@ -1110,7 +1110,7 @@ int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuf
 		castleId = buff[0] - 48;
 		questionId = atoi(firstSharp + 1);
 		answerId = secondSharp[1] - 48;
-		if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 3) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		CASTLE targetCastle = game->castles[castleId];
 		if (targetCastle->occupiedBy == player->teamIndex) return setResponseAndSend(player, opcode, ATK_CST_E_YOURS, strlen(ATK_CST_E_YOURS), buff);
 		if (targetCastle->question != questionId) return setResponseAndSend(player, opcode, ATK_CST_E_TOOLATE, strlen(ATK_CST_E_TOOLATE), buff);
@@ -1177,12 +1177,12 @@ int handleAttackMine(PLAYER player, char *opcode, char *buff, char *reserveBuff)
 		if (mineIdSize != 1 || resourceTypeSize != 1 || questionIdSize <= 0 || questionIdSize > 8 || answerIdSize != 1) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		mineId = buff[0] - 48;
 		resourceType = buff[2] - 48;
-		if (mineId < 0 || mineId > MINE_NUM - 1 || resourceType < 0 || resourceType > 2) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		questionId = atoi(secondSharp + 1);
+		answerId = thirdSharp[1] - 48;
+		if (mineId < 0 || mineId > MINE_NUM - 1 || resourceType < 0 || resourceType > 2 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		MINE targetMine = game->mines[mineId];
-		questionId = atoi(secondSharp + 1);
-		answerId = thirdSharp[1] - 48;
 		if (targetMine->question[resourceType] != questionId) return setResponseAndSend(player, opcode, ATK_MINE_E_TOOLATE, strlen(ATK_MINE_E_TOOLATE), buff);
 		if (targetMine->answer[resourceType] != answerId) { // Wrong answer
 			informMineAttack(game, mineId, resourceType, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_MINE_W, buff, reserveBuff);
