@@ -219,7 +219,7 @@ Send to request player if success, now client can know it id on server
 ```
 Whenever a player joins a lobby successfully, server sends update to all players in that lobby  
 ```c++
-402|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_JOIN#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Ready
 ```c++
@@ -236,7 +236,7 @@ Result code:
 ```
 Whenever a player is ready, server sends update to all players in that lobby
 ```c++
-402|strlen(data)|UPDATE_LOBBY_READY#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_READY#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Unready
 ```c++
@@ -253,7 +253,7 @@ Result code:
 ```
 Whenever a player is unready, server sends update to all players in that lobby
 ```c++
-402|strlen(data)|UPDATE_LOBBY_UNREADY#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_UNREADY#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Start Game
 ```c++
@@ -291,7 +291,7 @@ Result code:
 ```
 Whenever a player is quit game or disconnect, server sends update to all players in that lobby
 ```c++
-402|strlen(data)|UPDATE_LOBBY_DISCONNECT#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_DISCONNECT#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Change team
 ```c++
@@ -310,7 +310,7 @@ Result code:
 ```
 Whenever a player changes team successfully, server sends update to all players in that lobby
 ```c++
-402|strlen(data)|UPDATE_LOBBY_CHANGETEAM#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_CHANGETEAM#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Kick  
 ```c++
@@ -333,7 +333,7 @@ Send to player being kicked out
 ```
 Whenever a player changes team successfully, server sends update to all players in that lobby
 ```c++
-402|strlen(data)|UPDATE_LOBBY_QUIT#<team_number>#<request_player_ingame_id>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
+402|strlen(data)|UPDATE_LOBBY_QUIT#<team_number>#<request_player_ingame_id>#<host>#[<player_ingame_id>#<player_name>#<player_state>#<team>]*
 ```
 ### Attack castle
 ```c++

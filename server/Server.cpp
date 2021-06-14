@@ -573,6 +573,10 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 	int temp = BUFFLEN;
 	buff[BUFFLEN] = requestPlayer + 48;
 	buff[temp + 1] = 0;
+	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	temp = BUFFLEN;
+	buff[BUFFLEN] = game->host + 48;
+	buff[temp + 1] = 0;
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
 			strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
