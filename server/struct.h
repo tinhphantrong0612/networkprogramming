@@ -60,7 +60,6 @@ typedef struct _game {
 	TEAM		teams[TEAM_NUM];
 	CASTLE		castles[CASTLE_NUM];
 	MINE		mines[MINE_NUM];
-	CRITICAL_SECTION criticalSection;
 } *GAME;
 
 /* The updatePlayerInfo function update a player info
@@ -113,14 +112,10 @@ void calculateACastle(CASTLE castle, char *buff) {
 void calculateAMine(MINE mine, char *buff) {
 	_itoa_s(mine->index, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
-	//Enter critical section
-	while (!TryEnterCriticalSection(&mine->game->criticalSection)) {}
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		_itoa_s(mine->resources[i], buff + strlen(buff), BUFF_SIZE, 10);
 		strcat_s(buff, BUFF_SIZE, "#");
 	}
-	//Leave critical section
-	LeaveCriticalSection(&mine->game->criticalSection);
 }
 
 /* The calculateATeam function calculate a team's properties into a buffer
@@ -292,7 +287,6 @@ void emptyGame(GAME game) {
 	game->startAt = 0; // set start time to 0
 	game->gameState = WAITING; // set game state to waiting
 	game->host = 0;
-	DeleteCriticalSection(&game->criticalSection);
 	for (int i = 0; i < PLAYER_NUM; i++) game->players[i] = NULL; // Disconnect to all player
 	for (int i = 0; i < CASTLE_NUM; i++) { // Unlink and clear castle
 		game->castles[i]->occupiedBy = 4;
@@ -331,7 +325,6 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	game->host = 0;
 	game->teamNum = teamNum;
 	game->players[0] = player; // Set the first player is the host
-	InitializeCriticalSectionAndSpinCount(&game->criticalSection, 1000);
 	for (int i = 0; i < CASTLE_NUM; i++) {
 		game->castles[i]->wall->type = NO_WALL;
 		game->castles[i]->wall->defense = NO_WALL_DEF;
