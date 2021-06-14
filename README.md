@@ -77,7 +77,12 @@ payload_len = (first_byte - 1) * 255 + second_byte - 1;
 0:    NO_WEAPON_IRON			
 200:  BALLISTA_IRON			
 300:  CATAPULT_IRON			
-1800: CANNON_IRON				
+1800: CANNON_IRON			
+
+// Maximum amount
+999999: MAX_AMOUNT
+// Cheat amount
+10000:  CHEAT_AMOUNT	
 ```
 ``` C++
 // Universal
@@ -121,6 +126,7 @@ payload_len = (first_byte - 1) * 255 + second_byte - 1;
 40106: UPDATE_GAME_ATK_MINE_W
 40107: UPDATE_GAME_BUY_WPN
 40108: UPDATE_GAME_BUY_WALL
+40109: UPDATE_GAME_CHEAT
 
 40200: UPDATE_LOBBY_QUIT
 40201: UPDATE_LOBBY_JOIN
@@ -429,6 +435,21 @@ Result code:
 30303: BUY_WALL_E_GONE // Castle has been taken by enemy
 30304: BUY_WALL_E_NOTPLAYING // Either game or player is not playing
 30305: BUY_WALL_E_FORMAT
+```
+### Cheat
+```c++
+304|strlen(data)|<none>
+```
+Whenever a player buy a new wall success, server sends result to players
+```c++
+401|strlen(data)|UPDATE_GAME_CHEAT#<request_player_ingame_id>#<team_id>
+```
+`request_player_ingame_id` is request player's ingame index from 0 to 11, subtract 48 when receive  
+Result code: 
+``` C++
+//30400: CHEAT_SUCCESS // Using UPDATE_GAME_CHEAT
+30401: CHEAT_E_NOTPLAYING
+30402: CHEAT_E_GREEDY
 ```
 ### Timely update
 ```c++
