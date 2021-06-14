@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
 	while (1) {
 		// Send message
-		printf("Choose function:\n1. Login\t2. Sign Up\t3. Log out\t4. Create Game\n5. Get Lobby\t6. Join Game\t7. Ready\t8. Unready\n9. Start Game\t10. Quit\t11. Change team\t12. Kick \n13. Attack Castle\t14. Attack Mine\t15. Buy weapon\t16. Buy wall\nYou choose: ");
+		printf("Choose function:\n1. Login\t2. Sign Up\t3. Log out\t4. Create Game\n5. Get Lobby\t6. Join Game\t7. Ready\t8. Unready\n9. Start Game\t10. Quit\t11. Change team\t12. Kick \n13. Attack Castle\t14. Attack Mine\t15. Buy weapon\n16. Buy wall\t17. Cheat\nYou choose: ");
 		gets_s(buff, BUFF_SIZE);
 		func = atoi(buff);
 		if (func == 1) strcpy_s(buff, BUFF_SIZE, "100");
@@ -110,6 +110,7 @@ int main(int argc, char *argv[])
 		else if (func == 14) strcpy_s(buff, BUFF_SIZE, "301");
 		else if (func == 15) strcpy_s(buff, BUFF_SIZE, "302");
 		else if (func == 16) strcpy_s(buff, BUFF_SIZE, "303");
+		else if (func == 17) strcpy_s(buff, BUFF_SIZE, "304");
 		printf("Send to server: ");
 		gets_s(buff + 5, BUFF_SIZE);
 		msgLen = strlen(buff + 5);
