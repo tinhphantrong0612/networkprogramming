@@ -63,6 +63,7 @@
 #define ATTACK_MINE				"301"
 #define BUY_WEAPON				"302" // weaponType
 #define BUY_WALL				"303" // wallType	| castleIndex
+#define CHEAT					"304" // Add 1000 to every resource, include gold
 
 // Update header - Server send back only
 #define TIMELY_UPDATE			"400"
@@ -178,6 +179,10 @@
 #define BUY_WALL_E_NOTPLAYING	"30304" // Either game or player is not playing
 #define BUY_WALL_E_FORMAT		"30305"
 
+//#define CHEAT_SUCCESS			"30400" // Use UPDATE_GAME_CHEAT instead
+#define CHEAT_E_NOTPLAYING		"30401"
+#define CHEAT_E_GREEDY			"30402"
+
 #define UPDATE_GAME_START		"40100" // When game start
 #define UPDATE_GAME_CSTQUEST	"40101" // Send new castle question
 #define UPDATE_GAME_MINEQUEST	"40102" // Send new mine question
@@ -187,6 +192,7 @@
 #define UPDATE_GAME_ATK_MINE_W	"40106" // Attack mine wrong answer
 #define UPDATE_GAME_BUY_WPN		"40107" // Buy weapon
 #define UPDATE_GAME_BUY_WALL	"40108" // Buy wall
+#define UPDATE_GAME_CHEAT		"40109" // Cheat
 
 #define UPDATE_LOBBY_QUIT		"40200" // Inform disconnect from player
 #define UPDATE_LOBBY_JOIN		"40201" // Inform join from player
@@ -277,3 +283,17 @@
 #define ADDITION_WOOD			20
 #define ADDITION_STONE			15
 #define ADDITION_IRON			10
+
+// Maximum amount of resource each team
+#define MAX_GOLD				999999
+#define MAX_WOOD				999999
+#define MAX_STONE				999999
+#define MAX_IRON				999999
+#define MAX_AMOUNT				999999
+
+// Cheat amount
+#define CHEAT_GOLD				10000
+#define CHEAT_AMOUNT			10000
+#define CHEAT_WOOD				10000
+#define CHEAT_STONE				10000
+#define CHEAT_IRON				10000

@@ -40,6 +40,7 @@ int				handleAttackCastle(PLAYER, char *, char *, char *);
 int				handleAttackMine(PLAYER, char *, char *, char *);
 int				handleBuyWeapon(PLAYER, char *, char *, char *);
 int				handleBuyWall(PLAYER, char *, char *, char *);
+int				handleCheat(PLAYER, char *, char *, char *);
 int				setResponseAndSend(PLAYER, char *, char *, int, char *);
 void			emptyGame(GAME);
 void			getLobbyList(char *);
