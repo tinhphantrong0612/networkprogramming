@@ -2,12 +2,13 @@
 #include "wall.h"
 #include "string.h"
 
-Wall::Wall() {
+
+Wall::Wall(): Wall(NO_WALL, NO_WALL_DEF, NO_WALL_NAME, NO_WALL_WOOD, NO_WALL_STONE, NO_WALL_IRON) {
 
 }
 
-Wall::Wall(int defense, char* name, int wood, int stone, int iron) : defense{ defense }, wood{ wood }, stone{ stone }, iron{ iron } {
-	strcpy_s(this->name, USERNAME_LEN, name);
+Wall::Wall(int type, int defense, char* name, int wood, int stone, int iron) : type{type}, defense{ defense }, wood{ wood }, stone{ stone }, iron{ iron } {
+	strcpy_s(this->name, NAME_LENGTH, name);
 }
 
 Wall get_wall(int type) {
@@ -24,4 +25,5 @@ Wall get_wall(int type) {
 		case LEGEND_WALL:
 			return Wall(type, LEGEND_WALL_DEF, LEGEND_WALL_NAME, LEGEND_WALL_WOOD, LEGEND_WALL_STONE, LEGEND_WALL_IRON);
 	}
+	return Wall();
 }

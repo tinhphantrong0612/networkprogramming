@@ -2,10 +2,11 @@
 
 #include "team.h"
 #include "mine.h"
+#include "lobby.h"
 
 class Game {
 public:
-	int id;
+	unsigned long long id;
 	int start_at;
 	int team_number;
 	Team teams[MAX_TEAM_OF_GAME];
@@ -13,6 +14,8 @@ public:
 	Castle castles[MAX_CASTLE_OF_GAME];
 
 	Game();
-	Game(int id, int team_number, Player* players, int player_size);
+	Game(unsigned long long id, int team_number, Player* players, int player_size);
+	void init_game(unsigned long long id, int team_number, Player* players, int player_number);
 	void update_timely_response(char* payload);
+	void update_game_response(char * payload, Lobby& lobby, Player& player);
 };

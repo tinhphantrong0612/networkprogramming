@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "stream.h"
-
+#include "string.h"
 
 void receive_data(Socket& socket);
 

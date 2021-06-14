@@ -5,50 +5,56 @@
 #include "player.h"
 #include "question.h"
 
-struct Auth {
+struct Response {
 	char result_code[RESULT_CODE_SIZE + 1];
 };
 
-struct Create_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Auth: public Response {
+};
+
+struct Create_lobby : public Response  {
 	int id;
 };
 
-struct Get_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Get_lobby : public Response {
 	Lobby lobbies[MAX_LOBBY];
 	int size;
 };
 
+<<<<<<< HEAD
 struct Join_lobby {
 	char result_code[RESULT_CODE_SIZE + 1];
+=======
+struct Join_lobby : public Response  {
+	unsigned long long id;
+>>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	int player_id;
 };
 
-struct Ready{
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Ready : public Response {
 };
 
-struct Unready : public Join_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Unready : public Response{
 };
 
-struct Change_team : public Join_lobby{
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Change_team : public Response {
 };
 
 
-struct Quit_lobby {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Quit_lobby : public Response  {
 };
 
-struct Start_game {
-	char result_code[RESULT_CODE_SIZE + 1];
+struct Start_game : public Response  {
+
 };
 
-
+<<<<<<< HEAD
 struct Update_lobby {
 	char result_code[RESULT_CODE_SIZE + 1];
+=======
+struct Update_lobby : public Response  {
+	unsigned long long game_id;
+>>>>>>> 9a6400dd80bd5ef61e072bc57dbee08e6c1349ab
 	int team_number;
 	int request_player_id;
 	int host;
@@ -58,17 +64,33 @@ struct Update_lobby {
 	int player_number;
 };
 
-struct Update_game {
-	char result_code[RESULT_CODE_SIZE + 1];
+
+struct Buy_wall : public Response{
+
+};
+
+struct Buy_weapon : public Response {
+
+};
+
+struct Attack_castle : public Response {
+
+};
+
+struct Attack_mine : public Response {
+
+};
+
+struct Update_game : public Response  {
 };
 
 struct Update_question : public Update_game {
 	int question_id;
-	char question[QUESTION_LENGTH];
-	char answer1[ANSWER_LENGTH];
-	char answer2[ANSWER_LENGTH];
-	char answer3[ANSWER_LENGTH];
-	char answer4[ANSWER_LENGTH];
+	char question[QUESTION_LENGTH + 1];
+	char answer1[ANSWER_LENGTH + 1];
+	char answer2[ANSWER_LENGTH + 1];
+	char answer3[ANSWER_LENGTH + 1];
+	char answer4[ANSWER_LENGTH + 1];
 };
 
 struct Update_castle_ques : public Update_question {
@@ -79,24 +101,44 @@ struct Update_mine_ques : public Update_question {
 	int mine_id;
 };
 
-struct Castle_info {
-	int occupied_by;	// team_id
-	int wall_type;
-	int wall_def;
-};
-
-struct Mine_info {
-	int wood;
-	int iron;
-	int stone;
-};
-
-struct Update_resource : public Update_game {
-	int request_player_id;
+struct Update_castle_attack : public Update_question {
+	int player_id;
+	int team_id;
 	int castle_id;
-	Castle_info castle_info[MAX_CASTLE_OF_GAME];
-
+	int occupied_by;
+	int wall_type_id;
+	int wall_def;
+	int weapon_type_id;
+	int weapon_atk;
 };
+
+struct Update_mine_attack : public Update_question {
+	int player_id;
+	int team_id;
+	int mine_id;
+	int type;
+	int resource;
+};
+
+struct Update_buy_weapon : public Update_game {
+	int player_id;
+	int team_id;
+	int weapon_type_id;
+	int wood; 
+	int stone;
+	int iron;
+};
+
+struct Update_buy_wall : public Update_game {
+	int player_id;
+	int team_id;
+	int wall_type_id;
+	int wood;
+	int stone;
+	int iron;
+};
+
+
 
 struct Update_timely{
 	// Castle info

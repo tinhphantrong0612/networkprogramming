@@ -16,9 +16,6 @@ Auth auth_data(char* payload);
 Create_lobby create_lobby_data(char* payload);
 Get_lobby get_lobby_data(char* payload);
 Join_lobby join_lobby_data(char* payload);
-Change_team change_team_data(char* payload);
-Ready ready_data(char* payload);
-Unready unready_data(char* payload);
 Quit_lobby quit_lobby_data(char* payload);
 Start_game start_game_data(char* payload);
 
@@ -26,5 +23,23 @@ void resolve_team_player_str(char* string, int team_number, int team_player[]);
 
 Update_lobby update_lobby_data(char* payload);
 
+// Player update
+Change_team change_team_data(char* payload);
+Ready ready_data(char* payload);
+Unready unready_data(char* payload);
+Buy_weapon buy_weapon_data(char* payload);
+Buy_wall buy_wall_data(char* payload);
+Attack_castle attack_castle_data(char* payload);
+Attack_mine attack_mine_data(char* payload);
+
+
 // Update game
+Update_game update_game_data(char* payload);
+Update_castle_ques update_castle_ques_data(char* payload);
+Update_mine_ques update_mine_ques_data(char* payload);
+Update_castle_attack update_castle_attack_data(char* payload);
+Update_mine_attack update_mine_attack_data(char* payload);
+Update_buy_weapon update_buy_weapon_data(char* payload);
+Update_buy_wall update_buy_wall_data(char* payload);
+
 Update_timely update_timely_data(char* payload);

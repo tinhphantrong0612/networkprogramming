@@ -82,7 +82,6 @@
     <ClInclude Include="auth.h" />
     <ClInclude Include="castle.h" />
     <ClInclude Include="constant.h" />
-    <ClInclude Include="except.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="lobby.h" />
     <ClInclude Include="mine.h" />
@@ -101,7 +100,6 @@
     <ClCompile Include="castle.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="auth.cpp" />
-    <ClCompile Include="except.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="lobby.cpp" />
     <ClCompile Include="mine.cpp" />
@@ -116,6 +114,7 @@
     <ClCompile Include="team.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="wall.cpp" />
+    <ClCompile Include="weapon.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

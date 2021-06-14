@@ -88,45 +88,19 @@ void updatePlayerInfo(PLAYER player, SOCKET socket, char *IP, int port, int team
 	else strcpy_s(player->account, ACCOUNT_SIZE, account);
 }
 
-/* The updatePlayerInfo function clear a player info
-* @param	player			[IN/OUT]	Player
-* @return	nothing
-*/
-void clearPlayerInfo(PLAYER player, map<string, pair<string, int>> accountMap) {
-	// Remove player from game and team
-	if (player->game != NULL) {
-		GAME game = player->game;
-		int i;
-		game->players[player->gameIndex] = NULL;
-		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
-		for (i = 0; i < PLAYER_NUM; i++) {
-			if (game->players[i] != NULL) {
-				break;
-			}
-		}
-		if (i == PLAYER_NUM) emptyGame(game);
-		else {
-			if (player->gameIndex == game->host) game->host = i;
-			char buff[BUFF_SIZE];
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
-		}
-	}
-	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
-	if (it != accountMap.end())it->second.second = NOT_AUTHORIZED;
-	updatePlayerInfo(player, 0, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
-}
-
 /* The calculateACastle function calculate a castle's properties into a buffer
 * @param	castle			[IN]		Castle
 * @param	buff			[IN/OUT]	Calculate result
 * @return	buff
 */
 void calculateACastle(CASTLE castle, char *buff) {
-	buff[0] = castle->occupiedBy + 48; // Occupied by
+	_itoa_s(castle->index, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
-	buff[2] = castle->wall->type + 48; // Wall type
+	_itoa_s(castle->occupiedBy, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
-	_itoa_s(castle->wall->defense, buff + 5, BUFF_SIZE, 10);
+	_itoa_s(castle->wall->type, buff + strlen(buff), BUFF_SIZE, 10);
+	strcat_s(buff, BUFF_SIZE, "#");
+	_itoa_s(castle->wall->defense, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 }
 
@@ -136,6 +110,8 @@ void calculateACastle(CASTLE castle, char *buff) {
 * @return	buff
 */
 void calculateAMine(MINE mine, char *buff) {
+	_itoa_s(mine->index, buff + strlen(buff), BUFF_SIZE, 10);
+	strcat_s(buff, BUFF_SIZE, "#");
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		_itoa_s(mine->resources[i], buff + strlen(buff), BUFF_SIZE, 10);
 		strcat_s(buff, BUFF_SIZE, "#");
@@ -148,7 +124,7 @@ void calculateAMine(MINE mine, char *buff) {
 * @return	buff
 */
 void calculateATeam(TEAM team, char *buff) {
-	buff[0] = team->weapon->type + 48;	// Weapon type
+	_itoa_s(team->weapon->type, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->attack, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
@@ -176,7 +152,7 @@ void getGameProperties(GAME game, char *buff) {
 	}
 	// Then each team
 	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + +strlen(buff));
+		calculateATeam(game->teams[i], buff +strlen(buff));
 	}
 }
 
@@ -190,7 +166,7 @@ void getAttackCastleGameProperties(GAME game, char *buff) {
 		calculateACastle(game->castles[i], buff + strlen(buff));
 	}
 	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + +strlen(buff));
+		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
 }
 
@@ -204,7 +180,7 @@ void getAttackMineGameProperties(GAME game, char *buff) {
 		calculateAMine(game->mines[i], buff + strlen(buff));
 	}
 	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + +strlen(buff));
+		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
 }
 
@@ -215,7 +191,7 @@ void getAttackMineGameProperties(GAME game, char *buff) {
 */
 void getBuyWeaponGameProperties(GAME game, char *buff) {
 	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + +strlen(buff));
+		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
 }
 
@@ -229,17 +205,15 @@ void getBuyWallGameProperties(GAME game, char *buff) {
 		calculateACastle(game->castles[i], buff + strlen(buff));
 	}
 	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + +strlen(buff));
+		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
 }
 
 void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
-	int seed = getTime() / 1000000;
-	srand(seed);
 
-	castle->question = rand() % HARDQUESTION_NUM; // randomize
+	castle->question = getTime() % HARDQUESTION_NUM; // randomize
 	int question = castle->question;
 	while (question != 0) {
 		fgets(buff, BUFF_SIZE, file);
@@ -253,18 +227,55 @@ void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
-	int seed = getTime() / 1000000;
-	srand(seed);
 
-	mine->question[type] = rand() % EASYQUESTION_NUM; // randomize
+	mine->question[type] = getTime() % EASYQUESTION_NUM; // randomize
 	int question = mine->question[type];
 	while (question != 0) {
 		fgets(buff, BUFF_SIZE, file);
 		question--;
 	}
 	fgets(buff, BUFF_SIZE, file); // Get question
-	mine->question[type] = buff[0] - 48; // Get answer
+	mine->answer[type] = buff[0] - 48; // Get answer
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
+}
+
+void createEmptyGame(GAME game) {
+	game->id = 0; // set id to 0
+	game->startAt = 0; // set start time to 0
+	game->gameState = WAITING; // set game state to waiting
+	game->host = 0;
+	for (int i = 0; i < PLAYER_NUM; i++) game->players[i] = NULL; // Disconnect to all player
+	for (int i = 0; i < CASTLE_NUM; i++) { // Unlink and clear castle
+		game->castles[i] = (CASTLE)malloc(sizeof(_castle));
+		game->castles[i]->occupiedBy = 4;
+		game->castles[i]->index = i;
+		game->castles[i]->wall = (WALL)malloc(sizeof(_wall));
+		game->castles[i]->wall->type = NO_WALL;
+		game->castles[i]->wall->defense = NO_WALL_DEF;
+		game->castles[i]->game = game;
+	}
+	for (int i = 0; i < MINE_NUM; i++) { // Unlink and clear mine
+		game->mines[i] = (MINE)malloc(sizeof(_mine));
+		game->mines[i]->game = game;
+		game->mines[i]->index = i;
+		for (int j = 0; j < RESOURCE_NUM; j++) {
+			game->mines[i]->resources[j] = 0;
+		}
+	}
+	for (int i = 0; i < TEAM_NUM; i++) { // Unlink and clear team
+		game->teams[i] = (TEAM)malloc(sizeof(_team));
+		game->teams[i]->game = game;
+		game->teams[i]->weapon = (WEAPON)malloc(sizeof(_weapon));
+		game->teams[i]->weapon->type = NO_WEAPON;
+		game->teams[i]->weapon->attack = NO_WEAPON_ATK;
+		game->teams[i]->gold = 0;
+		for (int j = 0; j < 3; j++) {
+			game->teams[i]->players[j] = NULL;
+		}
+		for (int j = 0; j < 3; j++) {
+			game->teams[i]->basedResources[j] = 0;
+		}
+	}
 }
 
 /* The emptyGame function clear a game
@@ -278,18 +289,24 @@ void emptyGame(GAME game) {
 	game->host = 0;
 	for (int i = 0; i < PLAYER_NUM; i++) game->players[i] = NULL; // Disconnect to all player
 	for (int i = 0; i < CASTLE_NUM; i++) { // Unlink and clear castle
-		if (game->castles[i] != NULL) {
-			game->castles[i] = NULL;
-		}
+		game->castles[i]->occupiedBy = 4;
+		game->castles[i]->wall->type = NO_WALL;
+		game->castles[i]->wall->defense = NO_WALL_DEF;
 	}
 	for (int i = 0; i < MINE_NUM; i++) { // Unlink and clear mine
-		if (game->mines[i] != NULL) {
-			game->mines[i] = NULL;
+		for (int j = 0; j < RESOURCE_NUM; j++) {
+			game->mines[i]->resources[j] = 0;
 		}
 	}
 	for (int i = 0; i < TEAM_NUM; i++) { // Unlink and clear team
-		if (game->teams[i] != NULL) {
-			game->teams[i] = NULL;
+		game->teams[i]->weapon->type = NO_WEAPON;
+		game->teams[i]->weapon->attack = NO_WEAPON_ATK;
+		game->teams[i]->gold = 0;
+		for (int j = 0; j < 3; j++) {
+			game->teams[i]->players[j] = NULL;
+		}
+		for (int j = 0; j < 3; j++) {
+			game->teams[i]->basedResources[j] = 0;
 		}
 	}
 }
@@ -309,30 +326,21 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	game->teamNum = teamNum;
 	game->players[0] = player; // Set the first player is the host
 	for (int i = 0; i < CASTLE_NUM; i++) {
-		game->castles[i] = (CASTLE)malloc(sizeof(_castle));
-		game->castles[i]->game = game;
-		game->castles[i]->index = i;
-		game->castles[i]->wall = (WALL)malloc(sizeof(_wall));
 		game->castles[i]->wall->type = NO_WALL;
 		game->castles[i]->wall->defense = NO_WALL_DEF;
 		game->castles[i]->occupiedBy = 4;
 	}
 	for (int i = 0; i < MINE_NUM; i++) {
-		game->mines[i] = (MINE)malloc(sizeof(_mine));
-		game->mines[i]->game = game;
-		game->mines[i]->index = i;
 		for (int j = 0; j < RESOURCE_NUM; j++) {
 			game->mines[i]->resources[j] = 0;
 		}
 	}
 	for (int i = 0; i < TEAM_NUM; i++) {
-		game->teams[i] = (TEAM)malloc(sizeof(_team));
-		game->teams[i]->game = game;
-		game->teams[i]->index = i;
 		for (int j = 0; j < 3; j++) {
 			game->teams[i]->players[j] = NULL;
 		}
-		game->teams[i]->weapon = (WEAPON)malloc(sizeof(_weapon));
+		game->teams[i]->weapon->type = NO_WEAPON;
+		game->teams[i]->weapon->attack = NO_WEAPON_ATK;
 		game->teams[i]->gold = 0;
 		for (int j = 0; j < 3; j++) {
 			game->teams[i]->basedResources[j] = 0;

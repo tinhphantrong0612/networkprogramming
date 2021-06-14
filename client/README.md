@@ -1,4 +1,4 @@
-﻿# Các hàm trong client
+# Các hàm trong client
 ## Request
 ### Login/Signup/Logout
 - Khởi tạo User mặc định
@@ -22,6 +22,13 @@
 - Chức năng unready để yêu cầu hủy sẵn sàng
 - Chức năng change team để chuyển đội chơi
 
+### Buy weapon/ Buy wall/ Attack castle/ Attack mine
+- Dùng biến player để gọi hàm
+- Chức năng buy weapon dùng để trang bị vũ khí
+- Chức năng buy wall dùng để trang bị tường cho lâu đài(chỉ khi có lâu đài)
+- Chức năng này dùng để tấn công lâu đài
+- Chức năng này để chiếm bãi tài nguyên
+
 ## Response
 - receive_data: Đây là hàm gọi trong thread để bắt tất cả các response từ server
 
@@ -35,11 +42,11 @@ Ngoài ra còn các thông báo khác từ server
 
 ### Create/Get/Join/Quit Lobby and Startgame
 - Được gọi từ biến lobby
-- create_lobby_response: Nhận phản hồi và tạo thông tin về phòng của người chơi(sau khi thành công sẽ chuyển UI sang phòng chơi) lúc này sẽ khởi tạo một biến Player để lưu thông tin của người chơi(team nào, id bao nhiêu mặc định người tạo là id=0 team=0)
+- create_lobby_response: Nhận phản hồi và tạo thông tin về phòng của người chơi(sau khi thành công sẽ chuyển UI sang phòng chơi) lúc này sẽ khởi tạo một biến Player để lưu thông tin của người chơi(team nào, id bao nhiêu mặc định người tạo là id=0 team=0) nếu thất bại thì game_id == 0
 - get_lobby_response: Nhận phản hồi và trả về danh sách các phòng(nhớ tạo 1 mảng để lưu thông tin phòng)
 - join_lobby_response: Nhận phản hồi và hàm đã nhận thông tin của người chơi trả về biến Player(sau đó server sẽ trả về 1 response chứa toàn bộ danh sách các người chơi, khi đó cần phải hiện thị thông tin lobby )
 - quit_lobby_response: Nhận phản hồi và chuyển về phòng chờ
-- start_game_response: Nhận phản hồi thành công thì khởi tạo biến Game từ lobby này
+- start_game_response: Nhận phản hồi thành công thì chờ server gửi 1 response update game với result code là UPDATE_GAME_START lúc đấy thì biến Game sẽ khởi tạo phòng chơi
 
 ### Ready/Unready/Change team
 - Được gọi từ biến player
@@ -47,9 +54,18 @@ Ngoài ra còn các thông báo khác từ server
 - unread_response: Nhận phản hồi và người chơi chuyển sang trạng thái không sẵn sàng
 - change_team_response: Nhận phản hồi và thông tin về đội của người chơi thay đổi
 
+### Buy weapon/ Buy wall/ Attack castle/ Attack mine
+- Buy weapon: Mua vũ khí thành công khi đủ tài nguyên và cập nhật cho tất cả người chơi ở response Update game(tự động)
+- Buy wall: Tương tư như mua vũ khí
+- Attack castle: Trả về khi người chơi tấn công lâu đài, dù cho thành công hay thất bại thì sẽ tất cả người chơi đều nhân được thông tin qua response Update game(tự động)
+- Attack mine: Như attack castle
+
 ### Response chỉ từ server(tự động cập nhật)
 - Update lobby: chỉ xảy ra khi có sự thay đổi trong phòng chơi như có người vào người ra, người chơi sẵn sàng hoặc bỏ sẵn sàng, chuyển đội (join, quit lobby, ready, unready, change_team)
-- 
+- Update timely: chỉ xảy ra khi có sự thay đổi về tài nguyên trên nản đồ
+- Update game:
+    - Start game: update này sẽ gọi khi server sẵn sàng khởi tạo server game
+    - Update question: update xảy ra lúc đầu khi tạo phòng cũng như thay đổi câu hỏi khi lâu đài bị chiếm hoặc bãi tài nguyên bị khai thác
 
 
 

@@ -39,6 +39,9 @@
 #define STONE					1
 #define IRON					2
 
+// Universal
+#define UNKNOWN_HEADER			"000"
+
 // Outgame - Request header
 #define LOGIN					"100"
 #define SIGNUP					"101"
@@ -91,7 +94,7 @@
 #define LOBBY_E_NOTAUTH			"10401" // nothing
 #define LOBBY_E_INGAME			"10402"
 
-//#define JOIN_SUCCESS			"10500" // Using UPDATE_LOBBY_JOIN instead
+#define JOIN_SUCCESS			"10500" 
 #define JOIN_E_NOTAUTH			"10501" // nothing
 #define JOIN_E_ALREADY			"10502" // lobbylist
 #define JOIN_E_FORMAT			"10503" // lobbylist
