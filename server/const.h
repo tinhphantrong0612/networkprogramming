@@ -56,6 +56,7 @@
 #define START_GAME				"202" // nothing
 #define QUIT_GAME				"203" // nothing
 #define CHANGE_TEAM				"204" // teamIndex
+#define KICK					"205"
 
 // Ingame - Request header
 #define ATTACK_CASTLE			"300" // targetType	| targetIndex	| QuestionId Answer
@@ -140,6 +141,15 @@
 #define CHANGE_E_UNKNOWNTEAM	"20406"
 #define CHANGE_E_CURRENTTEAM	"20407"
 
+#define KICK_SUCCESS			"20500" // To kicked player
+#define KICK_E_NOTAUTH			"20501"
+#define KICK_E_NOTINGAME		"20502"
+#define KICK_E_PLAYING			"20503"
+#define KICK_E_NOTHOST			"20504"
+#define KICK_E_YOURSELF			"20505"
+#define KICK_E_NOPLAYER			"20506"
+#define KICK_E_FORMAT			"20507"
+
 // Ingame - Response header
 //#define ATK_CST_SUCCESS		"30000" // Using UPDATE_MINE_ATK_CST_R
 #define ATK_CST_E_TOOLATE		"30001" // Answer the question too late
@@ -183,6 +193,7 @@
 #define UPDATE_LOBBY_CHANGETEAM	"40202" // Inform player change team
 #define UPDATE_LOBBY_READY		"40203" // Inform player ready
 #define UPDATE_LOBBY_UNREADY	"40204" // Inform player unready
+#define UPDATE_LOBBY_KICK		"40205" // Inform player being kicked out
 
 // *** Game logic constant ***
 // Amount
