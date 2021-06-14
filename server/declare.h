@@ -34,6 +34,7 @@ int				handleReadyPlay(PLAYER, char *, char *);
 int				handleUnreadyPlay(PLAYER, char *, char *);
 int				handleQuitGame(PLAYER, char *, char *);
 int				handleStartGame(PLAYER, char *, char *, char *);
+int				handleKick(PLAYER, char *, char *);
 int				handleLogOut(PLAYER, char *, char *);
 int				handleAttackCastle(PLAYER, char *, char *, char *);
 int				handleAttackMine(PLAYER, char *, char *, char *);
