@@ -552,7 +552,7 @@ void getTeamPlayerString(GAME game, char *buff) {
 			strcat_s(buff, BUFF_SIZE, "x");
 		}
 		else {
-			_itoa_s(game->players[i]->gameIndex, buff, BUFF_SIZE, 10);
+			_itoa_s(game->players[i]->gameIndex, buff + i, BUFF_SIZE, 10);
 		}
 	}
 }
