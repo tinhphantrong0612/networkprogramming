@@ -108,6 +108,7 @@ payload_len = (first_byte - 1) * 255 + second_byte - 1;
 301: ATTACK_MINE
 302: BUY_WEAPON
 303: BUY_WALL
+304: CHEAT
 
 // Update header - Server send back only
 400: TIMELY_UPDATE
