@@ -85,6 +85,9 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 			if (player_id != player.id) {
 				printf("The player: %d of team %d has taken castle %d but fail\n",
 					player_id, team_id, castle_id);	// This line replace by UI notification
+				if (castle.wall.defense > res.wall_def && castle.occupied_by != 4) {
+					printf("The weapon not strong enough");		// This line replace by UI notification
+				}
 			}
 		}
 		else {
@@ -92,15 +95,15 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 				printf("The player: %d of team %d has taken successfully castle %d\n",
 					player_id, team_id, castle_id);	// This line replace by UI notification
 			}
-
 			castle.occupied_by = team_id;
-			castle.wall = get_wall(res.wall_type_id);
-			castle.wall.defense = res.wall_def;
-
-			team.add_castle(castle);
-			team.weapon = get_weapon(res.weapon_type_id);
-			team.weapon.attack = res.weapon_atk;
 		}
+		castle.wall = get_wall(res.wall_type_id);
+		castle.wall.defense = res.wall_def;
+
+		team.add_castle(castle);
+		team.weapon = get_weapon(res.weapon_type_id);
+		team.weapon.attack = res.weapon_atk;
+
 		castle.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
@@ -134,22 +137,23 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		}
 		Team& team = this->teams[res.team_id];
 		team.weapon = get_weapon(res.weapon_type_id);
-		team.wood = res.wood;
-		team.stone = res.stone;
-		team.iron = res.iron;
+		team.wood -= team.weapon.wood;
+		team.stone -= team.weapon.stone;
+		team.iron -= team.weapon.iron;
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
 		Update_buy_wall res = update_buy_wall_data(payload);
 		if (player.id != res.player_id) {
 			printf("Player %d of team %d has bought wall %d", res.player_id, res.team_id, res.wall_type_id);	// This line replace by UI notification
 		}
+
 		Team& team = this->teams[res.team_id];
 		Castle& castle = this->castles[res.castle_id];
 		team.wall = get_wall(res.wall_type_id);
 		castle.wall = get_wall(res.wall_type_id);
-		team.wood = res.wood;
-		team.stone = res.stone;
-		team.iron = res.iron;
+		team.wood -= team.wall.wood;
+		team.stone -= team.wall.stone;
+		team.iron -= team.wall.iron;
 	}
 
 }

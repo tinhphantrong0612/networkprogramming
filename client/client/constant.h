@@ -27,6 +27,7 @@
 #define GAME_ID_SIZE 13	// for game id str
 #define TEAM_ID_SIZE 1	// for team id str
 #define TEAM_NUM_SIZE 1 // for teamnumber str
+#define PLAYER_ID_SIZE 1 // for player id str
 #define CASTLE_ID_SIZE 1	// for castle id str
 #define MINE_ID_SIZE 1	// for mine id str
 #define WEAPON_ID_SIZE 1	// for weapon id str
@@ -208,6 +209,17 @@
 #define CHANGE_E_UNKNOWNTEAM "20406"
 #define CHANGE_E_CURRENTTEAM "20407"
 
+// Kick
+#define KICK_SUCCESS "20500"
+#define KICK_E_NOTAUTH "20501"
+#define KICK_E_NOTINGAME "20502"
+#define KICK_E_PLAYING "20503"
+#define KICK_E_NOTHOST "20504"
+#define KICK_E_YOURSELF "20505"
+#define KICK_E_NOPLAYER "20506"
+#define KICK_E_FORMAT "20507"
+
+
 // Attack castle
 #define ATK_CST_SUCCESS "30000"
 #define ATK_CST_E_TOOLATE "30001"	// Answer the question too late
@@ -272,6 +284,7 @@
 #define START_GAME "202"
 #define QUIT_LOBBY "203"
 #define CHANGE_TEAM "204"
+#define KICK "205"
 
 // Ingame - Request header
 #define ATTACK_CASTLE "300"

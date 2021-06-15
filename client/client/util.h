@@ -18,6 +18,7 @@ Get_lobby get_lobby_data(char* payload);
 Join_lobby join_lobby_data(char* payload);
 Quit_lobby quit_lobby_data(char* payload);
 Start_game start_game_data(char* payload);
+Kick kick_data(char* payload);
 
 void resolve_team_player_str(char* string, int team_number, int team_player[]);
 

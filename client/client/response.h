@@ -13,7 +13,7 @@ struct Auth: public Response {
 };
 
 struct Create_lobby : public Response  {
-	int id;
+	unsigned long long id;
 };
 
 struct Get_lobby : public Response {
@@ -21,11 +21,10 @@ struct Get_lobby : public Response {
 	int size;
 };
 
+
 struct Join_lobby : public Response  {
 	unsigned long long id;
 	int player_id;
-	int team_number;
-	int team_id;
 };
 
 struct Ready : public Response {
@@ -45,15 +44,19 @@ struct Start_game : public Response  {
 
 };
 
+
 struct Update_lobby : public Response  {
-	unsigned long long game_id;
 	int team_number;
 	int request_player_id;
-	int team_players[MAX_NUM_PLAYER];
+	int host;
 	Player players[MAX_NUM_PLAYER];
 
 	//Extra info
 	int player_number;
+};
+
+struct Kick : public Response{
+
 };
 
 
@@ -97,7 +100,6 @@ struct Update_castle_attack : public Update_question {
 	int player_id;
 	int team_id;
 	int castle_id;
-	int occupied_by;
 	int wall_type_id;
 	int wall_def;
 	int weapon_type_id;
@@ -116,18 +118,13 @@ struct Update_buy_weapon : public Update_game {
 	int player_id;
 	int team_id;
 	int weapon_type_id;
-	int wood; 
-	int stone;
-	int iron;
 };
 
 struct Update_buy_wall : public Update_game {
 	int player_id;
+	int castle_id;
 	int team_id;
 	int wall_type_id;
-	int wood;
-	int stone;
-	int iron;
 };
 
 
