@@ -67,6 +67,8 @@ unsigned _stdcall timelyUpdate(void* param) {
 
 		Sleep(LOOP_TIME - delay); //Wait till next update
 	}	
+
+	return 0;
 }
 
 int main(int argc, char* argv[])
