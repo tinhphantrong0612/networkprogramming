@@ -351,7 +351,7 @@ void resetGame(GAME game) {
 	for (int i = 0; i < PLAYER_NUM; i++) {
 		if (game->players[i] != NULL) {
 			updatePlayerInfo(game->players[i], game->players[i]->socket, game->players[i]->IP, game->players[i]->port, 
-			game->players[i]->teamIndex, game->players[i]->placeInTeam, game->players[i]->gameIndex, game, player->account, JOINT);
+			game->players[i]->teamIndex, game->players[i]->placeInTeam, game->players[i]->gameIndex, game, game->players[i]->account, JOINT);
 		}
 	}	
 }

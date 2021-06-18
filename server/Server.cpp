@@ -60,7 +60,7 @@ unsigned _stdcall timelyUpdate(void* param) {
 				//Leave critical section
 				LeaveCriticalSection(&currGame->criticalSection);
 
-				delay = getTime() - currGame->startAt - currLoop;
+				delay = getTime() - currGame->startAt - currTime;
 				loopCount++;
 			}
 		}
@@ -71,8 +71,6 @@ unsigned _stdcall timelyUpdate(void* param) {
 
 int main(int argc, char* argv[])
 {
-	
-
 	//Step 1: Initiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);
