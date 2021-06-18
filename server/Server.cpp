@@ -23,12 +23,11 @@ GAME							games[GAME_NUM];
 DWORD							nEvents = 0;
 WSAEVENT						events[WSA_MAXIMUM_WAIT_EVENTS];
 PLAYER							players[WSA_MAXIMUM_WAIT_EVENTS];
-DWORD							index;
-WSANETWORKEVENTS				sockEvent;
-char							buff[BUFF_SIZE];
-char							reserveBuff[BUFF_SIZE];
+
 
 unsigned _stdcall timelyUpdate(void* param) {
+	char buff[BUFF_SIZE];
+	char reserveBuff[BUFF_SIZE];
 	int loopCount = 1;
 	long long delay = 0;
 	GAME currGame = (GAME)param;
@@ -73,6 +72,11 @@ unsigned _stdcall timelyUpdate(void* param) {
 
 int main(int argc, char* argv[])
 {
+	DWORD							index;
+	WSANETWORKEVENTS				sockEvent;
+	char							buff[BUFF_SIZE];
+	char							reserveBuff[BUFF_SIZE];
+
 	//Step 1: Initiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);
