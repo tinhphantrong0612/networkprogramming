@@ -5,7 +5,7 @@
 class User {
 public:
 	char username[USERNAME_LEN + 1];
-	unsigned int state;
+	int state;
 
 	User();
 	void login_request(Socket& socket, char* username, char* password);

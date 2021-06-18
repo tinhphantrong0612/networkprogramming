@@ -22,7 +22,7 @@ struct Get_lobby : public Response {
 };
 
 struct Join_lobby : public Response  {
-	unsigned long long id;
+	int id;
 	int player_id;
 	int team_number;
 	int team_id;
@@ -46,7 +46,7 @@ struct Start_game : public Response  {
 };
 
 struct Update_lobby : public Response  {
-	unsigned long long game_id;
+	int game_id;
 	int team_number;
 	int request_player_id;
 	int team_players[MAX_NUM_PLAYER];
@@ -93,44 +93,24 @@ struct Update_mine_ques : public Update_question {
 	int mine_id;
 };
 
-struct Update_castle_attack : public Update_question {
-	int player_id;
-	int team_id;
-	int castle_id;
-	int occupied_by;
-	int wall_type_id;
+struct Castle_info {
+	int occupied_by;	// team_id
+	int wall_type;
 	int wall_def;
-	int weapon_type_id;
-	int weapon_atk;
 };
 
-struct Update_mine_attack : public Update_question {
-	int player_id;
-	int team_id;
-	int mine_id;
-	int type;
-	int resource;
-};
-
-struct Update_buy_weapon : public Update_game {
-	int player_id;
-	int team_id;
-	int weapon_type_id;
-	int wood; 
-	int stone;
-	int iron;
-};
-
-struct Update_buy_wall : public Update_game {
-	int player_id;
-	int team_id;
-	int wall_type_id;
+struct Mine_info {
 	int wood;
-	int stone;
 	int iron;
+	int stone;
 };
 
+struct Update_resource : public Update_game {
+	int request_player_id;
+	int castle_id;
+	Castle_info castle_info[MAX_CASTLE_OF_GAME];
 
+};
 
 struct Update_timely{
 	// Castle info
