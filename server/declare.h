@@ -15,6 +15,7 @@ void			getTeamPlayerString(GAME, char *);
 void			getGameProperties(GAME, char *);
 void			informGameRoomChange(GAME, int, char *, char *, char *);
 void            informUpdate(GAME, char *, char *, char *);
+void            informEndGame(GAME, char *, char*, char *, char *);
 void			loadAccountMap(char *);
 void			addNewAccount(char *, char *, char *);
 void			Swap(PLAYER, PLAYER, WSAEVENT, WSAEVENT);
