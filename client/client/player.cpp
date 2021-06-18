@@ -5,7 +5,7 @@
 #include "stream.h"
 #include "util.h"
 
-Player::Player() : id{ 0 }, team_id{ 0 }, state{ UNREADY } {
+Player::Player() : id{ MAX_NUM_PLAYER}, team_id{ 0 }, state{ UNREADY } {
 	strcpy_s(username, USERNAME_LEN, DEFAULT_USRNAME);
 };
 
@@ -42,10 +42,9 @@ void Player::unready_request(Socket& socket) {
 }
 
 void Player::unready_response(char* payload) {
-	Player player;
 	Unready response = unready_data(payload);
 	if (!strcmp(response.result_code, UNREADY_SUCCESS)) {
-		player.state = UNREADY;
+		this->state = UNREADY;
 	}
 	else if (!strcmp(response.result_code, READY_E_ALREADY)) {
 		printf("You're already ready");		// This line replace by UI notification
@@ -64,10 +63,9 @@ void Player::change_team_request(Socket& socket, int team_id) {
 
 // Input param: payload, team_id
 void Player::change_team_response(char* payload, int& team_id) {
-	Player player;
 	Change_team response = change_team_data(payload);
 	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
-		player.team_id = team_id;
+		this->team_id = team_id;
 	}
 	else if (!strcmp(response.result_code, CHANGE_E_CURRENTTEAM)) {
 		printf("You're already at this team");		// This line replace by UI notification
