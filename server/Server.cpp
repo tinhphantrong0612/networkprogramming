@@ -30,31 +30,32 @@ char							reserveBuff[BUFF_SIZE];
 
 unsigned _stdcall timelyUpdate(void* param) {
 	int loopCount = 1;
-	long long loopTime = 30000;
 	long long delay = 0;
 	GAME currGame = (GAME)param;
 
 	while (1) {
-		long long currLoop = loopCount * loopTime;
-		if ((getTime() - currGame->startAt) >= currLoop) {
-			if (loopCount >= 479) { //4hr
-				//END GAME
+		long long currTime = loopCount * LOOP_TIME;
+		if ((getTime() - currGame->startAt) >= currTime) {
+			if (loopCount >= MAX_LOOP) { 
+				informEndGame(currGame, UPDATE_GAME, UPDATE_GAME_OVER, buff, reserveBuff);
+				resetGame(currGame);
+				break;
 			} 
-			else {
+			else { 
 				//Enter critical section
 				while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
 				for (int i = 0; i < CASTLE_NUM; i++) {
 					if (currGame->castles[i]->occupiedBy > -1) {
-					currGame->teams[currGame->castles[i]->occupiedBy]->gold += 5; //update 5 gold to the team occupying the castle
+					currGame->teams[currGame->castles[i]->occupiedBy]->gold += ADDITION_GOLD; 
 					}
 				}
 				for (int i = 0; i < MINE_NUM; i++) {
-					currGame->mines[i]->resources[WOOD] += 30; //update 30 wood per 30s
-					currGame->mines[i]->resources[STONE] += 15; //update 15 stone per 30s
-					currGame->mines[i]->resources[IRON] += 5; //update 5 iron per 30s
+					currGame->mines[i]->resources[WOOD] += ADDITION_WOOD; 
+					currGame->mines[i]->resources[STONE] += ADDITION_STONE; 
+					currGame->mines[i]->resources[IRON] += ADDITION_IRON; 
 				}
 
-				resourceUpdate(currGame, TIMELY_UPDATE,)
+				informUpdate(currGame, TIMELY_UPDATE, buff, reserveBuff);
 
 				//Leave critical section
 				LeaveCriticalSection(&currGame->criticalSection);
@@ -64,7 +65,7 @@ unsigned _stdcall timelyUpdate(void* param) {
 			}
 		}
 
-		Sleep(loopTime - delay); //Wait till next update
+		Sleep(LOOP_TIME - delay); //Wait till next update
 	}	
 }
 
@@ -758,26 +759,41 @@ void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, c
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
 
-/* The resourceUpdate function inform resource update to all player
+/* The informUpdate function inform resource update to all player
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
+*/
+void informUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
+	memset(buff, 0, BUFF_SIZE);
+	for (int i = 0; i < CASTLE_NUM; i++) {
+		calculateACastle(game->castles[i], buff + BUFFLEN);
+	}
+	for (int i = 0; i < MINE_NUM; i++) {
+		calculateAMine(game->mines[i], buff + BUFFLEN);
+	}
+	for (int i = 0; i < TEAM_NUM; i++) {
+		_itoa_s(game->teams[i]->index, buff + BUFFLEN, BUFF_SIZE, 10);
+		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+		calculateATeam(game->teams[i], buff + BUFFLEN);
+	}
+	buff[strlen(buff) - 1] = 0;
+	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
+};
+
+/* The informEndGame function inform endgame signal to all player
 * @param	game				[IN]		Game
 * @param	requestPlayer		[IN]		Place of request player in team
 * @param	responseCode		[IN]		Response code for request
 * @param	buff				[IN/OUT]	Buffer to store result
 * @return	Nothing
 */
-void resourceUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
+void informEndGame(GAME game, char *opcode, char* responseCode, char *buff, char *reserveBuff) {
 	memset(buff, 0, BUFF_SIZE);
-	for (int i = 0; i < TEAM_NUM; i++) {
-		_itoa_s(game->teams[i]->index, buff + BUFFLEN, BUFF_SIZE, 10);
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-		_itoa_s(game->teams[i]->gold, buff + BUFFLEN, BUFF_SIZE, 10);
-		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	}
-	for (int i = 0; i < MINE_NUM; i++) {
-		calculateAMine(game->mines[i], buff + BUFFLEN);
-	}
-	buff[strlen(buff) - 1] = 0;
-	setResponse(opcode, buff + 5, strlen(buff + 5), buff);
+	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
+	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 };
 
