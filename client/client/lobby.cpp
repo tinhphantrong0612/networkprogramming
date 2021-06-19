@@ -3,12 +3,17 @@
 #include "response.h"
 #include "util.h"
 
-Lobby::Lobby() {
+Lobby::Lobby() :id{ 0 }, host{ 0 }, team_number{ 0 }, player_number{ 0 }, state{EMPTY} {
+	for (int i = 0; i < MAX_NUM_PLAYER; i++) {
+		team_players[i] = MAX_TEAM_OF_GAME;
+	}
+	for (int i = 0; i < MAX_NUM_PLAYER; i++) {
+		players[i] = Player();
+	}
 
 }
 
-Lobby::Lobby(unsigned long long id, int team_number) : id{ id }, team_number{ team_number } {
-
+Lobby::Lobby(unsigned long long id, int team_number, int state) : id{ id }, team_number{ team_number }, state{state} {
 }
 
 Lobby::Lobby(unsigned long long id) : id{ id } {
@@ -26,7 +31,7 @@ void Lobby::create_lobby_request(Socket& socket, int team_number) {
 	char teamnum_str[TEAM_NUM_SIZE + 1];
 	_itoa_s(team_number, teamnum_str, TEAM_NUM_SIZE + 1, 10);
 	socket.tcp_send(CREATE_LOBBY, teamnum_str);
-
+	this->team_number = team_number;
 }
 
 
@@ -35,9 +40,12 @@ Player Lobby::create_lobby_response(char* payload, char* username) {
 	Create_lobby response = create_lobby_data(payload);
 	if (!strcmp(response.result_code, CREATE_SUCCESS)){
 		this->id = response.id;
-		this->team_number = team_number;
+		this->host = 0;
 		this->state = WAITING;
-		return Player(0, username, 0, UNREADY);
+		this->player_number++;
+		this->team_players[0] = 0;
+		this->players[0] = Player(0, username, 0, UNREADY);
+		return players[0];
 	}
 	else if (!strcmp(response.result_code, CREATE_E_INVALIDTEAM)) {
 		printf("Max team number of a game is 4\n");	// This line replace by UI notification
@@ -57,7 +65,7 @@ void Lobby::get_lobby_request(Socket& socket) {
 // Output is lobbies and size of the lobby
 void Lobby::get_lobby_response(char* payload, Lobby* lobbies, int& size) {
 	//Receive lobby request
-	Get_lobby response = get_lobby_data(payload);
+	Get_lobby response = get_lobby_data(payload);	// Need state
 	if (!strcmp(response.result_code, LOBBY_SUCCESS)) {
 		size = response.size;
 		for (int i = 0; i < response.size; i++) {
@@ -78,16 +86,16 @@ void Lobby::join_lobby_request(Socket& socket, unsigned long long game_id, int t
 	char payload[PAYLOAD_SIZE + 1] = "";
 	join_lobby_payload(game_id_str, team_id_str, payload);
 	socket.tcp_send(JOIN_LOBBY, payload);
-	this->id = game_id;
 
 }
 
 // Input param: payload, username, team_id and team_number from the lobby list
-Player Lobby::join_lobby_response(char* payload, char* username, int& team_id, int& team_number) {
+Player Lobby::join_lobby_response(char* payload, char* username, int& game_id, int& team_id, int& team_number) {
 	//Receive lobby request
 	Join_lobby response = join_lobby_data(payload);
 	if (!strcmp(response.result_code, JOIN_SUCCESS)) {
 		this->team_number = team_number;
+		this->id = game_id;
 		return Player(response.player_id, username, team_id, UNREADY);
 	}
 	else if (!strcmp(response.result_code, JOIN_E_FORMAT)
@@ -177,10 +185,7 @@ void Lobby::update_lobby_response(char* payload) {
 
 	for (int i = 0; i < response.player_number; i++) {
 		this->players[i] = response.players[i];
-
 	}
-
-
 
 }
 

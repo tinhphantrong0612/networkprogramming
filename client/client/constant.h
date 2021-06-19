@@ -2,9 +2,10 @@
 
 //Buffer size
 #define PAYLOAD_SIZE 8000
-#define BUFF_SIZE 32000
+#define BUFF_SIZE 64000
 #define PAYLOAD_LEN_SIZE 2
 #define CODE_SIZE 3
+#define MAX_BUFFER_SIZE 8
 
 #define RESULT_CODE_SIZE 5
 #define USERNAME_LEN 256
@@ -56,6 +57,7 @@
 // Lobby state
 #define WAITING 0
 #define INGAME 1
+#define EMPTY 2
 
 
 // Type
