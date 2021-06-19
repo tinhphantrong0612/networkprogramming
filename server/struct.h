@@ -213,13 +213,15 @@ void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
 
-	castle->question = getTime() % HARDQUESTION_NUM; // randomize
+	long long time = getTime();
+	castle->question = (time + castle->index) % HARDQUESTION_NUM; // randomize
 	int question = castle->question;
 	while (question != 0) {
 		fgets(buff, BUFF_SIZE, file);
 		question--;
 	}
 	fgets(buff, BUFF_SIZE, file); // Get question
+	fclose(file);
 	castle->answer = buff[0] - 48; // Get answer
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
@@ -228,13 +230,15 @@ void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
 
-	mine->question[type] = getTime() % EASYQUESTION_NUM; // randomize
+	long long time = getTime();
+	mine->question[type] = (time + type + mine->index) % EASYQUESTION_NUM; // randomize
 	int question = mine->question[type];
 	while (question != 0) {
 		fgets(buff, BUFF_SIZE, file);
 		question--;
 	}
 	fgets(buff, BUFF_SIZE, file); // Get question
+	fclose(file);
 	mine->answer[type] = buff[0] - 48; // Get answer
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
