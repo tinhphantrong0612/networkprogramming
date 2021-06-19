@@ -7,7 +7,7 @@
 class Game {
 public:
 	unsigned long long id;
-	int start_at;
+	int day;
 	int team_number;
 	Team teams[MAX_TEAM_OF_GAME];
 	Mine mines[MAX_MINE_OF_GAME];
