@@ -156,7 +156,11 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		team.stone -= team.wall.stone;
 		team.iron -= team.wall.iron;
 	}
-	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
+	else if (!strcmp(response.result_code, UPDATE_GAME_CHEAT)) {
+		Update_cheat res = update_cheat_data(payload);
+		printf("Player % of team %d has cheated", res.request_player_id, res.team_id);	// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_OVER)) {
 		printf("It's over baby");	// Show end game UI
 		std::sort(this->teams, this->teams + this->team_number, rank_sort);		// Rank each team, the first team is the best, last team is the worst
 		// Switch to lobby view
