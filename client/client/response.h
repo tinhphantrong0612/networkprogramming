@@ -76,6 +76,10 @@ struct Attack_mine : public Response {
 
 };
 
+struct Cheat : Response {
+
+};
+
 struct Update_game : public Response  {
 };
 
@@ -94,6 +98,7 @@ struct Update_castle_ques : public Update_question {
 
 struct Update_mine_ques : public Update_question {
 	int mine_id;
+	int type;
 };
 
 struct Update_castle_attack : public Update_question {
@@ -147,4 +152,9 @@ struct Update_timely{
 	int wood_team[MAX_TEAM_OF_GAME];
 	int stone_team[MAX_TEAM_OF_GAME];
 	int iron_team[MAX_TEAM_OF_GAME];
+};
+
+struct Update_cheat : Response {
+	int request_player_id;
+	int team_id;
 };

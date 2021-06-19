@@ -195,6 +195,30 @@ Attack_mine attack_mine_data(char* payload) {
 	return result;
 }
 
+Cheat cheat_data(char* payload) {
+	Cheat result;
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, payload);
+	return result;
+}
+
+Update_cheat update_cheat_data(char* payload) {
+	Update_cheat result;
+	char* next_token;
+	// Get result code
+	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
+	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
+
+	// Get  player request id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.request_player_id = atoi(token);
+
+	// Get team id
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.team_id = atoi(token);
+
+	return result;
+}
+
 void resolve_team_player_str(char* string, int team_number, int* member_team) {
 	for (int i = 0; i < team_number * MAX_PLAYER_OF_TEAM; i++) {
 		if (string[i] == 'x') {
@@ -304,6 +328,10 @@ Update_mine_ques update_mine_ques_data(char* payload) {
 	// Get mine_id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.mine_id = atoi(token);
+
+	// Get type
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.type = atoi(token);
 
 	// Get question_id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);

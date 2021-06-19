@@ -206,3 +206,17 @@ void Player::buy_wall_response(char* payload) {
 	}
 
 }
+
+void cheat_request(Socket& socket) {
+	socket.tcp_send(CHEAT, "");
+}
+
+void cheat_response(char* payload) {
+	Cheat response = cheat_data(payload);
+	if (!strcmp(response.result_code, CHEAT_SUCCESS)) {
+		printf("You're such a sly");
+	}
+	else {
+		printf("Invalid operation\n");		// This line replace by UI notification
+	}
+}

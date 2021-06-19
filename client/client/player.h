@@ -21,6 +21,7 @@ public:
 	void attack_mine_request(Socket& socket, int mine_id, int type, int question_id, int answer_id);
 	void buy_weapon_request(Socket& socket, int weapon_id);
 	void buy_wall_request(Socket& socket, int wall_id);
+	void cheat_request(Socket& socket);
 
 	void ready_response(char* payload);
 	void unready_response(char* payload);
@@ -29,4 +30,5 @@ public:
 	void attack_mine_response(char* payload);
 	void buy_weapon_response(char* payload);
 	void buy_wall_response(char* payload);
+	void cheat_response(char* payload);
 };

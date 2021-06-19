@@ -36,6 +36,7 @@
 #define QUESTION_ID_SIZE 3 // for question id str
 #define ANSWER_ID_SIZE 3 // for question id str
 #define TYPE_SIZE 1
+#define TYPE_MINE_SIZE 3 // Number mine type
 
 // default value
 #define DEFAULT_PORT 5500
@@ -252,6 +253,11 @@
 #define BUY_WALL_E_NOTPLAYING "30304"
 #define BUY_WALL_E_FORMAT "30305"
 
+//Cheat
+
+#define CHEAT_SUCCESS "30400"
+#define CHEAT_E_NOTPLAYING "30401"
+#define CHEAT_E_GREEDY "30402"
 
 // Ingame
 #define UPDATE_GAME_START "40100"
@@ -263,6 +269,8 @@
 #define UPDATE_GAME_ATK_MINE_W "40106"
 #define UPDATE_GAME_BUY_WPN "40107"
 #define UPDATE_GAME_BUY_WALL "40108"
+#define UPDATE_GAME_CHEAT "40109"
+#define UPDATE_GAME_OVER "40110"
 
 // Update lobby
 #define UPDATE_LOBBY_QUIT "40200"
@@ -293,6 +301,7 @@
 #define ATTACK_MINE "301"
 #define BUY_WEAPON "302"
 #define BUY_WALL "303"
+#define CHEAT "304"
 
 // Update header - Server send back only
 #define TIMELY_UPDATE "400"

@@ -32,7 +32,7 @@ Buy_weapon buy_weapon_data(char* payload);
 Buy_wall buy_wall_data(char* payload);
 Attack_castle attack_castle_data(char* payload);
 Attack_mine attack_mine_data(char* payload);
-
+Cheat cheat_data(char* payload);
 
 // Update game
 Update_game update_game_data(char* payload);
@@ -42,5 +42,6 @@ Update_castle_attack update_castle_attack_data(char* payload);
 Update_mine_attack update_mine_attack_data(char* payload);
 Update_buy_weapon update_buy_weapon_data(char* payload);
 Update_buy_wall update_buy_wall_data(char* payload);
+Update_cheat update_cheat_data(char* payload);
 
 Update_timely update_timely_data(char* payload);
