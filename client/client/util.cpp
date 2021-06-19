@@ -305,6 +305,10 @@ Update_mine_ques update_mine_ques_data(char* payload) {
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.mine_id = atoi(token);
 
+	// Get type
+	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
+	result.type = atoi(token);
+
 	// Get question_id
 	token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
 	result.question_id = atoi(token);

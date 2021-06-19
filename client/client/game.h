@@ -19,3 +19,16 @@ public:
 	void update_timely_response(char* payload);
 	void update_game_response(char * payload, Lobby& lobby, Player& player);
 };
+
+bool rank_sort(Team a, Team b) {
+	if (a.gold == b.gold) {
+		if (a.iron == b.iron) {
+			if (a.stone == b.stone) {
+				return a.wood > b.wood;
+			}
+			return a.stone > b.stone;
+		}
+		return a.iron > b.iron;
+	}
+	return a.gold > b.gold;
+}

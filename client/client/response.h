@@ -94,6 +94,7 @@ struct Update_castle_ques : public Update_question {
 
 struct Update_mine_ques : public Update_question {
 	int mine_id;
+	int type;
 };
 
 struct Update_castle_attack : public Update_question {

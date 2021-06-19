@@ -2,6 +2,7 @@
 #include "game.h"
 #include "response.h"
 #include "util.h"
+#include <algorithm>
 
 Game::Game(){
 
@@ -72,7 +73,7 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_CSTQUEST)) {
 		Update_mine_ques res = update_mine_ques_data(payload);
-		this->mines[res.mine_id].question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+		this->mines[res.mine_id].question[res.type] = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_CST_R)) {
 		Update_castle_attack res = update_castle_attack_data(payload);
@@ -128,7 +129,7 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 			}
 		}
 
-		mine.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+		mine.question[res.type] = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WPN)) {
 		Update_buy_weapon res = update_buy_weapon_data(payload);
@@ -154,6 +155,11 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
 		team.wood -= team.wall.wood;
 		team.stone -= team.wall.stone;
 		team.iron -= team.wall.iron;
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
+		printf("It's over baby");	// Show end game UI
+		std::sort(this->teams, this->teams + this->team_number, rank_sort);		// Rank each team, the first team is the best, last team is the worst
+		// Switch to lobby view
 	}
 
 }
