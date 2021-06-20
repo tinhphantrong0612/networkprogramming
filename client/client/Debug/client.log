@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-﻿  stdafx.cpp
-  castle.cpp
-  client.cpp
-  auth.cpp
-  game.cpp
-  lobby.cpp
-  mine.cpp
-  player.cpp
-  question.cpp
-  response.cpp
-  stream.cpp
-  team.cpp
-  util.cpp
-  wall.cpp
-  weapon.cpp
-  Generating Code...
-  client.vcxproj -> F:\Tài liệu\Lập trình mạng\project\networkprogramming\client\Debug\client.exe
-=======
 ﻿Build started 19/06/2021 3:26:56 PM.
      1>Project "E:\Documents\Visual Studio 2013\network\client\client\client.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -45,4 +26,3 @@
 Build succeeded.
 
 Time Elapsed 00:00:00.95
->>>>>>> 2af5f0eaf8ad770792d23a751e1d090918905857
