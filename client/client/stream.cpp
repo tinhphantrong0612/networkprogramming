@@ -56,7 +56,7 @@ int Socket::tcp_send(char* code, char* payload) {
 	return 0;
 }
 
-int Socket::tcp_receive(char* code, char* payload) {
+int Socket::tcp_receive(Buffer* buffer) {
 	char mess[BUFF_SIZE] = "";
 	int ret = recv(this->client_socket, mess, BUFF_SIZE, 0);
 	if (ret == SOCKET_ERROR) {
@@ -67,12 +67,20 @@ int Socket::tcp_receive(char* code, char* payload) {
 	if (ret) {
 		mess[ret] = '\0';
 		char* ptr = mess;
-		strncpy_s(code, CODE_SIZE + 1, mess, CODE_SIZE);
-		ptr += CODE_SIZE;
-		int first_byte = ptr[0];
-		int second_byte = ptr[1];
-		int len = first_byte * 256 + second_byte;
-		strncpy_s(payload, PAYLOAD_SIZE + 1, ptr + PAYLOAD_LEN_SIZE, len);
+		int i = 0;
+		while (ptr) {
+			char code[CODE_SIZE + 1];
+			char payload[PAYLOAD_SIZE + 1];
+			strncpy_s(code, CODE_SIZE + 1, ptr, CODE_SIZE);
+			ptr += CODE_SIZE;
+			int first_byte = ptr[0];
+			int second_byte = ptr[1];
+			int len = (first_byte - 1) * 256 + second_byte - 1;
+			strncpy_s(payload, PAYLOAD_SIZE + 1, ptr + PAYLOAD_LEN_SIZE, len);
+			ptr += PAYLOAD_LEN_SIZE + strlen(payload);
+			buffer[i] = Buffer(code, payload);
+			i++;
+		}
 	}
 	else {
 		return WSAECONNRESET;

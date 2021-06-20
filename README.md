@@ -108,6 +108,7 @@ payload_len = (first_byte - 1) * 255 + second_byte - 1;
 301: ATTACK_MINE
 302: BUY_WEAPON
 303: BUY_WALL
+304: CHEAT
 
 // Update header - Server send back only
 400: TIMELY_UPDATE
@@ -127,6 +128,7 @@ payload_len = (first_byte - 1) * 255 + second_byte - 1;
 40107: UPDATE_GAME_BUY_WPN
 40108: UPDATE_GAME_BUY_WALL
 40109: UPDATE_GAME_CHEAT
+40110: UPDATE_GAME_OVER
 
 40200: UPDATE_LOBBY_QUIT
 40201: UPDATE_LOBBY_JOIN
@@ -464,3 +466,7 @@ Result code:
 	- `weapon_id` is similar to `wall_type`
 	- `weapon_atk` is similar to `wall_def`
 	- `<gold>#<wood>#<stone>#<iron>` use atoi 
+### End Game
+```c++
+401|strlen(data)|UPDATE_GAME_OVER
+```

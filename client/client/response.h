@@ -13,7 +13,7 @@ struct Auth: public Response {
 };
 
 struct Create_lobby : public Response  {
-	int id;
+	unsigned long long id;
 };
 
 struct Get_lobby : public Response {
@@ -21,11 +21,10 @@ struct Get_lobby : public Response {
 	int size;
 };
 
+
 struct Join_lobby : public Response  {
 	int id;
 	int player_id;
-	int team_number;
-	int team_id;
 };
 
 struct Ready : public Response {
@@ -45,15 +44,19 @@ struct Start_game : public Response  {
 
 };
 
+
 struct Update_lobby : public Response  {
-	int game_id;
 	int team_number;
 	int request_player_id;
-	int team_players[MAX_NUM_PLAYER];
+	int host;
 	Player players[MAX_NUM_PLAYER];
 
 	//Extra info
 	int player_number;
+};
+
+struct Kick : public Response{
+
 };
 
 
@@ -70,6 +73,10 @@ struct Attack_castle : public Response {
 };
 
 struct Attack_mine : public Response {
+
+};
+
+struct Cheat : Response {
 
 };
 
@@ -91,18 +98,38 @@ struct Update_castle_ques : public Update_question {
 
 struct Update_mine_ques : public Update_question {
 	int mine_id;
+	int type;
 };
 
-struct Castle_info {
-	int occupied_by;	// team_id
-	int wall_type;
+struct Update_castle_attack : public Update_question {
+	int player_id;
+	int team_id;
+	int castle_id;
+	int wall_type_id;
 	int wall_def;
+	int weapon_type_id;
+	int weapon_atk;
 };
 
-struct Mine_info {
-	int wood;
-	int iron;
-	int stone;
+struct Update_mine_attack : public Update_question {
+	int player_id;
+	int team_id;
+	int mine_id;
+	int type;
+	int resource;
+};
+
+struct Update_buy_weapon : public Update_game {
+	int player_id;
+	int team_id;
+	int weapon_type_id;
+};
+
+struct Update_buy_wall : public Update_game {
+	int player_id;
+	int castle_id;
+	int team_id;
+	int wall_type_id;
 };
 
 struct Update_resource : public Update_game {
@@ -130,4 +157,9 @@ struct Update_timely{
 	int wood_team[MAX_TEAM_OF_GAME];
 	int stone_team[MAX_TEAM_OF_GAME];
 	int iron_team[MAX_TEAM_OF_GAME];
+};
+
+struct Update_cheat : Response {
+	int request_player_id;
+	int team_id;
 };

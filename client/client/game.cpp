@@ -2,6 +2,7 @@
 #include "game.h"
 #include "response.h"
 #include "util.h"
+#include <algorithm>
 
 Game::Game(){
 
@@ -71,6 +72,97 @@ void Game::update_game_response(char* payload, Lobby& lobby) {
 	}
 	else if (!strcmp(response.result_code, UPDATE_GAME_CSTQUEST)) {
 		Update_mine_ques res = update_mine_ques_data(payload);
-		this->mines[res.mine_id].question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+		this->mines[res.mine_id].question[res.type] = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
 	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_CST_R)) {
+		Update_castle_attack res = update_castle_attack_data(payload);
+		int castle_id = res.castle_id;
+		int player_id = res.player_id;
+		int team_id = res.team_id;
+		Castle& castle = this->castles[castle_id];
+		Team& team = this->teams[team_id];
+		if (!strcmp(response.result_code, UPDATE_GAME_ATK_CST_W)) {
+			if (player_id != player.id) {
+				printf("The player: %d of team %d has taken castle %d but fail\n",
+					player_id, team_id, castle_id);	// This line replace by UI notification
+				if (castle.wall.defense > res.wall_def && castle.occupied_by != 4) {
+					printf("The weapon not strong enough");		// This line replace by UI notification
+				}
+			}
+		}
+		else {
+			if (player_id != player.id) {
+				printf("The player: %d of team %d has taken successfully castle %d\n",
+					player_id, team_id, castle_id);	// This line replace by UI notification
+			}
+			castle.occupied_by = team_id;
+		}
+		castle.wall = get_wall(res.wall_type_id);
+		castle.wall.defense = res.wall_def;
+
+		team.add_castle(castle);
+		team.weapon = get_weapon(res.weapon_type_id);
+		team.weapon.attack = res.weapon_atk;
+
+		castle.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_W) || !strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
+		Update_mine_attack res = update_mine_attack_data(payload);
+		int mine_id = res.mine_id;
+		int player_id = res.player_id;
+		int team_id = res.team_id;
+		Mine& mine = this->mines[mine_id];
+		Team& team = this->teams[team_id];
+		if (!strcmp(response.result_code, UPDATE_GAME_ATK_MINE_R)) {
+			printf("The player: %d of team %d has exploited successfully mine %d \n", player_id, team_id, mine_id);	// This line replace by UI notification
+			switch (res.type) {
+				case WOOD:
+					team.wood += res.resource;
+					break;
+				case STONE:
+					team.stone += res.resource;
+					break;
+				case IRON:
+					team.iron += res.resource;
+					break;
+			}
+		}
+
+		mine.question[res.type] = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WPN)) {
+		Update_buy_weapon res = update_buy_weapon_data(payload);
+		if (player.id != res.player_id) {
+			printf("Player %d of team %d has bought weapon %d", res.player_id, res.team_id, res.weapon_type_id);	// This line replace by UI notification
+		}
+		Team& team = this->teams[res.team_id];
+		team.weapon = get_weapon(res.weapon_type_id);
+		team.wood -= team.weapon.wood;
+		team.stone -= team.weapon.stone;
+		team.iron -= team.weapon.iron;
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_BUY_WALL)) {
+		Update_buy_wall res = update_buy_wall_data(payload);
+		if (player.id != res.player_id) {
+			printf("Player %d of team %d has bought wall %d", res.player_id, res.team_id, res.wall_type_id);	// This line replace by UI notification
+		}
+
+		Team& team = this->teams[res.team_id];
+		Castle& castle = this->castles[res.castle_id];
+		team.wall = get_wall(res.wall_type_id);
+		castle.wall = get_wall(res.wall_type_id);
+		team.wood -= team.wall.wood;
+		team.stone -= team.wall.stone;
+		team.iron -= team.wall.iron;
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_CHEAT)) {
+		Update_cheat res = update_cheat_data(payload);
+		printf("Player % of team %d has cheated", res.request_player_id, res.team_id);	// This line replace by UI notification
+	}
+	else if (!strcmp(response.result_code, UPDATE_GAME_OVER)) {
+		printf("It's over baby");	// Show end game UI
+		std::sort(this->teams, this->teams + this->team_number, rank_sort);		// Rank each team, the first team is the best, last team is the worst
+		// Switch to lobby view
+	}
+
 }
