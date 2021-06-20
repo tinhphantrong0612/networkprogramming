@@ -21,7 +21,6 @@ void receive_data(Socket& socket) {
 	//Receive response
 	char code[CODE_SIZE + 1];
 	char payload[PAYLOAD_SIZE + 1];
-	socket.tcp_receive(code, payload);
 	if (!strcmp(code, LOGIN)) {
 		// User goi login_response
 	}

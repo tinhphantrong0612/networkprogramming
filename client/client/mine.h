@@ -9,7 +9,7 @@ public:
 	int wood;
 	int stone;
 	int iron;
-	Question question;
+	Question question[TYPE_MINE_SIZE];
 
 	Mine();
 	Mine(int id, int type);

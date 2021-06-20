@@ -2,9 +2,10 @@
 
 //Buffer size
 #define PAYLOAD_SIZE 8000
-#define BUFF_SIZE 32000
+#define BUFF_SIZE 64000
 #define PAYLOAD_LEN_SIZE 2
 #define CODE_SIZE 3
+#define MAX_BUFFER_SIZE 8
 
 #define RESULT_CODE_SIZE 5
 #define USERNAME_LEN 256
@@ -27,6 +28,7 @@
 #define GAME_ID_SIZE 13	// for game id str
 #define TEAM_ID_SIZE 1	// for team id str
 #define TEAM_NUM_SIZE 1 // for teamnumber str
+#define PLAYER_ID_SIZE 1 // for player id str
 #define CASTLE_ID_SIZE 1	// for castle id str
 #define MINE_ID_SIZE 1	// for mine id str
 #define WEAPON_ID_SIZE 1	// for weapon id str
@@ -34,6 +36,7 @@
 #define QUESTION_ID_SIZE 3 // for question id str
 #define ANSWER_ID_SIZE 3 // for question id str
 #define TYPE_SIZE 1
+#define TYPE_MINE_SIZE 3 // Number mine type
 
 // default value
 #define DEFAULT_PORT 5500
@@ -55,6 +58,7 @@
 // Lobby state
 #define WAITING 0
 #define INGAME 1
+#define EMPTY 2
 
 
 // Type
@@ -208,6 +212,17 @@
 #define CHANGE_E_UNKNOWNTEAM "20406"
 #define CHANGE_E_CURRENTTEAM "20407"
 
+// Kick
+#define KICK_SUCCESS "20500"
+#define KICK_E_NOTAUTH "20501"
+#define KICK_E_NOTINGAME "20502"
+#define KICK_E_PLAYING "20503"
+#define KICK_E_NOTHOST "20504"
+#define KICK_E_YOURSELF "20505"
+#define KICK_E_NOPLAYER "20506"
+#define KICK_E_FORMAT "20507"
+
+
 // Attack castle
 #define ATK_CST_SUCCESS "30000"
 #define ATK_CST_E_TOOLATE "30001"	// Answer the question too late
@@ -238,6 +253,11 @@
 #define BUY_WALL_E_NOTPLAYING "30304"
 #define BUY_WALL_E_FORMAT "30305"
 
+//Cheat
+
+#define CHEAT_SUCCESS "30400"
+#define CHEAT_E_NOTPLAYING "30401"
+#define CHEAT_E_GREEDY "30402"
 
 // Ingame
 #define UPDATE_GAME_START "40100"
@@ -249,6 +269,8 @@
 #define UPDATE_GAME_ATK_MINE_W "40106"
 #define UPDATE_GAME_BUY_WPN "40107"
 #define UPDATE_GAME_BUY_WALL "40108"
+#define UPDATE_GAME_CHEAT "40109"
+#define UPDATE_GAME_OVER "40110"
 
 // Update lobby
 #define UPDATE_LOBBY_QUIT "40200"
@@ -272,12 +294,14 @@
 #define START_GAME "202"
 #define QUIT_LOBBY "203"
 #define CHANGE_TEAM "204"
+#define KICK "205"
 
 // Ingame - Request header
 #define ATTACK_CASTLE "300"
 #define ATTACK_MINE "301"
 #define BUY_WEAPON "302"
 #define BUY_WALL "303"
+#define CHEAT "304"
 
 // Update header - Server send back only
 #define TIMELY_UPDATE "400"

@@ -5,6 +5,6 @@ Castle::Castle() {
 
 }
 
-Castle::Castle(int id) : id{ id }, occupied_by{ -1 } {
+Castle::Castle(int id) : id{ id }, occupied_by{ 4 } {
 
 }
