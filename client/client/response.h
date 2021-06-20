@@ -23,7 +23,7 @@ struct Get_lobby : public Response {
 
 
 struct Join_lobby : public Response  {
-	unsigned long long id;
+	int id;
 	int player_id;
 };
 
@@ -132,7 +132,12 @@ struct Update_buy_wall : public Update_game {
 	int wall_type_id;
 };
 
+struct Update_resource : public Update_game {
+	int request_player_id;
+	int castle_id;
+	Castle_info castle_info[MAX_CASTLE_OF_GAME];
 
+};
 
 struct Update_timely{
 	// Castle info

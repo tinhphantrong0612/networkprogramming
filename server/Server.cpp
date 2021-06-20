@@ -19,25 +19,63 @@ using namespace std;
 #include "utilities.h"
 
 map <string, pair<string, int>> accountMap;
-CRITICAL_SECTION				criticalSection;
 GAME							games[GAME_NUM];
 DWORD							nEvents = 0;
 WSAEVENT						events[WSA_MAXIMUM_WAIT_EVENTS];
 PLAYER							players[WSA_MAXIMUM_WAIT_EVENTS];
 
+
 unsigned _stdcall timelyUpdate(void* param) {
+	char buff[BUFF_SIZE];
+	char reserveBuff[BUFF_SIZE];
+	int loopCount = 1;
+	long long delay = 0;
+	GAME currGame = (GAME)param;
+
 	while (1) {
-		printf("Thread function here!");
-		Sleep(30000);
-	}
+		long long currTime = loopCount * LOOP_TIME;
+		if ((getTime() - currGame->startAt) >= currTime) {
+			if (loopCount >= MAX_LOOP) { 
+				informEndGame(currGame, UPDATE_GAME, UPDATE_GAME_OVER, buff, reserveBuff);
+				resetGame(currGame);
+				break;
+			} 
+			else { 
+				//Enter critical section
+				while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
+				for (int i = 0; i < CASTLE_NUM; i++) {
+					if (currGame->castles[i]->occupiedBy > -1) {
+					currGame->teams[currGame->castles[i]->occupiedBy]->gold += ADDITION_GOLD; 
+					}
+				}
+				for (int i = 0; i < MINE_NUM; i++) {
+					currGame->mines[i]->resources[WOOD] += ADDITION_WOOD; 
+					currGame->mines[i]->resources[STONE] += ADDITION_STONE; 
+					currGame->mines[i]->resources[IRON] += ADDITION_IRON; 
+				}
+
+				informUpdate(currGame, TIMELY_UPDATE, buff, reserveBuff);
+
+				//Leave critical section
+				LeaveCriticalSection(&currGame->criticalSection);
+
+				delay = getTime() - currGame->startAt - currTime;
+				loopCount++;
+			}
+		}
+
+		Sleep(LOOP_TIME - delay); //Wait till next update
+	}	
+
+	return 0;
 }
 
 int main(int argc, char* argv[])
 {
-	DWORD				index;
-	WSANETWORKEVENTS	sockEvent;
-	char				buff[BUFF_SIZE];
-	char				reserveBuff[BUFF_SIZE];
+	DWORD							index;
+	WSANETWORKEVENTS				sockEvent;
+	char							buff[BUFF_SIZE];
+	char							reserveBuff[BUFF_SIZE];
 
 	//Step 1: Initiate WinSock
 	WSADATA wsaData;
@@ -706,10 +744,7 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	buff[BUFFLEN] = playerIndex + 48;
 	buff[temp + 1] = 0;
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(game->castles[castleId]->wall->type, buff + BUFFLEN, BUFF_SIZE, 10);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+	calculateACastle(game->castles[castleId], buff + BUFFLEN);
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
@@ -727,6 +762,45 @@ void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, c
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
+
+/* The informUpdate function inform resource update to all player
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
+*/
+void informUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
+	memset(buff, 0, BUFF_SIZE);
+	for (int i = 0; i < CASTLE_NUM; i++) {
+		calculateACastle(game->castles[i], buff + BUFFLEN);
+	}
+	for (int i = 0; i < MINE_NUM; i++) {
+		calculateAMine(game->mines[i], buff + BUFFLEN);
+	}
+	for (int i = 0; i < TEAM_NUM; i++) {
+		_itoa_s(game->teams[i]->index, buff + BUFFLEN, BUFF_SIZE, 10);
+		strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
+		calculateATeam(game->teams[i], buff + BUFFLEN);
+	}
+	buff[strlen(buff) - 1] = 0;
+	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
+};
+
+/* The informEndGame function inform endgame signal to all player
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
+*/
+void informEndGame(GAME game, char *opcode, char* responseCode, char *buff, char *reserveBuff) {
+	memset(buff, 0, BUFF_SIZE);
+	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
+	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
+};
+
 
 /* The sendNewCastleQuestion function send new castle question when game start
 * @param	game				[IN]		Game

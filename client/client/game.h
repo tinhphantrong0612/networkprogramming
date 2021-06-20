@@ -14,8 +14,8 @@ public:
 	Castle castles[MAX_CASTLE_OF_GAME];
 
 	Game();
-	Game(unsigned long long id, int team_number, Player* players, int player_size);
-	void init_game(unsigned long long id, int team_number, Player* players, int player_number);
+	Game(int id, int team_number, Player* players, int player_size);
+	void init_game(int id, int team_number, Player* players, int player_number);
 	void update_timely_response(char* payload);
 	void update_game_response(char * payload, Lobby& lobby, Player& player);
 };

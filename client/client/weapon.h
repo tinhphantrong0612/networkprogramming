@@ -8,7 +8,6 @@
 
 class Weapon {
 public:
-	char type;
 	char name[NAME_LENGTH + 1];
 	int	attack;
 	int	wood;
@@ -16,7 +15,7 @@ public:
 	int	iron;
 
 	Weapon();
-	Weapon(int type, int attack, char* name, int wood, int stone, int iron);
+	Weapon(int attack, char* name, int wood, int stone, int iron);
 
 };
 

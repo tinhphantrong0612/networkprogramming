@@ -9,11 +9,11 @@ Game::Game(){
 }
 
 
-Game::Game(unsigned long long id, int team_number, Player* players, int player_number){
+Game::Game(int id, int team_number, Player* players, int player_number){
 	init_game(id, team_number, players, player_number);
 }
 
-void Game::init_game(unsigned long long id, int team_number, Player* players, int player_number) {
+void Game::init_game(int id, int team_number, Player* players, int player_number) {
 	this->id = id;
 	this->team_number = team_number;
 	for (int i = 0; i < this->team_number; i++) {
@@ -58,10 +58,9 @@ void Game::update_timely_response(char* payload) {
 		this->teams[i].stone = response.stone_team[i];
 		this->teams[i].iron = response.iron_team[i];
 	}
-
 }
 
-void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
+void Game::update_game_response(char* payload, Lobby& lobby) {
 	Update_game response = update_game_data(payload);
 	if (!strcmp(response.result_code, UPDATE_GAME_START)) {
 		this->init_game(lobby.id, lobby.team_number, lobby.players, lobby.player_number);

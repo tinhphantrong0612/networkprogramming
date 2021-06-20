@@ -278,7 +278,11 @@
 #define CATAPULT_IRON			300
 #define CANNON_IRON				1800
 
-// Addtion per 30 seconds
+// Update loop info
+#define LOOP_TIME               30000 // update per 30 seconds
+#define MAX_LOOP                479 // 4 hour
+
+// Addtion per loop
 #define ADDITION_GOLD			5
 #define ADDITION_WOOD			20
 #define ADDITION_STONE			15

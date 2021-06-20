@@ -80,7 +80,7 @@ Get_lobby get_lobby_data(char* payload) {
 	// Get result code
 	char* token = strtok_s(payload, DELIM_REQ_RES, &next_token);
 	strcpy_s(result.result_code, RESULT_CODE_SIZE + 1, token);
-	unsigned long long id;
+	int id;
 	int team_number;
 	int state;
 	char team_players[TEAM_PLAYER_NUM_STR + 1];
@@ -90,7 +90,7 @@ Get_lobby get_lobby_data(char* payload) {
 	while (token) {
 		// Get lobby id
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
-		id = _atoi64(token);
+		id = atoi(token);
 
 		// Get team number
 		token = strtok_s(NULL, DELIM_REQ_RES, &next_token);
@@ -109,9 +109,6 @@ Get_lobby get_lobby_data(char* payload) {
 		result.lobbies[i] = lobby;
 
 		i++;
-		if (!next_token) {
-			break;
-		}
 	}
 	result.size = i;
 
@@ -268,9 +265,6 @@ Update_lobby update_lobby_data(char* payload) {
 		team_id = atoi(token);
 		result.players[i] = Player{ player_ingame_id, player_name, team_id, player_state };
 		i++;
-		if (!next_token) {
-			break;
-		}
 	}
 
 	result.player_number = i;
