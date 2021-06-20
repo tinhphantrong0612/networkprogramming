@@ -193,6 +193,7 @@
 #define UPDATE_GAME_BUY_WPN		"40107" // Buy weapon
 #define UPDATE_GAME_BUY_WALL	"40108" // Buy wall
 #define UPDATE_GAME_CHEAT		"40109" // Cheat
+#define UPDATE_GAME_OVER        "40110" // When game end
 
 #define UPDATE_LOBBY_QUIT		"40200" // Inform disconnect from player
 #define UPDATE_LOBBY_JOIN		"40201" // Inform join from player

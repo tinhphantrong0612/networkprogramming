@@ -36,7 +36,7 @@ unsigned _stdcall timelyUpdate(void* param) {
 		long long currTime = loopCount * LOOP_TIME;
 		if ((getTime() - currGame->startAt) >= currTime) {
 			if (loopCount >= MAX_LOOP) { 
-				informEndGame(currGame, UPDATE_GAME, UPDATE_GAME_OVER, buff, reserveBuff);
+				informEndGame(currGame, (char*) UPDATE_GAME, (char*) UPDATE_GAME_OVER, buff, reserveBuff);
 				resetGame(currGame);
 				break;
 			} 
@@ -54,7 +54,7 @@ unsigned _stdcall timelyUpdate(void* param) {
 					currGame->mines[i]->resources[IRON] += ADDITION_IRON; 
 				}
 
-				informUpdate(currGame, TIMELY_UPDATE, buff, reserveBuff);
+				informUpdate(currGame, (char*) TIMELY_UPDATE, buff, reserveBuff);
 
 				//Leave critical section
 				LeaveCriticalSection(&currGame->criticalSection);
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
-	loadAccountMap(ACCOUNT_FILE);
+	loadAccountMap((char*) ACCOUNT_FILE);
 
 	SOCKET connSock;
 	sockaddr_in clientAddr;
@@ -445,15 +445,15 @@ void setResponse(char *opcode, char *responsePayload, int responsePayloadLen, ch
 * @return	Send Response result
 */
 int handleLogin(PLAYER player, char *opcode, char *buff) {
-	if (player->state != NOT_AUTHORIZED) return setResponseAndSend(player, opcode, LOGIN_E_ALREADY, strlen(LOGIN_E_ALREADY), buff);
+	if (player->state != NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOGIN_E_ALREADY, strlen(LOGIN_E_ALREADY), buff);
 	char *sharp = strchr(buff, '#');
 	if (sharp == NULL || sharp + 1 == NULL) {
-		return setResponseAndSend(player, opcode, LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
+		return setResponseAndSend(player, opcode, (char*) LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
 	}
 	unsigned int usernameLen = (int)(sharp - buff);
 	unsigned int passwordLen = strlen(sharp + 1);
 	if (usernameLen > ACCOUNT_SIZE || passwordLen > ACCOUNT_SIZE) {
-		return setResponseAndSend(player, opcode, LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
+		return setResponseAndSend(player, opcode, (char*) LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
 	}
 	// Get username, password from payload
 	char username[ACCOUNT_SIZE];
@@ -464,14 +464,14 @@ int handleLogin(PLAYER player, char *opcode, char *buff) {
 	// Find username
 	map<string, pair<string, int>>::iterator it;
 	it = accountMap.find(username);
-	if (it == accountMap.end()) return setResponseAndSend(player, opcode, LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
-	else if (strcmp(it->second.first.c_str(), password) != 0) return setResponseAndSend(player, opcode, LOGIN_E_PASSWORD, strlen(LOGIN_E_PASSWORD), buff);
-	else if (it->second.second == AUTHORIZED) return setResponseAndSend(player, opcode, LOGIN_E_ELSEWHERE, strlen(LOGIN_E_ELSEWHERE), buff);
+	if (it == accountMap.end()) return setResponseAndSend(player, opcode, (char*) LOGIN_E_NOTEXIST, strlen(LOGIN_E_NOTEXIST), buff);
+	else if (strcmp(it->second.first.c_str(), password) != 0) return setResponseAndSend(player, opcode, (char*) LOGIN_E_PASSWORD, strlen(LOGIN_E_PASSWORD), buff);
+	else if (it->second.second == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOGIN_E_ELSEWHERE, strlen(LOGIN_E_ELSEWHERE), buff);
 	else {
 		// Update player state and account state in account map
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, username, AUTHORIZED);
 		it->second.second = AUTHORIZED;
-		return setResponseAndSend(player, opcode, LOGIN_SUCCESS, strlen(LOGIN_SUCCESS), buff);
+		return setResponseAndSend(player, opcode, (char*) LOGIN_SUCCESS, strlen(LOGIN_SUCCESS), buff);
 	}
 }
 
@@ -482,15 +482,15 @@ int handleLogin(PLAYER player, char *opcode, char *buff) {
 * @return	Send Response result
 */
 int handleSignUp(PLAYER player, char *opcode, char *buff) {
-	if (player->state != NOT_AUTHORIZED) return setResponseAndSend(player, opcode, SIGNUP_E_LOGGEDIN, strlen(SIGNUP_E_LOGGEDIN), buff);
+	if (player->state != NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) SIGNUP_E_LOGGEDIN, strlen(SIGNUP_E_LOGGEDIN), buff);
 	char *sharp = strchr(buff, '#');
 	if (sharp == NULL || sharp + 1 == NULL) {
-		return setResponseAndSend(player, opcode, SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
+		return setResponseAndSend(player, opcode, (char*) SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
 	}
 	unsigned int usernameLen = (int)(sharp - buff);
 	unsigned int passwordLen = strlen(sharp + 1);
 	if (usernameLen > ACCOUNT_SIZE || passwordLen > ACCOUNT_SIZE) {
-		return setResponseAndSend(player, opcode, SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
+		return setResponseAndSend(player, opcode, (char*) SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
 	}
 	// Get username, password from payload
 	char username[ACCOUNT_SIZE];
@@ -498,15 +498,15 @@ int handleSignUp(PLAYER player, char *opcode, char *buff) {
 	sharp[0] = 0;
 	strcpy_s(username, ACCOUNT_SIZE, buff);
 	strcpy_s(password, ACCOUNT_SIZE, sharp + 1);
-	if (strlen(password) < passwordLen) return setResponseAndSend(player, opcode, SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
+	if (strlen(password) < passwordLen) return setResponseAndSend(player, opcode, (char*) SIGNUP_E_FORMAT, strlen(SIGNUP_E_FORMAT), buff);
 	map<string, pair<string, int>>::iterator it;
 	it = accountMap.find(username);
-	if (it != accountMap.end()) return setResponseAndSend(player, opcode, SIGNUP_E_EXIST, strlen(SIGNUP_E_EXIST), buff);
+	if (it != accountMap.end()) return setResponseAndSend(player, opcode, (char*) SIGNUP_E_EXIST, strlen(SIGNUP_E_EXIST), buff);
 	else {
 		// Add new account to account map and to account file
 		accountMap[username] = make_pair(password, NOT_AUTHORIZED);
-		addNewAccount(ACCOUNT_FILE, username, password);
-		return setResponseAndSend(player, opcode, SIGNUP_SUCCESS, strlen(SIGNUP_SUCCESS), buff);
+		addNewAccount((char*) ACCOUNT_FILE, username, password);
+		return setResponseAndSend(player, opcode, (char*) SIGNUP_SUCCESS, strlen(SIGNUP_SUCCESS), buff);
 	}
 }
 
@@ -517,13 +517,13 @@ int handleSignUp(PLAYER player, char *opcode, char *buff) {
 * @return	Send Response result
 */
 int handleCreateGame(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, CREATE_E_NOTAUTH, strlen(CREATE_E_NOTAUTH), buff);
-	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, CREATE_E_INGAME, strlen(CREATE_E_INGAME), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) CREATE_E_NOTAUTH, strlen(CREATE_E_NOTAUTH), buff);
+	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, (char*) CREATE_E_INGAME, strlen(CREATE_E_INGAME), buff);
 	else {
 		int i;
 		// Get number of teams
 		int teamNum = buff[0] - 48;
-		if ((teamNum < 2) || (teamNum > 4)) return setResponseAndSend(player, opcode, CREATE_E_INVALIDTEAM, strlen(CREATE_E_INVALIDTEAM), buff);
+		if ((teamNum < 2) || (teamNum > 4)) return setResponseAndSend(player, opcode, (char*) CREATE_E_INVALIDTEAM, strlen(CREATE_E_INVALIDTEAM), buff);
 		for (i = 0; i < GAME_NUM; i++) {
 			if (games[i]->id == 0) {
 				// create new game with host player
@@ -531,7 +531,7 @@ int handleCreateGame(PLAYER player, char *opcode, char *buff) {
 				break;
 			}
 		}
-		if (i == GAME_NUM) return setResponseAndSend(player, opcode, CREATE_E_FULLGAME, strlen(CREATE_E_FULLGAME), buff);
+		if (i == GAME_NUM) return setResponseAndSend(player, opcode, (char*) CREATE_E_FULLGAME, strlen(CREATE_E_FULLGAME), buff);
 		long long gameId = games[i]->id;
 		memset(buff, 0, BUFF_SIZE);
 		strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, CREATE_SUCCESS);
@@ -548,8 +548,8 @@ int handleCreateGame(PLAYER player, char *opcode, char *buff) {
 * @return	Send Response result
 */
 int handleGetLobby(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, LOBBY_E_NOTAUTH, strlen(LOBBY_E_NOTAUTH), buff);
-	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, LOBBY_E_INGAME, strlen(LOBBY_E_INGAME), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOBBY_E_NOTAUTH, strlen(LOBBY_E_NOTAUTH), buff);
+	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOBBY_E_INGAME, strlen(LOBBY_E_INGAME), buff);
 	else {
 		strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, LOBBY_SUCCESS);
 		getLobbyList(buff);
@@ -674,7 +674,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	_itoa_s(team->weapon->type, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->attack, buff + BUFFLEN, BUFF_SIZE, 10);
-	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
+	getCastleQuestion(game->castles[castleId], (char*) HARD_QUESTION_FILE, buff + BUFFLEN);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
@@ -702,7 +702,7 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	_itoa_s(resourceType, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10);
-	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, resourceType, buff + BUFFLEN);
+	getMineQuestion(game->mines[mineId], (char*) EASY_QUESTION_FILE, resourceType, buff + BUFFLEN);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
@@ -813,8 +813,8 @@ void sendNewCastleQuestion(GAME game, int castleId, char *buff, char *reserveBuf
 	strcpy_s(buff + BUFFLEN, BUFF_SIZE, UPDATE_GAME_CSTQUEST);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(castleId, buff + BUFFLEN, BUFF_SIZE, 10);
-	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
-	setResponse(UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+	getCastleQuestion(game->castles[castleId], (char*) HARD_QUESTION_FILE, buff + BUFFLEN);
+	setResponse((char*) UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
 
@@ -832,8 +832,8 @@ void sendNewMineQuestion(GAME game, int mineId, int type, char *buff, char *rese
 	_itoa_s(mineId, buff + BUFFLEN, BUFF_SIZE, 10);
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(type, buff + BUFFLEN, BUFF_SIZE, 10);
-	getMineQuestion(game->mines[mineId], EASY_QUESTION_FILE, type, buff + BUFFLEN);
-	setResponse(UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+	getMineQuestion(game->mines[mineId], (char*) EASY_QUESTION_FILE, type, buff + BUFFLEN);
+	setResponse((char*) UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 }
 
@@ -881,13 +881,13 @@ void sendGameRoomMessageToAllPlayersInGameRoom(GAME game, int responseLen, char 
 * @return	1
 */
 int handleJoinGame(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, JOIN_E_NOTAUTH, strlen(JOIN_E_NOTAUTH), buff);
-	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, JOIN_E_ALREADY, strlen(JOIN_E_ALREADY), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) JOIN_E_NOTAUTH, strlen(JOIN_E_NOTAUTH), buff);
+	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, (char*) JOIN_E_ALREADY, strlen(JOIN_E_ALREADY), buff);
 	else {
 		char *sharp = strchr(buff, '#');
-		if (sharp == NULL) return setResponseAndSend(player, opcode, JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
+		if (sharp == NULL) return setResponseAndSend(player, opcode, (char*) JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
 		int distance = int(sharp - buff);
-		if (distance != 13 || *(sharp + 2) != 0) return setResponseAndSend(player, opcode, JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
+		if (distance != 13 || *(sharp + 2) != 0) return setResponseAndSend(player, opcode, (char*) JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
 		sharp[0] = 0;
 		long long gameId = _atoi64(buff);
 		int team = atoi(sharp + 1);
@@ -899,23 +899,23 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 				break;
 			}
 		}
-		if (i == GAME_NUM || game == NULL) return setResponseAndSend(player, opcode, JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
-		if (game->gameState != WAITING) return setResponseAndSend(player, opcode, JOIN_E_PLAYING, strlen(JOIN_E_PLAYING), buff);
+		if (i == GAME_NUM || game == NULL) return setResponseAndSend(player, opcode, (char*) JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
+		if (game->gameState != WAITING) return setResponseAndSend(player, opcode, (char*) JOIN_E_PLAYING, strlen(JOIN_E_PLAYING), buff);
 		for (i = 0; i < PLAYER_NUM; i++) {
 			if (game->players[i] == NULL) {
 				if (emptyPlaceInGame == -1) emptyPlaceInGame = i;
 			}
 			else countPlayer++;
 		}
-		if (countPlayer == game->teamNum * 3) return setResponseAndSend(player, opcode, JOIN_E_FULLGAME, strlen(JOIN_E_FULLGAME), buff);
-		if ((team < 0) || (team > game->teamNum - 1)) return setResponseAndSend(player, opcode, JOIN_E_NOTEAM, strlen(JOIN_E_NOTEAM), buff);
+		if (countPlayer == game->teamNum * 3) return setResponseAndSend(player, opcode, (char*) JOIN_E_FULLGAME, strlen(JOIN_E_FULLGAME), buff);
+		if ((team < 0) || (team > game->teamNum - 1)) return setResponseAndSend(player, opcode, (char*) JOIN_E_NOTEAM, strlen(JOIN_E_NOTEAM), buff);
 		for (i = 0; i < 3; i++) {
 			if (game->teams[team]->players[i] == NULL) {
 				emptyPlaceInTeam = i;
 				break;
 			}
 		}
-		if (i == 3)	return setResponseAndSend(player, opcode, JOIN_E_FULLTEAM, strlen(JOIN_E_FULLTEAM), buff);
+		if (i == 3)	return setResponseAndSend(player, opcode, (char*) JOIN_E_FULLTEAM, strlen(JOIN_E_FULLTEAM), buff);
 		// Add player to team
 		game->teams[team]->players[emptyPlaceInTeam] = player;
 		// Add player to game
@@ -936,7 +936,7 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 			nEvents--;
 			return 1;
 		};
-		informGameRoomChange(game, emptyPlaceInGame, UPDATE_LOBBY, UPDATE_LOBBY_JOIN, buff);
+		informGameRoomChange(game, emptyPlaceInGame, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_JOIN, buff);
 		return 1;
 	}
 }
@@ -948,21 +948,21 @@ int handleJoinGame(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleChangeTeam(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, CHANGE_E_NOTAUTH, strlen(CHANGE_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, CHANGE_E_NOTINGAME, strlen(CHANGE_E_NOTINGAME), buff);
-	else if (player->state == READY) return setResponseAndSend(player, opcode, CHANGE_E_READY, strlen(CHANGE_E_READY), buff);
-	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, CHANGE_E_PLAYING, strlen(CHANGE_E_PLAYING), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) CHANGE_E_NOTAUTH, strlen(CHANGE_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) CHANGE_E_NOTINGAME, strlen(CHANGE_E_NOTINGAME), buff);
+	else if (player->state == READY) return setResponseAndSend(player, opcode, (char*) CHANGE_E_READY, strlen(CHANGE_E_READY), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, (char*) CHANGE_E_PLAYING, strlen(CHANGE_E_PLAYING), buff);
 	else {
 		int emptyPlaceInTargetTeam = -1, targetTeam = buff[0] - 48;
-		if (targetTeam < 0 || targetTeam > player->game->teamNum - 1) return setResponseAndSend(player, opcode, CHANGE_E_PLAYING, strlen(CHANGE_E_PLAYING), buff);
-		if (targetTeam == player->teamIndex) return setResponseAndSend(player, opcode, CHANGE_E_CURRENTTEAM, strlen(CHANGE_E_CURRENTTEAM), buff);
+		if (targetTeam < 0 || targetTeam > player->game->teamNum - 1) return setResponseAndSend(player, opcode, (char*) CHANGE_E_PLAYING, strlen(CHANGE_E_PLAYING), buff);
+		if (targetTeam == player->teamIndex) return setResponseAndSend(player, opcode, (char*) CHANGE_E_CURRENTTEAM, strlen(CHANGE_E_CURRENTTEAM), buff);
 		for (int i = 0; i < 3; i++) {
 			if (player->game->teams[targetTeam]->players[i] == NULL) {
 				emptyPlaceInTargetTeam = i;
 				break;
 			}
 		}
-		if (emptyPlaceInTargetTeam == -1) return setResponseAndSend(player, opcode, CHANGE_E_FULL, strlen(CHANGE_E_FULL), buff);
+		if (emptyPlaceInTargetTeam == -1) return setResponseAndSend(player, opcode, (char*) CHANGE_E_FULL, strlen(CHANGE_E_FULL), buff);
 		GAME game = player->game;
 		// empty player place in old team
 		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
@@ -971,7 +971,7 @@ int handleChangeTeam(PLAYER player, char *opcode, char *buff) {
 		player->placeInTeam = emptyPlaceInTargetTeam;
 		// link team to player
 		game->teams[targetTeam]->players[emptyPlaceInTargetTeam] = player;
-		informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_CHANGETEAM, buff);
+		informGameRoomChange(game, player->gameIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_CHANGETEAM, buff);
 		return 1;
 	}
 }
@@ -983,14 +983,14 @@ int handleChangeTeam(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleReadyPlay(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, READY_E_NOTAUTH, strlen(READY_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, READY_E_NOTINGAME, strlen(READY_E_NOTINGAME), buff);
-	else if (player->state == READY) return setResponseAndSend(player, opcode, READY_E_ALREADY, strlen(READY_E_ALREADY), buff);
-	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, READY_E_PLAYING, strlen(READY_E_PLAYING), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) READY_E_NOTAUTH, strlen(READY_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) READY_E_NOTINGAME, strlen(READY_E_NOTINGAME), buff);
+	else if (player->state == READY) return setResponseAndSend(player, opcode, (char*) READY_E_ALREADY, strlen(READY_E_ALREADY), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, (char*) READY_E_PLAYING, strlen(READY_E_PLAYING), buff);
 	else {
-		if (player->gameIndex == player->game->host) return setResponseAndSend(player, opcode, READY_E_HOST, strlen(READY_E_HOST), buff);
+		if (player->gameIndex == player->game->host) return setResponseAndSend(player, opcode, (char*) READY_E_HOST, strlen(READY_E_HOST), buff);
 		player->state = READY; // Change player state to ready
-		informGameRoomChange(player->game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_READY, buff);
+		informGameRoomChange(player->game, player->gameIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_READY, buff);
 		return 1;
 	}
 }
@@ -1002,14 +1002,14 @@ int handleReadyPlay(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, UNREADY_E_NOTAUTH, strlen(UNREADY_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, UNREADY_E_NOTINGAME, strlen(UNREADY_E_NOTINGAME), buff);
-	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, UNREADY_E_PLAYING, strlen(UNREADY_E_PLAYING), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) UNREADY_E_NOTAUTH, strlen(UNREADY_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) UNREADY_E_NOTINGAME, strlen(UNREADY_E_NOTINGAME), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, (char*) UNREADY_E_PLAYING, strlen(UNREADY_E_PLAYING), buff);
 	else {
-		if (player->gameIndex == player->game->host) return setResponseAndSend(player, opcode, UNREADY_E_HOST, strlen(UNREADY_E_HOST), buff);
-		if (player->state == JOINT) return setResponseAndSend(player, opcode, UNREADY_E_ALREADY, strlen(UNREADY_E_ALREADY), buff);
+		if (player->gameIndex == player->game->host) return setResponseAndSend(player, opcode, (char*) UNREADY_E_HOST, strlen(UNREADY_E_HOST), buff);
+		if (player->state == JOINT) return setResponseAndSend(player, opcode, (char*) UNREADY_E_ALREADY, strlen(UNREADY_E_ALREADY), buff);
 		player->state = JOINT;
-		informGameRoomChange(player->game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_UNREADY, buff);
+		informGameRoomChange(player->game, player->gameIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_UNREADY, buff);
 		return 1;
 	}
 }
@@ -1021,9 +1021,9 @@ int handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleQuitGame(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, QUIT_E_NOTAUTH, strlen(QUIT_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, QUIT_E_NOTINGAME, strlen(QUIT_E_NOTINGAME), buff);
-	else if (player->state == READY) return setResponseAndSend(player, opcode, QUIT_E_READY, strlen(QUIT_E_READY), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) QUIT_E_NOTAUTH, strlen(QUIT_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) QUIT_E_NOTINGAME, strlen(QUIT_E_NOTINGAME), buff);
+	else if (player->state == READY) return setResponseAndSend(player, opcode, (char*) QUIT_E_READY, strlen(QUIT_E_READY), buff);
 	else {
 		int i;
 		GAME game = player->game;
@@ -1040,7 +1040,7 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 		if (i == PLAYER_NUM) emptyGame(game);
 		else if (game->host == player->gameIndex) game->host = i; // Update host if player is host
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, player->account, AUTHORIZED);
-		if (setResponseAndSend(player, QUIT_GAME, QUIT_SUCCESS, strlen(QUIT_SUCCESS), buff) == SOCKET_ERROR) {
+		if (setResponseAndSend(player, (char*) QUIT_GAME, (char*) QUIT_SUCCESS, strlen(QUIT_SUCCESS), buff) == SOCKET_ERROR) {
 			WSACloseEvent(events[player->index]);
 			closesocket(player->socket);
 			clearPlayerInfo(player, buff);
@@ -1048,7 +1048,7 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 			nEvents--;
 			return 1;
 		};
-		informGameRoomChange(game, playerIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
+		informGameRoomChange(game, playerIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_QUIT, buff);
 		return 1;
 	}
 }
@@ -1060,18 +1060,18 @@ int handleQuitGame(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleStartGame(PLAYER player, char *opcode, char * buff, char *reserveBuff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, START_E_NOTAUTH, strlen(START_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, START_E_NOTINGAME, strlen(START_E_NOTINGAME), buff);
-	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, START_E_PLAYING, strlen(START_E_PLAYING), buff);
-	else if (player->state == READY) return setResponseAndSend(player, opcode, START_E_NOTHOST, strlen(START_E_NOTHOST), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) START_E_NOTAUTH, strlen(START_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) START_E_NOTINGAME, strlen(START_E_NOTINGAME), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, (char*) START_E_PLAYING, strlen(START_E_PLAYING), buff);
+	else if (player->state == READY) return setResponseAndSend(player, opcode, (char*) START_E_NOTHOST, strlen(START_E_NOTHOST), buff);
 	else {
 		int i;
 		GAME game = player->game;
-		if (game->host != player->gameIndex) return setResponseAndSend(player, opcode, START_E_NOTHOST, strlen(START_E_NOTHOST), buff);
+		if (game->host != player->gameIndex) return setResponseAndSend(player, opcode, (char*) START_E_NOTHOST, strlen(START_E_NOTHOST), buff);
 		for (i = 0; i < PLAYER_NUM; i++) {
 			if (game->players[i] != NULL) {
 				if (game->players[i]->state != READY && i != player->gameIndex) {
-					return setResponseAndSend(player, opcode, START_E_NOTALLREADY, strlen(START_E_NOTALLREADY), buff);
+					return setResponseAndSend(player, opcode, (char*) START_E_NOTALLREADY, strlen(START_E_NOTALLREADY), buff);
 				}
 			}
 		}
@@ -1084,7 +1084,7 @@ int handleStartGame(PLAYER player, char *opcode, char * buff, char *reserveBuff)
 				}
 			}
 		}
-		if (countTeam < 2) return setResponseAndSend(player, opcode, START_E_ONETEAM, strlen(START_E_ONETEAM), buff);
+		if (countTeam < 2) return setResponseAndSend(player, opcode, (char*) START_E_ONETEAM, strlen(START_E_ONETEAM), buff);
 		memset(buff, 0, BUFF_SIZE);
 		// Start game
 		game->gameState = ONGOING;
@@ -1097,7 +1097,7 @@ int handleStartGame(PLAYER player, char *opcode, char * buff, char *reserveBuff)
 		}
 		_beginthreadex(NULL, NULL, &timelyUpdate, (void *)game, 0, 0);
 		strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, UPDATE_GAME_START);
-		setResponse(UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
+		setResponse((char*) UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 		sendInGameMessageToAllPlayersInGameRoom(game, BUFFLEN, buff, reserveBuff);
 		memset(buff + HEADER_SIZE, 0, BUFF_SIZE - 5);
 		for (i = 0; i < CASTLE_NUM; i++) {
@@ -1113,29 +1113,29 @@ int handleStartGame(PLAYER player, char *opcode, char * buff, char *reserveBuff)
 }
 
 int handleKick(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, KICK_E_NOTAUTH, strlen(KICK_E_NOTAUTH), buff);
-	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, KICK_E_NOTINGAME, strlen(KICK_E_NOTINGAME), buff);
-	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, KICK_E_PLAYING, strlen(KICK_E_NOTINGAME), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) KICK_E_NOTAUTH, strlen(KICK_E_NOTAUTH), buff);
+	else if (player->state == AUTHORIZED) return setResponseAndSend(player, opcode, (char*) KICK_E_NOTINGAME, strlen(KICK_E_NOTINGAME), buff);
+	else if (player->state == PLAYING) return setResponseAndSend(player, opcode, (char*) KICK_E_PLAYING, strlen(KICK_E_NOTINGAME), buff);
 	else {
 		GAME game = player->game;
-		if (player->gameIndex != game->host) return setResponseAndSend(player, opcode, KICK_E_NOTHOST, strlen(KICK_E_NOTHOST), buff);
-		if (strlen(buff) != 1) return setResponseAndSend(player, opcode, KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
+		if (player->gameIndex != game->host) return setResponseAndSend(player, opcode, (char*) KICK_E_NOTHOST, strlen(KICK_E_NOTHOST), buff);
+		if (strlen(buff) != 1) return setResponseAndSend(player, opcode, (char*) KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
 		int playerIndex = buff[0] - 48;
-		if (playerIndex < 0 || playerIndex > 11) return setResponseAndSend(player, opcode, KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
-		if (playerIndex == game->host) return setResponseAndSend(player, opcode, KICK_E_YOURSELF, strlen(KICK_E_YOURSELF), buff);
-		if (game->players[playerIndex] == NULL) return setResponseAndSend(player, opcode, KICK_E_NOPLAYER, strlen(KICK_E_NOPLAYER), buff);
+		if (playerIndex < 0 || playerIndex > 11) return setResponseAndSend(player, opcode, (char*) KICK_E_FORMAT, strlen(KICK_E_FORMAT), buff);
+		if (playerIndex == game->host) return setResponseAndSend(player, opcode, (char*) KICK_E_YOURSELF, strlen(KICK_E_YOURSELF), buff);
+		if (game->players[playerIndex] == NULL) return setResponseAndSend(player, opcode, (char*) KICK_E_NOPLAYER, strlen(KICK_E_NOPLAYER), buff);
 		PLAYER otherPlayer = game->players[playerIndex];
 		game->players[playerIndex] = NULL;
 		game->teams[otherPlayer->teamIndex]->players[otherPlayer->placeInTeam] = NULL;
 		updatePlayerInfo(otherPlayer, otherPlayer->socket, otherPlayer->IP, otherPlayer->port, 0, 0, 0, 0, otherPlayer->account, AUTHORIZED);
-		if (setResponseAndSend(otherPlayer, KICK, KICK_SUCCESS, strlen(KICK_SUCCESS), buff) == SOCKET_ERROR) {
+		if (setResponseAndSend(otherPlayer, (char*) KICK, (char*) KICK_SUCCESS, strlen(KICK_SUCCESS), buff) == SOCKET_ERROR) {
 			WSACloseEvent(events[otherPlayer->index]);
 			closesocket(otherPlayer->socket);
 			clearPlayerInfo(otherPlayer, buff);
 			if (otherPlayer->index != nEvents - 1) Swap(otherPlayer, players[nEvents - 1], events[otherPlayer->index], events[nEvents - 1]); // Swap last event and socket with the empties
 			nEvents--;
 		};
-		informGameRoomChange(game, playerIndex, UPDATE_LOBBY, UPDATE_LOBBY_KICK, buff);
+		informGameRoomChange(game, playerIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_KICK, buff);
 		return 1;
 	}
 }
@@ -1147,15 +1147,15 @@ int handleKick(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleLogOut(PLAYER player, char *opcode, char *buff) {
-	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, LOGOUT_E_NOTAUTH, strlen(LOGOUT_E_NOTAUTH), buff);
-	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, LOGOUT_E_INGAME, strlen(LOGOUT_E_INGAME), buff);
+	if (player->state == NOT_AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOGOUT_E_NOTAUTH, strlen(LOGOUT_E_NOTAUTH), buff);
+	else if (player->state != AUTHORIZED) return setResponseAndSend(player, opcode, (char*) LOGOUT_E_INGAME, strlen(LOGOUT_E_INGAME), buff);
 	else {
 		map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
 		if (it != accountMap.end()) {
 			it->second.second = NOT_AUTHORIZED;
 		}
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
-		return setResponseAndSend(player, opcode, LOGOUT_SUCCESS, strlen(LOGOUT_SUCCESS), buff);
+		return setResponseAndSend(player, opcode, (char*) LOGOUT_SUCCESS, strlen(LOGOUT_SUCCESS), buff);
 	}
 }
 
@@ -1166,17 +1166,17 @@ int handleLogOut(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuff) {
-	if (player->state != PLAYING) return setResponseAndSend(player, opcode, ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
 	else {
 		int castleId = 0, questionId = 0, answerId = 0;
 		char *firstSharp = strchr(buff, '#');
-		if (firstSharp == NULL) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (firstSharp == NULL) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		char *secondSharp = strchr(firstSharp + 1, '#');
-		if (secondSharp == NULL) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (secondSharp == NULL) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		int castleIdSize = (int)(firstSharp - buff);
 		int questionIdSize = (int)(secondSharp - firstSharp - 1);
 		int answerIdSize = strlen(secondSharp + 1);
-		if (castleIdSize != 1 || questionIdSize <= 0 || questionId >= 8 || answerIdSize != 1) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (castleIdSize != 1 || questionIdSize <= 0 || questionId >= 8 || answerIdSize != 1) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		firstSharp[0] = 0;
@@ -1184,10 +1184,10 @@ int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuf
 		castleId = buff[0] - 48;
 		questionId = atoi(firstSharp + 1);
 		answerId = secondSharp[1] - 48;
-		if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		CASTLE targetCastle = game->castles[castleId];
-		if (targetCastle->occupiedBy == player->teamIndex) return setResponseAndSend(player, opcode, ATK_CST_E_YOURS, strlen(ATK_CST_E_YOURS), buff);
-		if (targetCastle->question != questionId) return setResponseAndSend(player, opcode, ATK_CST_E_TOOLATE, strlen(ATK_CST_E_TOOLATE), buff);
+		if (targetCastle->occupiedBy == player->teamIndex) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_YOURS, strlen(ATK_CST_E_YOURS), buff);
+		if (targetCastle->question != questionId) return setResponseAndSend(player, opcode, (char*) ATK_CST_E_TOOLATE, strlen(ATK_CST_E_TOOLATE), buff);
 		if (targetCastle->answer != answerId) { // Wrong answer
 			if (targetCastle->wall->defense >= team->weapon->attack) { // Lost weapon
 				team->weapon->type = NO_WEAPON;
@@ -1196,21 +1196,21 @@ int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuf
 			else { // Reduce attack
 				team->weapon->attack -= targetCastle->wall->defense;
 			}
-			informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_W, buff, reserveBuff);
+			informCastleAttack(game, castleId, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_CST_W, buff, reserveBuff);
 		}
 		else {
 			if (targetCastle->wall->defense > team->weapon->attack) {
 				targetCastle->wall->defense -= team->weapon->attack;
 				team->weapon->type = NO_WEAPON;
 				team->weapon->attack = NO_WEAPON_ATK;
-				informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
+				informCastleAttack(game, castleId, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
 			}
 			else if (targetCastle->wall->defense < team->weapon->attack) {
 				team->weapon->attack -= targetCastle->wall->defense;
 				targetCastle->wall->type = NO_WALL;
 				targetCastle->wall->defense = NO_WALL_DEF;
 				targetCastle->occupiedBy = player->teamIndex;
-				informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
+				informCastleAttack(game, castleId, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
 			}
 			else if (targetCastle->wall->defense == team->weapon->attack) {
 				targetCastle->wall->type = NO_WALL;
@@ -1218,7 +1218,7 @@ int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuf
 				team->weapon->type = NO_WEAPON;
 				team->weapon->attack = NO_WEAPON_ATK;
 				targetCastle->occupiedBy = player->teamIndex;
-				informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
+				informCastleAttack(game, castleId, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_CST_R, buff, reserveBuff);
 			}
 		}
 	}
@@ -1232,15 +1232,15 @@ int handleAttackCastle(PLAYER player, char *opcode, char *buff, char *reserveBuf
 * @return	1
 */
 int handleAttackMine(PLAYER player, char *opcode, char *buff, char *reserveBuff) {
-	if (player->state != PLAYING) return setResponseAndSend(player, opcode, ATK_MINE_E_NOTPLAYING, strlen(ATK_MINE_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_NOTPLAYING, strlen(ATK_MINE_E_NOTPLAYING), buff);
 	else {
 		int mineId = 0, resourceType = 0, questionId = 0, answerId = 0;
 		char *firstSharp = strchr(buff, '#');
-		if (firstSharp == NULL) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		if (firstSharp == NULL) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		char *secondSharp = strchr(firstSharp + 1, '#');
-		if (secondSharp == NULL) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		if (secondSharp == NULL) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		char *thirdSharp = strchr(secondSharp + 1, '#');
-		if (thirdSharp == NULL) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		if (thirdSharp == NULL) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		firstSharp[0] = 0;
 		secondSharp[0] = 0;
 		thirdSharp[0] = 0;
@@ -1248,23 +1248,23 @@ int handleAttackMine(PLAYER player, char *opcode, char *buff, char *reserveBuff)
 		int resourceTypeSize = (int)(secondSharp - firstSharp - 1);
 		int questionIdSize = (int)(thirdSharp - secondSharp - 1);
 		int answerIdSize = strlen(thirdSharp + 1);
-		if (mineIdSize != 1 || resourceTypeSize != 1 || questionIdSize <= 0 || questionIdSize > 8 || answerIdSize != 1) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		if (mineIdSize != 1 || resourceTypeSize != 1 || questionIdSize <= 0 || questionIdSize > 8 || answerIdSize != 1) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		mineId = buff[0] - 48;
 		resourceType = buff[2] - 48;
 		questionId = atoi(secondSharp + 1);
 		answerId = thirdSharp[1] - 48;
-		if (mineId < 0 || mineId > MINE_NUM - 1 || resourceType < 0 || resourceType > 2 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
+		if (mineId < 0 || mineId > MINE_NUM - 1 || resourceType < 0 || resourceType > 2 || answerId < 0 || answerId > 4) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_FORMAT, strlen(ATK_MINE_E_FORMAT), buff);
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		MINE targetMine = game->mines[mineId];
-		if (targetMine->question[resourceType] != questionId) return setResponseAndSend(player, opcode, ATK_MINE_E_TOOLATE, strlen(ATK_MINE_E_TOOLATE), buff);
+		if (targetMine->question[resourceType] != questionId) return setResponseAndSend(player, opcode, (char*) ATK_MINE_E_TOOLATE, strlen(ATK_MINE_E_TOOLATE), buff);
 		if (targetMine->answer[resourceType] != answerId) { // Wrong answer
-			informMineAttack(game, mineId, resourceType, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_MINE_W, buff, reserveBuff);
+			informMineAttack(game, mineId, resourceType, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_MINE_W, buff, reserveBuff);
 		}
 		else { // Take resource and change question
 			team->basedResources[resourceType] += targetMine->resources[resourceType];
 			targetMine->resources[resourceType] = 0;
-			informMineAttack(game, mineId, resourceType, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_MINE_R, buff, reserveBuff);
+			informMineAttack(game, mineId, resourceType, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_ATK_MINE_R, buff, reserveBuff);
 		}
 	}
 	return 1;
@@ -1285,29 +1285,29 @@ void setNewWeapon(TEAM team, int weaponId, int weaponAtk, int weaponWood, int we
 * @return	1
 */
 int handleBuyWeapon(PLAYER player, char *opcode, char *buff, char *reserveBuff) {
-	if (player->state != PLAYING) return setResponseAndSend(player, opcode, BUY_WEAPON_E_NOTPLAYING, strlen(BUY_WEAPON_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_NOTPLAYING, strlen(BUY_WEAPON_E_NOTPLAYING), buff);
 	else {
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		int weaponId = buff[0] - 48;
-		if (weaponId <= 0 || weaponId > 3) return setResponseAndSend(player, opcode, BUY_WEAPON_E_FORMAT, strlen(BUY_WEAPON_E_FORMAT), buff);
+		if (weaponId <= 0 || weaponId > 3) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_FORMAT, strlen(BUY_WEAPON_E_FORMAT), buff);
 		if (weaponId == BALLISTA) { // Ballista
-			if (team->weapon->attack >= BALLISTA_ATK) return setResponseAndSend(player, opcode, BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < BALLISTA_WOOD || team->basedResources[STONE] < BALLISTA_STONE || team->basedResources[IRON] < BALLISTA_IRON) return setResponseAndSend(player, opcode, BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
+			if (team->weapon->attack >= BALLISTA_ATK) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < BALLISTA_WOOD || team->basedResources[STONE] < BALLISTA_STONE || team->basedResources[IRON] < BALLISTA_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
 			setNewWeapon(team, BALLISTA, BALLISTA_ATK, BALLISTA_WOOD, BALLISTA_STONE, BALLISTA_IRON);
-			informBuyWeapon(game, player->gameIndex, weaponId, UPDATE_GAME, UPDATE_GAME_BUY_WPN, buff, reserveBuff);
+			informBuyWeapon(game, player->gameIndex, weaponId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WPN, buff, reserveBuff);
 		}
 		else if (weaponId == CATAPULT) { // Catapult
-			if (team->weapon->attack >= CATAPULT_ATK) return setResponseAndSend(player, opcode, BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < CATAPULT_WOOD || team->basedResources[STONE] < CATAPULT_STONE || team->basedResources[IRON] < CATAPULT_IRON) return setResponseAndSend(player, opcode, BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
+			if (team->weapon->attack >= CATAPULT_ATK) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < CATAPULT_WOOD || team->basedResources[STONE] < CATAPULT_STONE || team->basedResources[IRON] < CATAPULT_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
 			setNewWeapon(team, CATAPULT, CATAPULT_ATK, CATAPULT_WOOD, CATAPULT_STONE, CATAPULT_IRON);
-			informBuyWeapon(game, player->gameIndex, weaponId, UPDATE_GAME, UPDATE_GAME_BUY_WPN, buff, reserveBuff);
+			informBuyWeapon(game, player->gameIndex, weaponId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WPN, buff, reserveBuff);
 		}
 		else if (weaponId == CANNON) { // Cannon
-			if (team->weapon->attack >= CANNON_ATK) return setResponseAndSend(player, opcode, BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < CANNON_WOOD || team->basedResources[STONE] < CANNON_STONE || team->basedResources[IRON] < CANNON_IRON) return setResponseAndSend(player, opcode, BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
+			if (team->weapon->attack >= CANNON_ATK) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_WEAKER, strlen(BUY_WEAPON_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < CANNON_WOOD || team->basedResources[STONE] < CANNON_STONE || team->basedResources[IRON] < CANNON_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WEAPON_E_NOTENOUGH, strlen(BUY_WEAPON_E_FORMAT), buff);
 			setNewWeapon(team, CANNON, CANNON_ATK, CANNON_WOOD, CANNON_STONE, CANNON_IRON);
-			informBuyWeapon(game, player->gameIndex, weaponId, UPDATE_GAME, UPDATE_GAME_BUY_WPN, buff, reserveBuff);
+			informBuyWeapon(game, player->gameIndex, weaponId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WPN, buff, reserveBuff);
 		}
 	}
 	return 1;
@@ -1328,55 +1328,55 @@ void setNewWall(TEAM team, CASTLE castle, int wallId, int wallDefense, int wallW
 * @return	1
 */
 int handleBuyWall(PLAYER player, char *opcode, char *buff, char *reserveBuff) {
-	if (player->state != PLAYING) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTPLAYING, strlen(BUY_WALL_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_NOTPLAYING, strlen(BUY_WALL_E_NOTPLAYING), buff);
 	else {
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		int castleId = 0, wallId = 0;
-		if (strlen(buff) != 3) setResponseAndSend(player, opcode, BUY_WALL_E_FORMAT, strlen(BUY_WALL_E_FORMAT), buff);
+		if (strlen(buff) != 3) setResponseAndSend(player, opcode, (char*) BUY_WALL_E_FORMAT, strlen(BUY_WALL_E_FORMAT), buff);
 		castleId = buff[0] - 48;
 		wallId = buff[2] - 48;
-		if (castleId < 0 || castleId > CASTLE_NUM - 1 || wallId <= 0 || wallId > 4) return setResponseAndSend(player, opcode, BUY_WALL_E_FORMAT, strlen(BUY_WALL_E_FORMAT), buff);
+		if (castleId < 0 || castleId > CASTLE_NUM - 1 || wallId <= 0 || wallId > 4) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_FORMAT, strlen(BUY_WALL_E_FORMAT), buff);
 		CASTLE castle = game->castles[castleId];
-		if (player->teamIndex != castle->occupiedBy) return setResponseAndSend(player, opcode, BUY_WALL_E_GONE, strlen(BUY_WALL_E_GONE), buff);
+		if (player->teamIndex != castle->occupiedBy) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_GONE, strlen(BUY_WALL_E_GONE), buff);
 		if (wallId == FENCE) {
-			if (castle->wall->defense >= FENCE_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < FENCE_WOOD || team->basedResources[STONE] < FENCE_STONE || team->basedResources[IRON] < FENCE_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
+			if (castle->wall->defense >= FENCE_DEF) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < FENCE_WOOD || team->basedResources[STONE] < FENCE_STONE || team->basedResources[IRON] < FENCE_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, FENCE, FENCE_DEF, FENCE_WOOD, FENCE_STONE, FENCE_IRON);
-			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff, reserveBuff);
+			informBuyWall(game, player->gameIndex, castleId, wallId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WALL, buff, reserveBuff);
 		}
 		else if (wallId == WOOD_WALL) {
-			if (castle->wall->defense >= WOOD_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < WOOD_WALL_WOOD || team->basedResources[STONE] < WOOD_WALL_STONE || team->basedResources[IRON] < WOOD_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
+			if (castle->wall->defense >= WOOD_WALL_DEF) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < WOOD_WALL_WOOD || team->basedResources[STONE] < WOOD_WALL_STONE || team->basedResources[IRON] < WOOD_WALL_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, WOOD_WALL, WOOD_WALL_DEF, WOOD_WALL_WOOD, WOOD_WALL_STONE, WOOD_WALL_IRON);
-			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff, reserveBuff);
+			informBuyWall(game, player->gameIndex, castleId, wallId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WALL, buff, reserveBuff);
 		}
 		else if (wallId == STONE_WALL) {
-			if (castle->wall->defense >= STONE_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < STONE_WALL_WOOD || team->basedResources[STONE] < STONE_WALL_STONE || team->basedResources[IRON] < STONE_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
+			if (castle->wall->defense >= STONE_WALL_DEF) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < STONE_WALL_WOOD || team->basedResources[STONE] < STONE_WALL_STONE || team->basedResources[IRON] < STONE_WALL_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, STONE_WALL, STONE_WALL_DEF, STONE_WALL_WOOD, STONE_WALL_STONE, STONE_WALL_IRON);
-			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff, reserveBuff);
+			informBuyWall(game, player->gameIndex, castleId, wallId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WALL, buff, reserveBuff);
 		}
 		else if (wallId == LEGEND_WALL) {
-			if (castle->wall->defense >= LEGEND_WALL_DEF) return setResponseAndSend(player, opcode, BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
-			if (team->basedResources[WOOD] < LEGEND_WALL_WOOD || team->basedResources[STONE] < LEGEND_WALL_STONE || team->basedResources[IRON] < LEGEND_WALL_IRON) return setResponseAndSend(player, opcode, BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
+			if (castle->wall->defense >= LEGEND_WALL_DEF) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_WEAKER, strlen(BUY_WALL_E_WEAKER), buff);
+			if (team->basedResources[WOOD] < LEGEND_WALL_WOOD || team->basedResources[STONE] < LEGEND_WALL_STONE || team->basedResources[IRON] < LEGEND_WALL_IRON) return setResponseAndSend(player, opcode, (char*) BUY_WALL_E_NOTENOUGH, strlen(BUY_WALL_E_NOTENOUGH), buff);
 			setNewWall(team, castle, LEGEND_WALL, LEGEND_WALL_DEF, LEGEND_WALL_WOOD, LEGEND_WALL_STONE, LEGEND_WALL_IRON);
-			informBuyWall(game, player->gameIndex, castleId, wallId, UPDATE_GAME, UPDATE_GAME_BUY_WALL, buff, reserveBuff);
+			informBuyWall(game, player->gameIndex, castleId, wallId, (char*) UPDATE_GAME, (char*) UPDATE_GAME_BUY_WALL, buff, reserveBuff);
 		}
 		return 1;
 	}
 }
 
 int handleCheat(PLAYER player, char *opcode, char *buff, char * reserveBuff) {
-	if (player->state != PLAYING) return setResponseAndSend(player, opcode, CHEAT_E_NOTPLAYING, strlen(CHEAT_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) return setResponseAndSend(player, opcode, (char*) CHEAT_E_NOTPLAYING, strlen(CHEAT_E_NOTPLAYING), buff);
 	else {
 		GAME game = player->game;
 		TEAM team = game->teams[player->teamIndex];
 		for (int i = 0; i < RESOURCE_NUM; i++) {
-			if (team->basedResources[i] + CHEAT_AMOUNT > MAX_AMOUNT) return setResponseAndSend(player, opcode, CHEAT_E_GREEDY, strlen(CHEAT_E_GREEDY), buff);
+			if (team->basedResources[i] + CHEAT_AMOUNT > MAX_AMOUNT) return setResponseAndSend(player, opcode, (char*) CHEAT_E_GREEDY, strlen(CHEAT_E_GREEDY), buff);
 		}
 		for (int i = 0; i < RESOURCE_NUM; i++) team->basedResources[i] += CHEAT_AMOUNT;
-		informCheat(game, player->gameIndex, UPDATE_GAME, UPDATE_GAME_CHEAT, buff, reserveBuff);
+		informCheat(game, player->gameIndex, (char*) UPDATE_GAME, (char*) UPDATE_GAME_CHEAT, buff, reserveBuff);
 	}
 	return 1;
 }
@@ -1401,7 +1401,7 @@ void clearPlayerInfo(PLAYER player, char *reserveBuff) {
 		else {
 			if (player->gameIndex == game->host) game->host = i;
 			memset(reserveBuff, 0, BUFF_SIZE);
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, reserveBuff);
+			informGameRoomChange(game, player->gameIndex, (char*) UPDATE_LOBBY, (char*) UPDATE_LOBBY_QUIT, reserveBuff);
 		}
 	}
 	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
