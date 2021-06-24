@@ -143,6 +143,8 @@ void calculateAMine(MINE mine, char *buff) {
 * @return	buff
 */
 void calculateATeam(TEAM team, char *buff) {
+	_itoa_s(team->index, buff + strlen(buff), BUFF_SIZE, 10);
+	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->type, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->attack, buff + strlen(buff), BUFF_SIZE, 10);
