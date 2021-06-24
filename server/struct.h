@@ -1,66 +1,84 @@
 #pragma once
+typedef struct _wall		*WALL;
+typedef struct _weapon		*WEAPON;
+typedef struct _castle		*CASTLE;
+typedef struct _mine		*MINE;
+typedef struct _player		*PLAYER;
+typedef struct _team		*TEAM;
+typedef struct _game		*GAME;
+typedef struct _perIoData	PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
+
+typedef struct _perIoData{
+	WSAOVERLAPPED overlapped;
+	WSABUF dataBuff;
+	CHAR buffer[BUFF_SIZE];
+	int bufLen;
+	int recvBytes;
+	int sentBytes;
+	int operation;
+} PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
 
 typedef struct _wall {
-	int			type;
-	int			defense;
+	int					type;
+	int					defense;
 } *WALL;
 
 
 typedef struct _weapon {
-	int			type;
-	int			attack;
+	int					type;
+	int					attack;
 } *WEAPON;
 
 typedef struct _castle {
-	int			index;
-	WALL		wall;
-	int			occupiedBy;
-	int			question;
-	int			answer;
-	GAME		game;
+	int					index;
+	WALL				wall;
+	int					occupiedBy;
+	int					question;
+	int					answer;
+	GAME				game;
 } *CASTLE;
 
 typedef struct _mine {
-	int			index;
-	int			resources[RESOURCE_NUM];
-	int			question[3];
-	int			answer[3];
-	GAME		game;
+	int					index;
+	int					resources[RESOURCE_NUM];
+	int					question[3];
+	int					answer[3];
+	GAME				game;
 } *MINE;
 
 typedef struct _player {
-	int			index;
-	SOCKET		socket;
-	char		IP[INET_ADDRSTRLEN];
-	int			port;
-	int			teamIndex;
-	int			placeInTeam;
-	int			gameIndex;
-	char		account[ACCOUNT_SIZE];
-	int			state;
-	GAME		game;
+	SOCKET				socket;
+	char				IP[INET_ADDRSTRLEN];
+	int					port;
+	int					teamIndex;
+	int					placeInTeam;
+	int					gameIndex;
+	char				account[ACCOUNT_SIZE];
+	int					state;
+	GAME				game;
+	CRITICAL_SECTION	criticalSection;
 } *PLAYER;
 
 typedef struct _team {
-	int			index;
-	PLAYER		players[3];
-	WEAPON		weapon;
-	int			gold;
-	int			basedResources[RESOURCE_NUM];
-	GAME		game;
+	int					index;
+	PLAYER				players[3];
+	WEAPON				weapon;
+	int					gold;
+	int					basedResources[RESOURCE_NUM];
+	GAME				game;
 } *TEAM;
 
 typedef struct _game {
-	long long	id;
-	long long	startAt;
-	int			gameState;
-	int			host;
-	int			teamNum;
-	PLAYER		players[PLAYER_NUM];
-	TEAM		teams[TEAM_NUM];
-	CASTLE		castles[CASTLE_NUM];
-	MINE		mines[MINE_NUM];
-	CRITICAL_SECTION criticalSection;
+	long long			id;
+	long long			startAt;
+	int					gameState;
+	int					host;
+	int					teamNum;
+	PLAYER				players[PLAYER_NUM];
+	TEAM				teams[TEAM_NUM];
+	CASTLE				castles[CASTLE_NUM];
+	MINE				mines[MINE_NUM];
+	CRITICAL_SECTION	criticalSection;
 } *GAME;
 
 /* The updatePlayerInfo function update a player info
@@ -113,14 +131,10 @@ void calculateACastle(CASTLE castle, char *buff) {
 void calculateAMine(MINE mine, char *buff) {
 	_itoa_s(mine->index, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
-	//Enter critical section
-	while (!TryEnterCriticalSection(&mine->game->criticalSection)) {}
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		_itoa_s(mine->resources[i], buff + strlen(buff), BUFF_SIZE, 10);
 		strcat_s(buff, BUFF_SIZE, "#");
 	}
-	//Leave critical section
-	LeaveCriticalSection(&mine->game->criticalSection);
 }
 
 /* The calculateATeam function calculate a team's properties into a buffer
@@ -133,11 +147,7 @@ void calculateATeam(TEAM team, char *buff) {
 	strcat_s(buff, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->attack, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
-	// Enter critical section
-	while (!TryEnterCriticalSection(&team->game->criticalSection)) {}
 	_itoa_s(team->gold, buff + strlen(buff), BUFF_SIZE, 10);
-	// Leave critical section
-	LeaveCriticalSection(&team->game->criticalSection);
 	strcat_s(buff, BUFF_SIZE, "#");
 	for (int i = 0; i < RESOURCE_NUM; i++) {
 		_itoa_s(team->basedResources[i], buff + strlen(buff), BUFF_SIZE, 10);
@@ -160,59 +170,6 @@ void getGameProperties(GAME game, char *buff) {
 		calculateAMine(game->mines[i], buff + strlen(buff));
 	}
 	// Then each team
-	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff +strlen(buff));
-	}
-}
-
-/* The getAttackCastleGameProperties function calculate attack castle info to send back
-* @param	game			[IN]		Game
-* @param	buff			[IN/OUT]	Calculate result
-* @return	nothing
-*/
-void getAttackCastleGameProperties(GAME game, char *buff) {
-	for (int i = 0; i < CASTLE_NUM; i++) {
-		calculateACastle(game->castles[i], buff + strlen(buff));
-	}
-	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + strlen(buff));
-	}
-}
-
-/* The getAttackMineGameProperties function calculate attack mine info to send back
-* @param	game			[IN]		Game
-* @param	buff			[IN/OUT]	Calculate result
-* @return	nothing
-*/
-void getAttackMineGameProperties(GAME game, char *buff) {
-	for (int i = 0; i < MINE_NUM; i++) {
-		calculateAMine(game->mines[i], buff + strlen(buff));
-	}
-	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + strlen(buff));
-	}
-}
-
-/* The getBuyWeaponGameProperties function calculate buy weapon info to send back
-* @param	game			[IN]		Game
-* @param	buff			[IN/OUT]	Calculate result
-* @return	nothing
-*/
-void getBuyWeaponGameProperties(GAME game, char *buff) {
-	for (int i = 0; i < TEAM_NUM; i++) {
-		calculateATeam(game->teams[i], buff + strlen(buff));
-	}
-}
-
-/* The getBuyWallGameProperties function calculate buy weapon info to send back
-* @param	game			[IN]		Game
-* @param	buff			[IN/OUT]	Calculate result
-* @return	nothing
-*/
-void getBuyWallGameProperties(GAME game, char *buff) {
-	for (int i = 0; i < CASTLE_NUM; i++) {
-		calculateACastle(game->castles[i], buff + strlen(buff));
-	}
 	for (int i = 0; i < TEAM_NUM; i++) {
 		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
@@ -300,7 +257,6 @@ void emptyGame(GAME game) {
 	game->startAt = 0; // set start time to 0
 	game->gameState = WAITING; // set game state to waiting
 	game->host = 0;
-	DeleteCriticalSection(&game->criticalSection);
 	for (int i = 0; i < PLAYER_NUM; i++) game->players[i] = NULL; // Disconnect to all player
 	for (int i = 0; i < CASTLE_NUM; i++) { // Unlink and clear castle
 		game->castles[i]->occupiedBy = 4;
@@ -325,41 +281,6 @@ void emptyGame(GAME game) {
 	}
 }
 
-/* The resetGame function reset a game
-* @param	game			[IN/OUT]		Pointer to a emptyGame
-* @return	nothing
-*/
-void resetGame(GAME game) {
-	// Init value
-	game->id = getTime();
-	game->startAt = 0;
-	game->gameState = WAITING;
-	for (int i = 0; i < CASTLE_NUM; i++) {
-		game->castles[i]->wall->type = NO_WALL;
-		game->castles[i]->wall->defense = NO_WALL_DEF;
-		game->castles[i]->occupiedBy = 4;
-	}
-	for (int i = 0; i < MINE_NUM; i++) {
-		for (int j = 0; j < RESOURCE_NUM; j++) {
-			game->mines[i]->resources[j] = 0;
-		}
-	}
-	for (int i = 0; i < TEAM_NUM; i++) {
-		game->teams[i]->weapon->type = NO_WEAPON;
-		game->teams[i]->weapon->attack = NO_WEAPON_ATK;
-		game->teams[i]->gold = 0;
-		for (int j = 0; j < 3; j++) {
-			game->teams[i]->basedResources[j] = 0;
-		}
-	}
-	for (int i = 0; i < PLAYER_NUM; i++) {
-		if (game->players[i] != NULL) {
-			updatePlayerInfo(game->players[i], game->players[i]->socket, game->players[i]->IP, game->players[i]->port, 
-			game->players[i]->teamIndex, game->players[i]->placeInTeam, game->players[i]->gameIndex, game, game->players[i]->account, JOINT);
-		}
-	}	
-}
-
 /* The createGame function create a game
 * @param	player			[IN/OUT]		Creator
 * @param	game			[IN/OUT]		Pointer to a emptyGame
@@ -374,7 +295,6 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	game->host = 0;
 	game->teamNum = teamNum;
 	game->players[0] = player; // Set the first player is the host
-	InitializeCriticalSectionAndSpinCount(&game->criticalSection, 1000);
 	for (int i = 0; i < CASTLE_NUM; i++) {
 		game->castles[i]->wall->type = NO_WALL;
 		game->castles[i]->wall->defense = NO_WALL_DEF;
