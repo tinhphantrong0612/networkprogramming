@@ -61,10 +61,10 @@ unsigned _stdcall timelyUpdate(void* param) {
 
 				delay = getTime() - currGame->startAt - currTime;
 				loopCount++;
+
+				Sleep(LOOP_TIME - delay); //Wait till next update
 			}
 		}
-
-		Sleep(LOOP_TIME - delay); //Wait till next update
 	}	
 
 	return 0;
