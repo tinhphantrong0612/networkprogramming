@@ -27,21 +27,21 @@
 2#26#Since _______ 1600s, worldwide overexploitation of animals for _______ food and other products has caused numerous species to become extinct or endangered.#the / a#the / Ø#Ø / the#the / the
 2#27#You _______ forget to pay the rent tomorrow. The landlord is very strict about paying on time.#needn't#mustn't#do not have to#may not
 3#28#The television isn't working. It _______ during the move.#should have been damaged#needn't be damaged#must have been damaged#ought not be damaged
-2#29#I am not deaf. You _______ shout.#must#mustn't#need#needn‟t
+2#29#I am not deaf. You _______ shout.#must#mustn't#need#needn't
 2#30#John failed again. He _______ harder.#must have tried#should have tried#can tried#may have tried
 1#31#We have plenty of time for doing the work. We _______ be hurried.#needn't#shouldn't#mustn't#mayn't
 1#32#You should __ more attention to what your teacher explains.#pay#get#set#make
 3#33#Without the traffic jam on the high way this morning, I ______ late for the meeting.#hadn't been#would have been#wouldn't have been#would be
-4#34#Remember to appreciate what your friends do for you. You shouldn‟t take them______.#out of habit#as usual#as a rule#for granted
+4#34#Remember to appreciate what your friends do for you. You shouldn't take them______.#out of habit#as usual#as a rule#for granted
 2#35#Nobody seemed to be interested in the news. It was greeted with a lack of ______.#enthusiastically#enthusiasm#enthusiastic#enthusiast
-2#36#Isn‟t there anyone______ of using this digital camera?#skilled#capable#affordable#possible
+2#36#Isn't there anyone______ of using this digital camera?#skilled#capable#affordable#possible
 1#37#The plane would have landed easily __ the thick fog.#but for#because of#due to#unless
-3#38#This letter___ be from Harry. He doesn‟t know my new address.#might#shouldn‟t#can‟t#mustn‟t
+3#38#This letter___ be from Harry. He doesn't know my new address.#might#shouldn't#can't#mustn't
 2#39#Body language is a potent form of ______ communication.#verbal#non-verbal#tongue#oral
 2#40#It is important that every student______ attentive in class.#was#be#were#is
 3#41#With black hair and eyes, she is______ of the people from her country.#identical#the same#typical#similar
 1#42#______ you known he was a liar, would you have agreed to support him?#Had#If#Did#Since
-1#43#It was only …….. he told me his surname that I realized that we had been to the same school.#when#until#as soon as#the
+1#43#It was only __.. he told me his surname that I realized that we had been to the same school.#when#until#as soon as#the
 2#44#Many teenagers show signs of anxiety and _______ when being asked about their future.#depress#depression#depressing#depressed
 1#45#Constant __ of attack makes everyday life dangerous here.#threat#threaten#threatening#threateningly
 4#46#No one can predict the future exactly. Things may happen _______.#expected#unexpected#expectedly#unexpectedly
@@ -63,52 +63,52 @@
 2#62#If you have ever watched television, you have seen plenty ___ drug ads.#with#of#for#about
 3#63#According _______ Bill, there's something wrong _______ my computer.#after / for#on / about#to / with#upon / at
 1#64#Chaplin was a comedian __ was best known for his work in silent movies.#who#which#whose#what
-2#65#I‟m terrified ___ breaking down on a motorway at night.#from#with#for#of
+2#65#I'm terrified ___ breaking down on a motorway at night.#from#with#for#of
 1#66#The pop star __________ when the lights __________.#was singing/went out#sang/were going out#was singing/were going out#sang/went out
 3#67#Scandinavia consists of four countries. One is Denmark, ____ are Finland, Norway and Sweden.#others#the other#the others#other
 3#68#I wish you __ complaining about the weather.#would stop#stop#stopped#had stopped
 2#69#She got up early; otherwise she __________ her bus.#would miss#would have missed#had missed#missed
-2#70#I‟m very lazy. I only go to the gym once in a______ moon.#black#blue#full#new
-3#71#__________ he tried, his father didn‟t let him run the company.#Although hard#No matter what#However hard#Whatever hard
-3#72#When I came to his house, I didn‟t see him. He __________ .#can be away#may be out#must have been away#must be absent
+2#70#I'm very lazy. I only go to the gym once in a______ moon.#black#blue#full#new
+3#71#__________ he tried, his father didn't let him run the company.#Although hard#No matter what#However hard#Whatever hard
+3#72#When I came to his house, I didn't see him. He __________ .#can be away#may be out#must have been away#must be absent
 3#73#To our surprise, the so-called cheap shop was __________ was expected.#as twice as expensive#expensive as twice as#twice as expensive as#as expensive as twice
 4#74#We bought some __________.#old lovely German glasses#German old lovely glasses#German lovely old glasses#lovely old German glasses
-1#75#"Congratulations on your new home! It‟s wonderful" "__________"#Thank you#You‟re welcome#Really#It‟s OK
+1#75#"Congratulations on your new home! It's wonderful" "__________"#Thank you#You're welcome#Really#It's OK
 2#76#As well as __________ in an office he used to have a part-time as a waiter.#having worked#working#to have worked#to work
 2#77#__________ will China be the first to use nuclear weapons.#At any time#At no time#At a time#At one time
 3#78#"I'd like to change some money." "__________"#Five tens, please#What's your account number?#Which currency?#You haven't signed it.
 2#79#She was __________ disappointed when she learned that she was turned down for the post.#gravely#bitterly#highly#fully
 4#80#I was just about ___ the office when the telephone rang.#to have left#leave#to leave#leaving
-1#81#"Thank you for your lovely dinner. You are an excellent cook." " __________"#I‟m glad you like it. You must come again.#No, thanks. I‟ll have to try more.#No. I‟m not. My sister cooks better than me.#Yes, right. I often cook in my family.
+1#81#"Thank you for your lovely dinner. You are an excellent cook." " __________"#I'm glad you like it. You must come again.#No, thanks. I'll have to try more.#No. I'm not. My sister cooks better than me.#Yes, right. I often cook in my family.
 2#82#Find the wrong word: "Not until recently has interest of tidal electric power plants been revived."#recently#interest of#tidal electric power#revived
-1#83#Find the wrong word: "Little they knew in 1926, when the first T.V. broadcast began, that it would have such an impact on people‟s everyday lives."#they knew#when the first T.V. broadcast#it would have#such an impact
+1#83#Find the wrong word: "Little they knew in 1926, when the first T.V. broadcast began, that it would have such an impact on people's everyday lives."#they knew#when the first T.V. broadcast#it would have#such an impact
 1#84#Find the wrong word: "Lightning, it is essentially an enormous electric spark that seeks the path of least resistance to ground."#it is essentially#electric spark#that#least resistance
 3#85At this time yesterday I ____ to music.#listened#had listened#was listening#am listening
-4#86#By next June, I…… here for 2 years.#worked#have worked#have been working#will have worked
-1#87#By last June, I…… here for 2 years.#had worked#have worked#have been working#will have worked
-2#88#Now, I……… here for 2 years.#worked#have worked#have been working#will have worked
+4#86#By next June, I__ here for 2 years.#worked#have worked#have been working#will have worked
+1#87#By last June, I__ here for 2 years.#had worked#have worked#have been working#will have worked
+2#88#Now, I___ here for 2 years.#worked#have worked#have been working#will have worked
 2#89#At this time tomorrow, I ____ to music.#listened#will be listening#was listening#am listening
 3#90#I ____ to music at this time.#listened#had listened#was listening#am listening
-2#91#After I ……………………….., I go home.#had finished#have finished#finish#finished
-1#92#After I…………………………., I went home.#had finished#have finished#finish#finished
-2#93#Before they built this house, they………carefully.#thought#had thought#have thought#think
-3#94#Before they build this house, they…….carefully.#have thought#had thought#will have thought#think
-1#95#When I came, she ……………the door.#was cleaning#will be cleaning#cleaned#had cleaned
-2#96#When I come, she ……………the door.#was cleaning#will be cleaning#cleaned#had cleaned
-4#97#When he went home, his mother………………….. dinner, so he took off his coat to help her.#Had cooked#cooking#cooked#was cooking.
-3#98#When he went home, his mother………………….., so he had a delicious meal.#was cooking#had cooked#cooked#was cooking
-1#99#When he went home, he ….. because his wife were busy.#was cooking#had cooked#cooked#was cooking
-2#100#When he goes home, he …………………dinner because he wants to make his wife surprised.#cooks#will cook#will have cooked#will be cooking
-3#101#When he goes home, his mother …because she always wants her son to have a delicious meal after a hard work day.#cooks#will cook#will have cooked#will be cooking
-2#102#By the time you finish cooking they (do)………………… their homework.#had done#will have done#will be doing#will do
-1#103#This is the most beautiful place I (visit)………….#have visited#had visited#visit#will visit
+2#91#After I _________.., I go home.#had finished#have finished#finish#finished
+1#92#After I__________., I went home.#had finished#have finished#finish#finished
+2#93#Before they built this house, they___carefully.#thought#had thought#have thought#think
+3#94#Before they build this house, they__.carefully.#have thought#had thought#will have thought#think
+1#95#When I came, she _____the door.#was cleaning#will be cleaning#cleaned#had cleaned
+2#96#When I come, she _____the door.#was cleaning#will be cleaning#cleaned#had cleaned
+4#97#When he went home, his mother_______.. dinner, so he took off his coat to help her.#Had cooked#cooking#cooked#was cooking.
+3#98#When he went home, his mother_______.., so he had a delicious meal.#was cooking#had cooked#cooked#was cooking
+1#99#When he went home, he _.. because his wife were busy.#was cooking#had cooked#cooked#was cooking
+2#100#When he goes home, he _______dinner because he wants to make his wife surprised.#cooks#will cook#will have cooked#will be cooking
+3#101#When he goes home, his mother _because she always wants her son to have a delicious meal after a hard work day.#cooks#will cook#will have cooked#will be cooking
+2#102#By the time you finish cooking they (do)_______ their homework.#had done#will have done#will be doing#will do
+1#103#This is the most beautiful place I (visit)____.#have visited#had visited#visit#will visit
 2#104#This time next week they ..in the train on their way to Paris.#will sit#will be sitting#will have sat#all are correct
-1#105#By the first of July I (work)…………………… for this company for 20 years.#had worked#worked#have worked#will have work
+1#105#By the first of July I (work)________ for this company for 20 years.#had worked#worked#have worked#will have work
 2#106#We (be) in this class for 4 years next Septemper.#will be#will have been#have been#had been
-1#107#By the end of this week I (read)… 200 pages of my new novel.#will have read#read#had read#have read
-1#108#I think she is the nicest person I (meet)………...#have met#had met#will have met#met
+1#107#By the end of this week I (read)_ 200 pages of my new novel.#will have read#read#had read#have read
+1#108#I think she is the nicest person I (meet)___...#have met#had met#will have met#met
 3#109#Susan (wait) for you at 9 o'clock tomorrow.#will be wait#will have waited#will be waiting#will wait
-2#110#He was the most warm-hearted I (know)….. .#have known#had known#knew#know
+2#110#He was the most warm-hearted I (know)_.. .#have known#had known#knew#know
 4#111#Research has shown that there is no difference at all between the brain of the average woman and __of the average man.#what#which#one#that
 3#112#UNICEF _______ supports and funds for the most disadvantaged children all over the world.#presents#assists#provides#offers
 4#113#Is there anyone who _ the plan put forward by the committee?#differs#disagrees#objects#opposes
@@ -128,11 +128,11 @@
 3#127#Different conservation efforts have been made in order to save ________species.#danger#endanger#endangered#dangerous
 3#128#This film is quite_______ All the children are____in the film.#interesting/ interesting#interested/ interesting#interesting/ interested#interested/ interested
 2#129#She passed the National High School Graduation Exam with ___ colours.#bright#flying#red#True
-3#130#The little girl asked what ………………to her .#has happened#would have been happened#had happened#happened
+3#130#The little girl asked what ______to her .#has happened#would have been happened#had happened#happened
 4#131#I learnt to______ a bicycle when I was 6 years old.#conduct#drive#guide#ride
 1#132#I get up early _____ go work on time.#in order to#so as not to#so that#in order that
-2#133#I don‟t have my own room. I have to ________ the bedroom with my elder brother.#divide#share#separate#live
-3#134#Last week Laura said "I‟ll do it tomorrow". She said she would do it _______.#tomorrow#the previous day#the following day#yesterday
+2#133#I don't have my own room. I have to ________ the bedroom with my elder brother.#divide#share#separate#live
+3#134#Last week Laura said "I'll do it tomorrow". She said she would do it _______.#tomorrow#the previous day#the following day#yesterday
 3#135#No matter how angry he was, he would never ___to violence.#exert#resolve#resort#recourse
 3#136#When you do something, you should _____.#go down well with#turn over a new leaf#weigh up the pros and cons#get through to
 4#137#Taxis don't follow any schedule: they come and go ________.#chronologically#punctually#in sequence#at random
@@ -148,31 +148,31 @@
 4#147#Because of ______weather conditions, California has an advantage in the production of fruits and vegetables.#favour#favourably#favourite#favourable
 2#148#Today, women are increasingly involved ____the politics.#of#in#with#from
 3#149#Our landlord had the broken window ___ before winter.#fix#fixing#fixed#to fix
-1#150#I had a red pen but I seem to have lost it; I think I‟d better buy _________ one.#another#the#the other#other
+1#150#I had a red pen but I seem to have lost it; I think I'd better buy _________ one.#another#the#the other#other
 3#151#On __ he had won, he jumped for joy.#he has told#having told#being told#telling
 3#152#I finally managed _____.#in getting a temporary job.#a temporary job to get.#to get a temporary job.#getting a temporary job.
-4#153#Let‟s go to the library, ___?#will we#would we#should we#shall we
-1#154#_so aggressive, we‟d get on much better.#If she weren‟t#Had she not#Weren‟t she#She was not
-2#155#We haven‟t reached the final _______ on the funding for scientific research yet.#deciding#decision#decisive#decides
-4#156#A: _______________ B: Oh, thank you. I just got it yesterday.#How a beautiful dress you‟re wearing!#When have you got this beautiful dress?#You‟ve just bought this beautiful dress, haven‟t you?#That‟s a beautiful dress you have on!
-3#157#- Do you like pop music or jazz? - I don‟t like _______of them. I prefer classical music.#any#both#either#neither
+4#153#Let's go to the library, ___?#will we#would we#should we#shall we
+1#154#_so aggressive, we'd get on much better.#If she weren't#Had she not#Weren't she#She was not
+2#155#We haven't reached the final _______ on the funding for scientific research yet.#deciding#decision#decisive#decides
+4#156#A: _______________ B: Oh, thank you. I just got it yesterday.#How a beautiful dress you're wearing!#When have you got this beautiful dress?#You've just bought this beautiful dress, haven't you?#That's a beautiful dress you have on!
+3#157#- Do you like pop music or jazz? - I don't like _______of them. I prefer classical music.#any#both#either#neither
 3#158#By 1820, there were over sixty steamboats on the Mississippi river, _______ were quite luxurious.#which many#many of them#many of which#many that
 1#159#_______ saying was so important that I asked everyone to stop talking and listen.#What the woman was#That the woman was#The woman was#What was the woman
 4#160#If we leave now for our trip, we can drive half the distance before we stop _______lunch.#for having#having had#having#to have
 3#161#Although he is my friend, I find it hard to _______ his selfishness.#keep up with#come down with#put up with#catch up with
-4#162#My parents lent me the money. _______, I couldn‟t have afforded the trip.#However#Therefore#Only if#Otherwise
+4#162#My parents lent me the money. _______, I couldn't have afforded the trip.#However#Therefore#Only if#Otherwise
 3#163#It was Mr. Harding _______ the bill to yesterday.#who sent my secretary#to whom my secretary sent#that my secretary sent#my secretary sent
 1#164#It is essential that Alice ___ Tom of the meeting tomorrow.#remind#must remind#reminds#will remind
 4#165#It is interesting to take _______ a new hobby such as collecting stamps or going fishing.#over#on#in#up
 4#166#Jack made me __ him next week.#promise calling#to promise calling#to promise to call#promise to call
 1#167#_______ down to dinner than the telephone rang.#No sooner had I sat#Scarcely I sat#Hardly had I sat#No sooner I sat
 3#168#" I passed the TOEFL test, Mom." -" _______"#All right#Thank you#Well done#Good luck
-4#169#- "Don‟t fail to send your parents my regards" - "_____________ ."#It‟s my pleasure#Good idea, thanks#You‟ve welcome#Thanks, I will
+4#169#- "Don't fail to send your parents my regards" - "_____________ ."#It's my pleasure#Good idea, thanks#You've welcome#Thanks, I will
 1#170#Parts of the country are suffering water _______ after the unusually dry summer.#shortage#supply#thirst#hunger
 4#171#The bad weather caused serious damage to the crop. If only it _______ warmer.#was#were#has been#had been
-4#172#My supervisor is angry with me. I didn‟t do all the work that I _______ last week.#must have done#can have done#may have done#should have done
+4#172#My supervisor is angry with me. I didn't do all the work that I _______ last week.#must have done#can have done#may have done#should have done
 1#173#Jogging every day will_______ you good.#do#keep#help#make
-1#174#_______you, I‟d think twice about that decision. I could be a bad move.#Were I#Should I be#If I am#If I had been
+1#174#_______you, I'd think twice about that decision. I could be a bad move.#Were I#Should I be#If I am#If I had been
 3#175#They are having their house _______ by a construction company.#to paint#being painted#painted#painting
 3#176#Do you have any objections____ this new road scheme?#at#with#to#for
 4#177#Despite a lot of hardship, the Green City Project will go____.#before#forward#advance#ahead
@@ -191,8 +191,8 @@
 2#190#The equipment in our office needs ______.#moderner#modernising#modernised#modernisation
 1#191#It was very kind ______ you to help those poor people.#of#to#by#at
 2#192#Peter got a bad mark, ______ made his parents sad.#that#which#and#so
-1#193#I‟d rather you ______ at home tonight.#stayed#to stay#stay#staying
-3#194#That man lives next-door, ______ he?#does#isn‟t#doesn‟t#is
+1#193#I'd rather you ______ at home tonight.#stayed#to stay#stay#staying
+3#194#That man lives next-door, ______ he?#does#isn't#doesn't#is
 1#195#She likes reading books ______ the library.#in#at#on#from
 2#196#I will bring an umbrella with me ______ it may rain.#when#in case#if#unless
 4#197#By and _____, the pupils are well-behaved.#by#from#forward#large
