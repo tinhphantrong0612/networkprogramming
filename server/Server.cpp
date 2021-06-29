@@ -33,14 +33,7 @@ DWORD                           num_player = 0;
 PLAYER                          players[MAX_CLIENT];
 
 unsigned __stdcall serverWorkerThread(LPVOID CompletionPortID);
-unsigned __stdcall timelyUpdate(LPVOID game) {
-	while (1) {
-		printf("Thread HERE");
-		Sleep(30000);
-	}
-	return 1;
-};
-
+unsigned __stdcall timelyUpdate(LPVOID game);
 int		header_data_check(char *, int, int&);
 int		deleteClient(int);
 LPPER_IO_OPERATION_DATA	Communicate(LPPER_IO_OPERATION_DATA, PLAYER, char *);
@@ -272,6 +265,58 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 
 }
 
+unsigned __stdcall timelyUpdate(LPVOID game) {
+	GAME currGame = (GAME)game;
+	char buff[BUFF_SIZE];
+	char reserveBuff[BUFF_SIZE];
+	int loopCount = 0;
+	int tmp = 0;
+	int tmpTeam = TEAM_NUM;
+
+	while (1) {
+		//Check if one team remain
+		tmpTeam = TEAM_NUM;
+		for (tmp = 0; tmp < PLAYER_NUM; tmp++) {
+			if (currGame->players[tmp] != NULL) {
+				if (tmpTeam == TEAM_NUM)
+					tmpTeam = currGame->players[tmp]->teamIndex;
+				else {
+					if (currGame->players[tmp]->teamIndex != tmpTeam)
+						break;
+				}
+			}
+		}
+
+		//End game
+		if (tmp == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
+			informEndGame(currGame, (char*)UPDATE_GAME, (char*)UPDATE_GAME_OVER, buff, reserveBuff);
+			resetGame(currGame);
+			break;
+		}
+
+		//Update resource
+		if ((getTime() - currGame->startAt) >= loopCount * LOOP_TIME) {
+			while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
+			for (int i = 0; i < CASTLE_NUM; i++) {
+				if (currGame->castles[i]->occupiedBy > -1) {
+					currGame->teams[currGame->castles[i]->occupiedBy]->gold += ADDITION_GOLD;
+				}
+			}
+			for (int i = 0; i < MINE_NUM; i++) {
+				currGame->mines[i]->resources[WOOD] += ADDITION_WOOD;
+				currGame->mines[i]->resources[STONE] += ADDITION_STONE;
+				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
+			}
+
+			informUpdate(currGame, (char*)TIMELY_UPDATE, buff, reserveBuff);
+			loopCount++;
+			LeaveCriticalSection(&currGame->criticalSection);		
+		}
+	}
+
+	return 1;
+}
+
 int deleteClient(int index) {
 	printf("%d ", index);
 	printf("Closing socket %d\n", players[index]->socket);
@@ -447,7 +492,7 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 	}
 	else {
 		printf("Unknown header from player [%s:%d]: %s\n", player->IP, player->port, buff);
-		setResponseAndSend(player, UNKNOWN_HEADER, UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
+		setResponseAndSend(player, (char *) UNKNOWN_HEADER, (char *) UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
 	}
 	return;
 }
@@ -474,7 +519,7 @@ void clearPlayerInfo(PLAYER player, char *buff) {
 		if (i == PLAYER_NUM) emptyGame(game);
 		else {
 			if (player->gameIndex == game->host) game->host = i;
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
+			informGameRoomChange(game, player->gameIndex, (char *) UPDATE_LOBBY, (char *) UPDATE_LOBBY_QUIT, buff);
 		}
 		LeaveCriticalSection(&game->criticalSection);
 	}

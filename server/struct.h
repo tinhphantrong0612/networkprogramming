@@ -322,3 +322,38 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	// Link player to game and team, 0, 0, 0 means player in team 0, at place 0 in that team, and place 0 in game
 	updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, game, player->account, JOINT);
 }
+
+/* The resetGame function reset a game
+* @param	game			[IN/OUT]		Pointer to a emptyGame
+* @return	nothing
+*/
+void resetGame(GAME game) {
+	// Init value
+	game->id = getTime();
+	game->startAt = 0;
+	game->gameState = WAITING;
+	for (int i = 0; i < CASTLE_NUM; i++) {
+		game->castles[i]->wall->type = NO_WALL;
+		game->castles[i]->wall->defense = NO_WALL_DEF;
+		game->castles[i]->occupiedBy = 4;
+	}
+	for (int i = 0; i < MINE_NUM; i++) {
+		for (int j = 0; j < RESOURCE_NUM; j++) {
+			game->mines[i]->resources[j] = 0;
+		}
+	}
+	for (int i = 0; i < TEAM_NUM; i++) {
+		game->teams[i]->weapon->type = NO_WEAPON;
+		game->teams[i]->weapon->attack = NO_WEAPON_ATK;
+		game->teams[i]->gold = 0;
+		for (int j = 0; j < 3; j++) {
+			game->teams[i]->basedResources[j] = 0;
+		}
+	}
+	for (int i = 0; i < PLAYER_NUM; i++) {
+		if (game->players[i] != NULL) {
+			updatePlayerInfo(game->players[i], game->players[i]->socket, game->players[i]->IP, game->players[i]->port,
+				game->players[i]->teamIndex, game->players[i]->placeInTeam, game->players[i]->gameIndex, game, game->players[i]->account, JOINT);
+		}
+	}
+}
