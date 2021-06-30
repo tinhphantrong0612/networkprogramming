@@ -115,17 +115,17 @@ int main(int argc, char* argv[])
 	for (i = 0; i < MAX_CLIENT; i++) {
 		players[i] = (PLAYER)malloc(sizeof(_player));
 		updatePlayerInfo(players[i], INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
-		InitializeCriticalSection(&players[i]->criticalSection);
+		InitializeCriticalSectionAndSpinCount(&players[i]->criticalSection, 1000);
 	}
 
 	for (i = 0; i < GAME_NUM; i++) {
 		games[i] = (GAME)malloc(sizeof(_game));
 		createEmptyGame(games[i]);
-		InitializeCriticalSection(&games[i]->criticalSection);
+		InitializeCriticalSectionAndSpinCount(&games[i]->criticalSection, 1000);
 	}
 
-	InitializeCriticalSection(&accountMapCriticalSection);
-	InitializeCriticalSection(&gameListCriticalSection);
+	InitializeCriticalSectionAndSpinCount(&accountMapCriticalSection, 1000);
+	InitializeCriticalSectionAndSpinCount(&gameListCriticalSection, 1000);
 
 	while (1) {
 		if (num_player == MAX_CLIENT) {
@@ -191,6 +191,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	for (i = 0; i < MAX_CLIENT; i++) {
+		DeleteCriticalSection(&players[i]->criticalSection);
+	}
+	for (i = 0; i < GAME_NUM; i++) {
+		DeleteCriticalSection(&games[i]->criticalSection);
+	}
+	DeleteCriticalSection(&accountMapCriticalSection);
+	DeleteCriticalSection(&gameListCriticalSection);
 	return 0;
 }
 
@@ -504,9 +512,9 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 */
 void clearPlayerInfo(PLAYER player, char *buff) {
 	// Remove player from game and team
-	EnterCriticalSection(&player->criticalSection);
+	while (!TryEnterCriticalSection(&player->criticalSection)) {}
 	if (player->game != NULL) {
-		EnterCriticalSection(&player->game->criticalSection);
+		while (!TryEnterCriticalSection(&player->game->criticalSection)) {}
 		GAME game = player->game;
 		int i;
 		game->players[player->gameIndex] = NULL;
