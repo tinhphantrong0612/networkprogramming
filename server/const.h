@@ -217,8 +217,8 @@
 #define MINE_NUM				6
 #define WALL_NUM				5
 #define WEAPON_NUM				4
-#define HARDQUESTION_NUM		24
-#define EASYQUESTION_NUM		200
+#define HARDQUESTION_NUM		200
+#define EASYQUESTION_NUM		100
 
 // Wall type
 #define NO_WALL					0
