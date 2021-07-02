@@ -11,7 +11,7 @@
 0#10#That house reminds me __________the one where I used to live.#of#for#about#with
 1#11#It was very kind__________you to lend me the money I needed.#for#of#to#with
 2#12#The company made very good profit in __________.#the 1990#1990s#the 1990s#1990's
-1#13#Her eyes are different colors. One eye is gray, and .........is green.#another#the other#the others#other
+1#13#Her eyes are different colors. One eye is gray, and _________is green.#another#the other#the others#other
 2#14#Fred refused to travel by air because he was afraid of ________.#long#lengths#heights#high
 2#15#He __________for that company for five months when it went bankrupt.#has been worked#has worked#had been working#was working
 3#16#Most people prefer spending money ___it.#than earning#from earning#to earn#to earning
@@ -89,15 +89,15 @@
 1#88#Now, I___ here for 2 years.#worked#have worked#have been working#will have worked
 1#89#At this time tomorrow, I ____ to music.#listened#will be listening#was listening#am listening
 2#90#I ____ to music at this time.#listened#had listened#was listening#am listening
-1#91#After I _________.., I go home.#had finished#have finished#finish#finished
-0#92#After I__________., I went home.#had finished#have finished#finish#finished
+1#91#After I _________, I go home.#had finished#have finished#finish#finished
+0#92#After I__________, I went home.#had finished#have finished#finish#finished
 1#93#Before they built this house, they___carefully.#thought#had thought#have thought#think
 2#94#Before they build this house, they__.carefully.#have thought#had thought#will have thought#think
 0#95#When I came, she _____the door.#was cleaning#will be cleaning#cleaned#had cleaned
 1#96#When I come, she _____the door.#was cleaning#will be cleaning#cleaned#had cleaned
-3#97#When he went home, his mother_______.. dinner, so he took off his coat to help her.#Had cooked#cooking#cooked#was cooking.
-2#98#When he went home, his mother_______.., so he had a delicious meal.#was cooking#had cooked#cooked#was cooking
-0#99#When he went home, he _.. because his wife were busy.#was cooking#had cooked#cooked#was cooking
+3#97#When he went home, his mother_______ dinner, so he took off his coat to help her.#Had cooked#cooking#cooked#was cooking.
+2#98#When he went home, his mother_______, so he had a delicious meal.#was cooking#had cooked#cooked#was cooking
+0#99#When he went home, he ___ because his wife were busy.#was cooking#had cooked#cooked#was cooking
 1#100#When he goes home, he _______dinner because he wants to make his wife surprised.#cooks#will cook#will have cooked#will be cooking
 2#101#When he goes home, his mother _because she always wants her son to have a delicious meal after a hard work day.#cooks#will cook#will have cooked#will be cooking
 1#102#By the time you finish cooking they (do)_______ their homework.#had done#will have done#will be doing#will do
@@ -106,9 +106,9 @@
 0#105#By the first of July I (work)________ for this company for 20 years.#had worked#worked#have worked#will have work
 1#106#We (be) in this class for 4 years next Septemper.#will be#will have been#have been#had been
 0#107#By the end of this week I (read)_ 200 pages of my new novel.#will have read#read#had read#have read
-0#108#I think she is the nicest person I (meet)___...#have met#had met#will have met#met
+0#108#I think she is the nicest person I (meet)_____.#have met#had met#will have met#met
 2#109#Susan (wait) for you at 9 o'clock tomorrow.#will be wait#will have waited#will be waiting#will wait
-1#110#He was the most warm-hearted I (know)_.. .#have known#had known#knew#know
+1#110#He was the most warm-hearted I (know)____.#have known#had known#knew#know
 3#111#Research has shown that there is no difference at all between the brain of the average woman and __of the average man.#what#which#one#that
 2#112#UNICEF _______ supports and funds for the most disadvantaged children all over the world.#presents#assists#provides#offers
 3#113#Is there anyone who _ the plan put forward by the committee?#differs#disagrees#objects#opposes
@@ -162,7 +162,7 @@
 2#161#Although he is my friend, I find it hard to _______ his selfishness.#keep up with#come down with#put up with#catch up with
 3#162#My parents lent me the money. _______, I couldn't have afforded the trip.#However#Therefore#Only if#Otherwise
 2#163#It was Mr. Harding _______ the bill to yesterday.#who sent my secretary#to whom my secretary sent#that my secretary sent#my secretary sent
-0#164#It is essential that Alice ___ Tom of the meeting tomorrow.#remind#must remind#reminds#will remind
+0#164#It is essential that Alice _____ Tom of the meeting tomorrow.#remind#must remind#reminds#will remind
 3#165#It is interesting to take _______ a new hobby such as collecting stamps or going fishing.#over#on#in#up
 3#166#Jack made me __ him next week.#promise calling#to promise calling#to promise to call#promise to call
 0#167#_______ down to dinner than the telephone rang.#No sooner had I sat#Scarcely I sat#Hardly had I sat#No sooner I sat

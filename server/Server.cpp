@@ -276,7 +276,6 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 unsigned __stdcall timelyUpdate(LPVOID game) {
 	GAME currGame = (GAME)game;
 	char buff[BUFF_SIZE];
-	char reserveBuff[BUFF_SIZE];
 	int loopCount = 0;
 	int tmp = 0;
 	int tmpTeam = TEAM_NUM;
@@ -297,7 +296,7 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 
 		//End game
 		if (tmp == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
-			informEndGame(currGame, (char*)UPDATE_GAME, (char*)UPDATE_GAME_OVER, buff, reserveBuff);
+			informEndGame(currGame, (char*)UPDATE_GAME, (char*)UPDATE_GAME_OVER, buff);
 			resetGame(currGame);
 			break;
 		}
@@ -316,7 +315,7 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
 			}
 
-			informUpdate(currGame, (char*)TIMELY_UPDATE, buff, reserveBuff);
+			informUpdate(currGame, (char*)TIMELY_UPDATE, buff);
 			loopCount++;
 			LeaveCriticalSection(&currGame->criticalSection);		
 		}

@@ -22,8 +22,8 @@ void	informBuyWeapon(GAME, int, int, char *, char *, char *);
 void	setNewWall(TEAM, CASTLE, int, int, int, int, int);
 void	informBuyWall(GAME, int, int, int, char *, char *, char *);
 void	informCheat(GAME, int, char *, char *, char *);
-void	informUpdate(GAME, char *, char *, char *);
-void	informEndGame(GAME, char *, char *, char *, char*);
+void	informUpdate(GAME, char *, char *);
+void	informEndGame(GAME, char *, char *, char *);
 
 /* The setResponseAndSend function sets response, then send to player
 * @param	opcode				[IN]		Operation code
@@ -1173,9 +1173,9 @@ void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, c
 * @param	buff				[IN/OUT]	Buffer to store result
 * @return	Nothing
 */
-void informUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
+void informUpdate(GAME game, char *opcode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
-	getGameProperties(game, buff);
+	getGameProperties(game, buff + HEADER_SIZE);
 	buff[strlen(buff) - 1] = 0;
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
@@ -1188,7 +1188,7 @@ void informUpdate(GAME game, char *opcode, char *buff, char *reserveBuff) {
 * @param	buff				[IN/OUT]	Buffer to store result
 * @return	Nothing
 */
-void informEndGame(GAME game, char *opcode, char* responseCode, char *buff, char *reserveBuff) {
+void informEndGame(GAME game, char *opcode, char* responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
