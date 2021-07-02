@@ -222,6 +222,7 @@ Makefile: ..\Client_UI\Client_UI.pro G:\Qt\5.12.11\msvc2015_64\mkspecs\win32-msv
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\features\qt_config.prf \
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\win32-msvc\qmake.conf \
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\features\spec_post.prf \
+		.qmake.stash \
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\features\exclusive_builds.prf \
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\common\msvc-version.conf \
 		G:\Qt\5.12.11\msvc2015_64\mkspecs\features\toolchain.prf \
@@ -396,6 +397,7 @@ G:\Qt\5.12.11\msvc2015_64\mkspecs\features\qt_functions.prf:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\features\qt_config.prf:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\win32-msvc\qmake.conf:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\features\spec_post.prf:
+.qmake.stash:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\features\exclusive_builds.prf:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\common\msvc-version.conf:
 G:\Qt\5.12.11\msvc2015_64\mkspecs\features\toolchain.prf:

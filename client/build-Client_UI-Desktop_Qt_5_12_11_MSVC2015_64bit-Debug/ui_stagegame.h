@@ -69,7 +69,6 @@ public:
     QWidget *inventoryTabPage;
     QLabel *text2_1;
     QLabel *text2_3;
-    QLabel *miniText2_1;
     QLabel *miniText2_2;
     QFrame *line2_1;
     QFrame *line2_3;
@@ -92,6 +91,12 @@ public:
     QLabel *textTeam4Weapon;
     QLabel *textTeam2Weapon;
     QLabel *textTeam3Weapon;
+    QLabel *labelAtk_team1;
+    QLabel *labelAtk_team2;
+    QLabel *labelAtk_team3;
+    QLabel *labelAtk_team4;
+    QLabel *imgGold;
+    QLabel *labelGoldResource;
     QWidget *shopTabPage;
     QFrame *line3_0;
     QLabel *text3_1;
@@ -123,7 +128,7 @@ public:
     QLabel *miniTextShop_7;
     QFrame *line3_3;
     QPushButton *buttonBuyItem;
-    QLabel *text2_2;
+    QLabel *labelResourceShop;
     QListWidget *listGameLog;
     QLabel *text0_1;
     QLabel *labelGreet;
@@ -163,6 +168,11 @@ public:
 "        background-color: #000066;\n"
 "}\n"
 "\n"
+"QPushButton:disabled {\n"
+"        color: #ffff66;\n"
+"        background-color: #ffff66;\n"
+"}\n"
+"\n"
 "QLineEdit {\n"
 "        background-color: #b3ecff;\n"
 "        border-radius: 15;\n"
@@ -185,13 +195,13 @@ public:
 "}\n"
 "\n"
 "/*Copy tren mang cho cai listwidget nhin sang chanh hon*/\n"
-"QListView::item:alternate {\n"
+"QListView::item"
+                        ":alternate {\n"
 "    background: #EEEEEE;\n"
 "}\n"
 "\n"
 "QListView::item:selected:!active {\n"
-"    backg"
-                        "round: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "                                stop: 0 #ABAFE5, stop: 1 #8588B2);\n"
 "}\n"
 "\n"
@@ -243,6 +253,10 @@ public:
 "QPushButton:pressed {\n"
 "        color: #fff7e6 ;\n"
 "        background-color: #000066;\n"
+"}\n"
+"\n"
+"QPushButton: disabled {\n"
+"		background-color:#ff6666;\n"
 "}\n"
 "\n"
 "QWidget#mapTabPage {\n"
@@ -439,21 +453,17 @@ public:
         text2_3->setObjectName(QString::fromUtf8("text2_3"));
         text2_3->setGeometry(QRect(40, 180, 180, 30));
         text2_3->setFont(font3);
-        miniText2_1 = new QLabel(inventoryTabPage);
-        miniText2_1->setObjectName(QString::fromUtf8("miniText2_1"));
-        miniText2_1->setGeometry(QRect(40, 50, 451, 30));
+        miniText2_2 = new QLabel(inventoryTabPage);
+        miniText2_2->setObjectName(QString::fromUtf8("miniText2_2"));
+        miniText2_2->setGeometry(QRect(40, 210, 451, 30));
         QFont font4;
         font4.setFamily(QString::fromUtf8("Roboto"));
         font4.setPointSize(9);
         font4.setItalic(true);
-        miniText2_1->setFont(font4);
-        miniText2_2 = new QLabel(inventoryTabPage);
-        miniText2_2->setObjectName(QString::fromUtf8("miniText2_2"));
-        miniText2_2->setGeometry(QRect(40, 210, 451, 30));
         miniText2_2->setFont(font4);
         line2_1 = new QFrame(inventoryTabPage);
         line2_1->setObjectName(QString::fromUtf8("line2_1"));
-        line2_1->setGeometry(QRect(40, 80, 540, 3));
+        line2_1->setGeometry(QRect(40, 55, 540, 3));
         line2_1->setFrameShape(QFrame::HLine);
         line2_1->setFrameShadow(QFrame::Sunken);
         line2_3 = new QFrame(inventoryTabPage);
@@ -463,55 +473,59 @@ public:
         line2_3->setFrameShadow(QFrame::Sunken);
         imgWood = new QLabel(inventoryTabPage);
         imgWood->setObjectName(QString::fromUtf8("imgWood"));
-        imgWood->setGeometry(QRect(40, 100, 64, 64));
+        imgWood->setGeometry(QRect(40, 70, 80, 80));
         imgWood->setStyleSheet(QString::fromUtf8(""));
         imgWood->setAlignment(Qt::AlignCenter);
         imgStone = new QLabel(inventoryTabPage);
         imgStone->setObjectName(QString::fromUtf8("imgStone"));
-        imgStone->setGeometry(QRect(230, 100, 64, 64));
+        imgStone->setGeometry(QRect(190, 70, 80, 80));
         imgStone->setStyleSheet(QString::fromUtf8(""));
         imgStone->setAlignment(Qt::AlignCenter);
         imgIron = new QLabel(inventoryTabPage);
         imgIron->setObjectName(QString::fromUtf8("imgIron"));
-        imgIron->setGeometry(QRect(420, 100, 64, 64));
+        imgIron->setGeometry(QRect(330, 70, 80, 80));
         imgIron->setStyleSheet(QString::fromUtf8(""));
         imgIron->setAlignment(Qt::AlignCenter);
         labelWoodResource = new QLabel(inventoryTabPage);
         labelWoodResource->setObjectName(QString::fromUtf8("labelWoodResource"));
-        labelWoodResource->setGeometry(QRect(110, 120, 100, 25));
+        labelWoodResource->setGeometry(QRect(30, 150, 100, 25));
         QFont font5;
         font5.setFamily(QString::fromUtf8("Roboto"));
         font5.setPointSize(12);
         font5.setBold(true);
         font5.setWeight(75);
         labelWoodResource->setFont(font5);
+        labelWoodResource->setAlignment(Qt::AlignCenter);
         labelStoneResource = new QLabel(inventoryTabPage);
         labelStoneResource->setObjectName(QString::fromUtf8("labelStoneResource"));
-        labelStoneResource->setGeometry(QRect(300, 120, 100, 25));
+        labelStoneResource->setGeometry(QRect(180, 150, 100, 25));
         labelStoneResource->setFont(font5);
+        labelStoneResource->setAlignment(Qt::AlignCenter);
         labelIronResource = new QLabel(inventoryTabPage);
         labelIronResource->setObjectName(QString::fromUtf8("labelIronResource"));
-        labelIronResource->setGeometry(QRect(490, 120, 100, 25));
+        labelIronResource->setGeometry(QRect(320, 150, 100, 25));
         labelIronResource->setFont(font5);
+        labelIronResource->setAlignment(Qt::AlignCenter);
         equipment_atk_1 = new QLabel(inventoryTabPage);
         equipment_atk_1->setObjectName(QString::fromUtf8("equipment_atk_1"));
-        equipment_atk_1->setGeometry(QRect(40, 280, 80, 80));
+        equipment_atk_1->setGeometry(QRect(40, 275, 80, 80));
         equipment_atk_1->setAlignment(Qt::AlignCenter);
         equipment_atk_2 = new QLabel(inventoryTabPage);
         equipment_atk_2->setObjectName(QString::fromUtf8("equipment_atk_2"));
-        equipment_atk_2->setGeometry(QRect(190, 280, 80, 80));
+        equipment_atk_2->setGeometry(QRect(190, 275, 80, 80));
         equipment_atk_2->setAlignment(Qt::AlignCenter);
         equipment_atk_3 = new QLabel(inventoryTabPage);
         equipment_atk_3->setObjectName(QString::fromUtf8("equipment_atk_3"));
-        equipment_atk_3->setGeometry(QRect(330, 280, 80, 80));
+        equipment_atk_3->setGeometry(QRect(330, 275, 80, 80));
         equipment_atk_3->setAlignment(Qt::AlignCenter);
         equipment_atk_4 = new QLabel(inventoryTabPage);
         equipment_atk_4->setObjectName(QString::fromUtf8("equipment_atk_4"));
-        equipment_atk_4->setGeometry(QRect(480, 280, 80, 80));
+        equipment_atk_4->setGeometry(QRect(480, 275, 80, 80));
         equipment_atk_4->setAlignment(Qt::AlignCenter);
         buttonAttack = new QPushButton(inventoryTabPage);
         buttonAttack->setObjectName(QString::fromUtf8("buttonAttack"));
-        buttonAttack->setGeometry(QRect(120, 470, 150, 50));
+        buttonAttack->setEnabled(true);
+        buttonAttack->setGeometry(QRect(95, 470, 200, 50));
         QFont font6;
         font6.setFamily(QString::fromUtf8("Roboto"));
         font6.setPointSize(20);
@@ -519,53 +533,26 @@ public:
         font6.setItalic(false);
         font6.setWeight(75);
         buttonAttack->setFont(font6);
-        buttonAttack->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"        background-color: #00cccc;\n"
-"        color: #fff7e6 ;\n"
-"        border-radius: 20;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"        color: #fff7e6 ;\n"
-"        background-color: #002e4d;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"        color: #fff7e6 ;\n"
-"        background-color: #000066;\n"
-"}"));
+        buttonAttack->setStyleSheet(QString::fromUtf8(""));
+        buttonAttack->setCheckable(false);
         text2_4 = new QLabel(inventoryTabPage);
         text2_4->setObjectName(QString::fromUtf8("text2_4"));
-        text2_4->setGeometry(QRect(40, 370, 301, 30));
+        text2_4->setGeometry(QRect(40, 390, 301, 30));
         text2_4->setFont(font3);
         miniText2_3 = new QLabel(inventoryTabPage);
         miniText2_3->setObjectName(QString::fromUtf8("miniText2_3"));
-        miniText2_3->setGeometry(QRect(40, 400, 450, 30));
+        miniText2_3->setGeometry(QRect(40, 420, 450, 30));
         miniText2_3->setFont(font4);
         line2_4 = new QFrame(inventoryTabPage);
         line2_4->setObjectName(QString::fromUtf8("line2_4"));
-        line2_4->setGeometry(QRect(40, 430, 540, 3));
+        line2_4->setGeometry(QRect(40, 450, 540, 3));
         line2_4->setFrameShape(QFrame::HLine);
         line2_4->setFrameShadow(QFrame::Sunken);
         buttonCheat = new QPushButton(inventoryTabPage);
         buttonCheat->setObjectName(QString::fromUtf8("buttonCheat"));
-        buttonCheat->setGeometry(QRect(330, 470, 150, 50));
+        buttonCheat->setGeometry(QRect(340, 470, 200, 50));
         buttonCheat->setFont(font6);
-        buttonCheat->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"        background-color: #00cccc;\n"
-"        color: #fff7e6 ;\n"
-"        border-radius: 20;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"        color: #fff7e6 ;\n"
-"        background-color: #002e4d;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"        color: #fff7e6 ;\n"
-"        background-color: #000066;\n"
-"}"));
+        buttonCheat->setStyleSheet(QString::fromUtf8(""));
         textTeam1Weapon = new QLabel(inventoryTabPage);
         textTeam1Weapon->setObjectName(QString::fromUtf8("textTeam1Weapon"));
         textTeam1Weapon->setGeometry(QRect(55, 243, 50, 30));
@@ -573,7 +560,7 @@ public:
         textTeam1Weapon->setAlignment(Qt::AlignCenter);
         textTeam4Weapon = new QLabel(inventoryTabPage);
         textTeam4Weapon->setObjectName(QString::fromUtf8("textTeam4Weapon"));
-        textTeam4Weapon->setGeometry(QRect(495, 250, 50, 30));
+        textTeam4Weapon->setGeometry(QRect(495, 243, 50, 30));
         textTeam4Weapon->setFont(font2);
         textTeam4Weapon->setAlignment(Qt::AlignCenter);
         textTeam2Weapon = new QLabel(inventoryTabPage);
@@ -586,6 +573,36 @@ public:
         textTeam3Weapon->setGeometry(QRect(345, 243, 50, 30));
         textTeam3Weapon->setFont(font2);
         textTeam3Weapon->setAlignment(Qt::AlignCenter);
+        labelAtk_team1 = new QLabel(inventoryTabPage);
+        labelAtk_team1->setObjectName(QString::fromUtf8("labelAtk_team1"));
+        labelAtk_team1->setGeometry(QRect(30, 360, 100, 25));
+        labelAtk_team1->setFont(font2);
+        labelAtk_team1->setAlignment(Qt::AlignCenter);
+        labelAtk_team2 = new QLabel(inventoryTabPage);
+        labelAtk_team2->setObjectName(QString::fromUtf8("labelAtk_team2"));
+        labelAtk_team2->setGeometry(QRect(180, 360, 100, 25));
+        labelAtk_team2->setFont(font2);
+        labelAtk_team2->setAlignment(Qt::AlignCenter);
+        labelAtk_team3 = new QLabel(inventoryTabPage);
+        labelAtk_team3->setObjectName(QString::fromUtf8("labelAtk_team3"));
+        labelAtk_team3->setGeometry(QRect(320, 360, 100, 25));
+        labelAtk_team3->setFont(font2);
+        labelAtk_team3->setAlignment(Qt::AlignCenter);
+        labelAtk_team4 = new QLabel(inventoryTabPage);
+        labelAtk_team4->setObjectName(QString::fromUtf8("labelAtk_team4"));
+        labelAtk_team4->setGeometry(QRect(470, 360, 100, 25));
+        labelAtk_team4->setFont(font2);
+        labelAtk_team4->setAlignment(Qt::AlignCenter);
+        imgGold = new QLabel(inventoryTabPage);
+        imgGold->setObjectName(QString::fromUtf8("imgGold"));
+        imgGold->setGeometry(QRect(480, 70, 80, 80));
+        imgGold->setStyleSheet(QString::fromUtf8(""));
+        imgGold->setAlignment(Qt::AlignCenter);
+        labelGoldResource = new QLabel(inventoryTabPage);
+        labelGoldResource->setObjectName(QString::fromUtf8("labelGoldResource"));
+        labelGoldResource->setGeometry(QRect(470, 150, 100, 25));
+        labelGoldResource->setFont(font5);
+        labelGoldResource->setAlignment(Qt::AlignCenter);
         tabWidget->addTab(inventoryTabPage, QString());
         shopTabPage = new QWidget();
         shopTabPage->setObjectName(QString::fromUtf8("shopTabPage"));
@@ -752,15 +769,16 @@ public:
 "        color: #fff7e6 ;\n"
 "        background-color: #000066;\n"
 "}"));
-        text2_2 = new QLabel(shopTabPage);
-        text2_2->setObjectName(QString::fromUtf8("text2_2"));
-        text2_2->setGeometry(QRect(30, 460, 280, 30));
+        labelResourceShop = new QLabel(shopTabPage);
+        labelResourceShop->setObjectName(QString::fromUtf8("labelResourceShop"));
+        labelResourceShop->setGeometry(QRect(30, 460, 280, 30));
         QFont font9;
         font9.setFamily(QString::fromUtf8("Roboto"));
         font9.setPointSize(10);
         font9.setBold(true);
         font9.setWeight(75);
-        text2_2->setFont(font9);
+        labelResourceShop->setFont(font9);
+        labelResourceShop->setAlignment(Qt::AlignCenter);
         tabWidget->addTab(shopTabPage, QString());
         listGameLog = new QListWidget(centralwidget);
         listGameLog->setObjectName(QString::fromUtf8("listGameLog"));
@@ -882,7 +900,6 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(mapTabPage), QApplication::translate("StageGame", "Map", nullptr));
         text2_1->setText(QApplication::translate("StageGame", "Resource", nullptr));
         text2_3->setText(QApplication::translate("StageGame", "Team's weapon", nullptr));
-        miniText2_1->setText(QApplication::translate("StageGame", "Manage resource wisely. ", nullptr));
         miniText2_2->setText(QApplication::translate("StageGame", "Your team and enemies team 's weapon shown here. ", nullptr));
         imgWood->setText(QApplication::translate("StageGame", "Wood", nullptr));
         imgStone->setText(QApplication::translate("StageGame", "Stone", nullptr));
@@ -902,6 +919,12 @@ public:
         textTeam4Weapon->setText(QApplication::translate("StageGame", "Team 4", nullptr));
         textTeam2Weapon->setText(QApplication::translate("StageGame", "Team 2", nullptr));
         textTeam3Weapon->setText(QApplication::translate("StageGame", "Team 3", nullptr));
+        labelAtk_team1->setText(QApplication::translate("StageGame", "POWER: 0", nullptr));
+        labelAtk_team2->setText(QApplication::translate("StageGame", "POWER: 0", nullptr));
+        labelAtk_team3->setText(QApplication::translate("StageGame", "POWER: 0", nullptr));
+        labelAtk_team4->setText(QApplication::translate("StageGame", "POWER: 0", nullptr));
+        imgGold->setText(QApplication::translate("StageGame", "Gold", nullptr));
+        labelGoldResource->setText(QApplication::translate("StageGame", "x 0", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(inventoryTabPage), QApplication::translate("StageGame", "Inventory", nullptr));
         text3_1->setText(QApplication::translate("StageGame", "Weapon (ATK)", nullptr));
         text3_2->setText(QApplication::translate("StageGame", "Castle Wall (DEF)", nullptr));
@@ -929,9 +952,9 @@ public:
         miniTextShop_6->setText(QApplication::translate("StageGame", "Cost: 200 W + 1000 S + 1000 I", nullptr));
         miniTextShop_7->setText(QApplication::translate("StageGame", " Cost: 1000 W + 2000 S + 2000 I", nullptr));
         buttonBuyItem->setText(QApplication::translate("StageGame", "Buy something !", nullptr));
-        text2_2->setText(QApplication::translate("StageGame", "You have: ", nullptr));
+        labelResourceShop->setText(QApplication::translate("StageGame", "You have: 0W, 0S, 0I", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(shopTabPage), QApplication::translate("StageGame", "Shop", nullptr));
-        text0_1->setText(QApplication::translate("StageGame", "Game record", nullptr));
+        text0_1->setText(QApplication::translate("StageGame", "NEWS", nullptr));
         labelGreet->setText(QApplication::translate("StageGame", "Greeting, username", nullptr));
         text0_2->setText(QApplication::translate("StageGame", "Player List", nullptr));
         menuHelp->setTitle(QApplication::translate("StageGame", "Help", nullptr));

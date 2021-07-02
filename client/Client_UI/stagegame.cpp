@@ -42,6 +42,7 @@ void StageGame::loadStaticUI(){
     QPixmap imageCatapult(":/image/catapult.png");
     QPixmap imageCannon(":/image/cannon.png");
     QPixmap imageNothing(":/image/nothing.png");
+    QPixmap imageGold(":/image/gold.png");
 
     ui->castle1->setPixmap(imageCastle1.scaled(128,128,Qt::KeepAspectRatio));
     ui->castle2->setPixmap(imageCastle2.scaled(128,128,Qt::KeepAspectRatio));
@@ -55,6 +56,7 @@ void StageGame::loadStaticUI(){
     ui->imgWood->setPixmap(imageWood.scaled(64,64,Qt::KeepAspectRatio));
     ui->imgStone->setPixmap(imageStone.scaled(64,64,Qt::KeepAspectRatio));
     ui->imgIron->setPixmap(imageIron.scaled(64,64,Qt::KeepAspectRatio));
+    ui->imgGold->setPixmap(imageGold.scaled(80,80,Qt::KeepAspectRatio));
     ui->imageShop_fence->setPixmap(imageFence.scaled(80,80,Qt::KeepAspectRatio));
     ui->imageShop_woodwall->setPixmap(imageWoodWall.scaled(80,80,Qt::KeepAspectRatio));
     ui->imageShop_stonewall->setPixmap(imageStoneWall.scaled(80,80,Qt::KeepAspectRatio));
@@ -77,7 +79,7 @@ void StageGame::loadPlayers(){
     for ( int i = 0; i < currentLobby.player_number ; i++ ){
         ui->listPlayer->addItem("[ID: " + QString::number(currentLobby.players[i].id) + "]" +
                                 " [Name: " + QString::fromLocal8Bit(currentLobby.players[i].username) + "]"+
-                                " [Team:" + QString::number(currentLobby.players[i].team_id) + "]");
+                                " [Team:" + QString::number(currentLobby.players[i].team_id+1) + "]");
     }
 }
 
@@ -107,15 +109,25 @@ void StageGame::updateDynamicUI(){
     ui->labelToughCst1->setText( "DEF: " + QString::number(currentGame.castles[0].wall.defense) );
     ui->labelToughCst2->setText( "DEF: " + QString::number(currentGame.castles[1].wall.defense) );
     ui->labelToughCst3->setText( "DEF: " + QString::number(currentGame.castles[2].wall.defense) );
+    ui->labelAtk_team1->setText( "POWER: " + QString::number(currentGame.teams[0].weapon.attack));
+    ui->labelAtk_team2->setText( "POWER: " + QString::number(currentGame.teams[1].weapon.attack));
+    ui->labelAtk_team3->setText( "POWER: " + QString::number(currentGame.teams[2].weapon.attack));
+    ui->labelAtk_team4->setText( "POWER: " + QString::number(currentGame.teams[3].weapon.attack));
 
     //Update INVENTORY : resources, equipment
     ui->labelWoodResource->setText("x " + QString::number(currentGame.teams[myTeam].wood));
     ui->labelStoneResource->setText("x " + QString::number(currentGame.teams[myTeam].stone));
     ui->labelIronResource->setText("x " + QString::number(currentGame.teams[myTeam].iron));
+    ui->labelGoldResource->setText("x " + QString::number(currentGame.teams[myTeam].gold));
     ui->equipment_atk_1->setPixmap(getWeaponPixMap(currentGame.teams[0].weapon.type).scaled(80,80,Qt::KeepAspectRatio));
     ui->equipment_atk_2->setPixmap(getWeaponPixMap(currentGame.teams[1].weapon.type).scaled(80,80,Qt::KeepAspectRatio));
     ui->equipment_atk_3->setPixmap(getWeaponPixMap(currentGame.teams[2].weapon.type).scaled(80,80,Qt::KeepAspectRatio));
     ui->equipment_atk_4->setPixmap(getWeaponPixMap(currentGame.teams[3].weapon.type).scaled(80,80,Qt::KeepAspectRatio));
+
+    //Update Shop resource label
+    ui->labelResourceShop->setText("You have: " + QString::number(currentGame.teams[myTeam].wood) + "W, " +
+                                   QString::number(currentGame.teams[myTeam].stone) + "S, " +
+                                   QString::number(currentGame.teams[myTeam].iron)+ "I");
 }
 
 void StageGame::on_actionRules_triggered()
@@ -160,6 +172,15 @@ void StageGame::on_buttonAttack_clicked()
                 answerID = QInputDialog::getInt(this,"Answer question",TEXT_RULES_QUESTION + getQuestText(currentQuestion),1,1,4,1,0,Qt::Dialog) - 1;
                 currentPlayer.attack_castle_request(clientSocket,targetID,currentQuestion.id,answerID);
             }
+            // Set cooldown on attack command
+            QTimer::singleShot(0, [&](){
+                ui->buttonAttack->setText("Cooldown");
+                ui->buttonAttack->setDisabled(true);
+            });
+            QTimer::singleShot(COOLDOWN_INTERVAL, [&](){
+                ui->buttonAttack->setText("Attack");
+                ui->buttonAttack->setDisabled(false);
+            });
         }
     }
 }
