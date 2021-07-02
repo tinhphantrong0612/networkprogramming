@@ -1,5 +1,6 @@
 // Some game constant
 #define DISCONNECTED "00000"
+#define COOLDOWN_INTERVAL 5000
 
 // Display Game UI text
 #define GAME_RULES  "0. When you read it, the game has started!\n\

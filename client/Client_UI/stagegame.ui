@@ -40,6 +40,11 @@ QPushButton:pressed {
         background-color: #000066;
 }
 
+QPushButton:disabled {
+        color: #ffff66;
+        background-color: #ffff66;
+}
+
 QLineEdit {
         background-color: #b3ecff;
         border-radius: 15;
@@ -124,6 +129,10 @@ QPushButton:hover {
 QPushButton:pressed {
         color: #fff7e6 ;
         background-color: #000066;
+}
+
+QPushButton: disabled {
+		background-color:#ff6666;
 }
 
 QWidget#mapTabPage {
@@ -967,26 +976,6 @@ QWidget#mapTabPage {
        <string>Team's weapon</string>
       </property>
      </widget>
-     <widget class="QLabel" name="miniText2_1">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>50</y>
-        <width>451</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Roboto</family>
-        <pointsize>9</pointsize>
-        <italic>true</italic>
-       </font>
-      </property>
-      <property name="text">
-       <string>Manage resource wisely. </string>
-      </property>
-     </widget>
      <widget class="QLabel" name="miniText2_2">
       <property name="geometry">
        <rect>
@@ -1011,7 +1000,7 @@ QWidget#mapTabPage {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>80</y>
+        <y>55</y>
         <width>540</width>
         <height>3</height>
        </rect>
@@ -1037,9 +1026,9 @@ QWidget#mapTabPage {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>100</y>
-        <width>64</width>
-        <height>64</height>
+        <y>70</y>
+        <width>80</width>
+        <height>80</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1055,10 +1044,10 @@ QWidget#mapTabPage {
      <widget class="QLabel" name="imgStone">
       <property name="geometry">
        <rect>
-        <x>230</x>
-        <y>100</y>
-        <width>64</width>
-        <height>64</height>
+        <x>190</x>
+        <y>70</y>
+        <width>80</width>
+        <height>80</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1074,10 +1063,10 @@ QWidget#mapTabPage {
      <widget class="QLabel" name="imgIron">
       <property name="geometry">
        <rect>
-        <x>420</x>
-        <y>100</y>
-        <width>64</width>
-        <height>64</height>
+        <x>330</x>
+        <y>70</y>
+        <width>80</width>
+        <height>80</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -1093,8 +1082,8 @@ QWidget#mapTabPage {
      <widget class="QLabel" name="labelWoodResource">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>120</y>
+        <x>30</x>
+        <y>150</y>
         <width>100</width>
         <height>25</height>
        </rect>
@@ -1109,13 +1098,16 @@ QWidget#mapTabPage {
       </property>
       <property name="text">
        <string>x 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="labelStoneResource">
       <property name="geometry">
        <rect>
-        <x>300</x>
-        <y>120</y>
+        <x>180</x>
+        <y>150</y>
         <width>100</width>
         <height>25</height>
        </rect>
@@ -1130,13 +1122,16 @@ QWidget#mapTabPage {
       </property>
       <property name="text">
        <string>x 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="labelIronResource">
       <property name="geometry">
        <rect>
-        <x>490</x>
-        <y>120</y>
+        <x>320</x>
+        <y>150</y>
         <width>100</width>
         <height>25</height>
        </rect>
@@ -1151,13 +1146,16 @@ QWidget#mapTabPage {
       </property>
       <property name="text">
        <string>x 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="equipment_atk_1">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>280</y>
+        <y>275</y>
         <width>80</width>
         <height>80</height>
        </rect>
@@ -1173,7 +1171,7 @@ QWidget#mapTabPage {
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>280</y>
+        <y>275</y>
         <width>80</width>
         <height>80</height>
        </rect>
@@ -1189,7 +1187,7 @@ QWidget#mapTabPage {
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>280</y>
+        <y>275</y>
         <width>80</width>
         <height>80</height>
        </rect>
@@ -1205,7 +1203,7 @@ QWidget#mapTabPage {
       <property name="geometry">
        <rect>
         <x>480</x>
-        <y>280</y>
+        <y>275</y>
         <width>80</width>
         <height>80</height>
        </rect>
@@ -1218,11 +1216,14 @@ QWidget#mapTabPage {
       </property>
      </widget>
      <widget class="QPushButton" name="buttonAttack">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>95</x>
         <y>470</y>
-        <width>150</width>
+        <width>200</width>
         <height>50</height>
        </rect>
       </property>
@@ -1236,31 +1237,20 @@ QWidget#mapTabPage {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton {
-        background-color: #00cccc;
-        color: #fff7e6 ;
-        border-radius: 20;
-}
-
-QPushButton:hover {
-        color: #fff7e6 ;
-        background-color: #002e4d;
-}
-
-QPushButton:pressed {
-        color: #fff7e6 ;
-        background-color: #000066;
-}</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Attack</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="text2_4">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>370</y>
+        <y>390</y>
         <width>301</width>
         <height>30</height>
        </rect>
@@ -1281,7 +1271,7 @@ QPushButton:pressed {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>400</y>
+        <y>420</y>
         <width>450</width>
         <height>30</height>
        </rect>
@@ -1301,7 +1291,7 @@ QPushButton:pressed {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>430</y>
+        <y>450</y>
         <width>540</width>
         <height>3</height>
        </rect>
@@ -1313,9 +1303,9 @@ QPushButton:pressed {
      <widget class="QPushButton" name="buttonCheat">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>340</x>
         <y>470</y>
-        <width>150</width>
+        <width>200</width>
         <height>50</height>
        </rect>
       </property>
@@ -1329,21 +1319,7 @@ QPushButton:pressed {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton {
-        background-color: #00cccc;
-        color: #fff7e6 ;
-        border-radius: 20;
-}
-
-QPushButton:hover {
-        color: #fff7e6 ;
-        background-color: #002e4d;
-}
-
-QPushButton:pressed {
-        color: #fff7e6 ;
-        background-color: #000066;
-}</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Cheat</string>
@@ -1378,7 +1354,7 @@ QPushButton:pressed {
       <property name="geometry">
        <rect>
         <x>495</x>
-        <y>250</y>
+        <y>243</y>
         <width>50</width>
         <height>30</height>
        </rect>
@@ -1444,6 +1420,149 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>Team 3</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAtk_team1">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>360</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Roboto</family>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>POWER: 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAtk_team2">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>360</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Roboto</family>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>POWER: 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAtk_team3">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>360</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Roboto</family>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>POWER: 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAtk_team4">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>360</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Roboto</family>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>POWER: 0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="imgGold">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>70</y>
+        <width>80</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Gold</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelGoldResource">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>150</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Roboto</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>x 0</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -2075,7 +2194,7 @@ QPushButton:pressed {
        <string>Buy something !</string>
       </property>
      </widget>
-     <widget class="QLabel" name="text2_2">
+     <widget class="QLabel" name="labelResourceShop">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -2093,7 +2212,10 @@ QPushButton:pressed {
        </font>
       </property>
       <property name="text">
-       <string>You have: </string>
+       <string>You have: 0W, 0S, 0I</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
@@ -2135,7 +2257,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string>Game record</string>
+     <string>NEWS</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

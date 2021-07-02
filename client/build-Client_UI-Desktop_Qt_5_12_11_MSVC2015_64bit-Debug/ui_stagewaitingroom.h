@@ -127,6 +127,7 @@ public:
         font2.setPointSize(9);
         listLobby->setFont(font2);
         listLobby->setStyleSheet(QString::fromUtf8("QListWidget {\n"
+"		background-color: #ccffcc;\n"
 "        border-radius: 10 ;\n"
 "		font-family: Roboto;\n"
 "		font-style: bold;\n"

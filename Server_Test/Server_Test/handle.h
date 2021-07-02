@@ -819,7 +819,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->castles[castleId]->wall->defense, buff + BUFFLEN, BUFF_SIZE, 10); // Defense
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10); // Team Index
+	_itoa_s(game->castles[castleId]->occupiedBy, buff + BUFFLEN, BUFF_SIZE, 10); // Team Index
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	TEAM team = game->teams[game->players[playerIndex]->teamIndex];
 	_itoa_s(team->weapon->type, buff + BUFFLEN, BUFF_SIZE, 10); // Weapon Type

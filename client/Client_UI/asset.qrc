@@ -17,6 +17,7 @@
         <file>image/wagon2.png</file>
         <file>image/wagon3.png</file>
         <file>image/nothing.png</file>
+        <file>image/gold.png</file>
     </qresource>
     <qresource prefix="/image"/>
 </RCC>

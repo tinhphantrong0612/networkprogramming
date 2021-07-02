@@ -88,7 +88,8 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
         int player_id = res.player_id;
         int team_id = res.team_id;
         Castle& castle = this->castles[castle_id];
-        Team& team = this->teams[team_id];
+        Team& occupiedTeam = this->teams[team_id];
+        Team& attackTeam = this->teams[lobby.players[player_id].team_id];
 
         // answer wrong
         if (!strcmp(result_code, UPDATE_GAME_ATK_CST_W)) {
@@ -127,13 +128,17 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
                                             + QString::number(castle_id+1) + "]",0);
                 }
             }
+            // Get wall information
             castle.occupied_by = team_id;
             castle.wall = get_wall(res.wall_type_id);
             castle.wall.defense = res.wall_def;
 
-            team.add_castle(castle);
-            team.weapon = get_weapon(res.weapon_type_id);
-            team.weapon.attack = res.weapon_atk;
+            // Set castle's occupied state
+            occupiedTeam.add_castle(castle);
+
+            // Get weapon information
+            attackTeam.weapon = get_weapon(res.weapon_type_id);
+            attackTeam.weapon.attack = res.weapon_atk;
         }
 
         castle.question = Question(res.question_id, res.question, res.answer1, res.answer2, res.answer3, res.answer4);

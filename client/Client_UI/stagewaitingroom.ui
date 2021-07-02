@@ -146,6 +146,7 @@ QMessageBox QPushButton {
     </property>
     <property name="styleSheet">
      <string notr="true">QListWidget {
+		background-color: #ccffcc;
         border-radius: 10 ;
 		font-family: Roboto;
 		font-style: bold;

@@ -251,22 +251,23 @@ compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_asset.cpp
 debug\qrc_asset.cpp: ..\Client_UI\asset.qrc \
 		G:\Qt\5.12.11\msvc2015_64\bin\rcc.exe \
-		..\Client_UI\image\iron.png \
-		..\Client_UI\image\coal.png \
-		..\Client_UI\image\wagon3.png \
+		..\Client_UI\image\gold.png \
+		..\Client_UI\image\castle.png \
 		..\Client_UI\image\legendwall.png \
-		..\Client_UI\image\castle2.png \
-		..\Client_UI\image\wagon2.png \
-		..\Client_UI\image\wood.png \
-		..\Client_UI\image\ballista.png \
-		..\Client_UI\image\castle1.png \
-		..\Client_UI\image\stonewall.png \
 		..\Client_UI\image\woodwall.png \
 		..\Client_UI\image\wagon1.png \
-		..\Client_UI\image\cannon.png \
-		..\Client_UI\image\catapult.png \
-		..\Client_UI\image\castle.png \
+		..\Client_UI\image\wagon2.png \
+		..\Client_UI\image\coal.png \
+		..\Client_UI\image\wagon3.png \
 		..\Client_UI\image\fence.png \
+		..\Client_UI\image\castle1.png \
+		..\Client_UI\image\castle2.png \
+		..\Client_UI\image\iron.png \
+		..\Client_UI\image\cannon.png \
+		..\Client_UI\image\ballista.png \
+		..\Client_UI\image\stonewall.png \
+		..\Client_UI\image\catapult.png \
+		..\Client_UI\image\wood.png \
 		..\Client_UI\image\nothing.png
 	G:\Qt\5.12.11\msvc2015_64\bin\rcc.exe -name asset ..\Client_UI\asset.qrc -o debug\qrc_asset.cpp
 
