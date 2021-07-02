@@ -1,8 +1,5 @@
-networkprogramming
-GUI client using Qt C++ framework
-
-After tested, there are bugs remain:
-
-1. handleAttackCastle: when answer right without take over the castle, send incorrect 'team' index 
-   <br/>Cause by: informCastleAttack: 'team' got from using request player's team index
-   <br/>Fix: Use castle -> occupied by instead of player's team index
+* UPDATE 2/7:
+</br>Add Server_HoangLong: sync and test "timely update" & "end game" function
+</br>Client prevents consecutive attack from a player with 30s interval
+</br>Fix some UI display
+</br>Current bugs: 0
