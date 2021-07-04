@@ -26,15 +26,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true">QMainWindow {
-        background-color: #ffffe6;
-}
-
-QPushButton {
+   <string notr="true">QPushButton {
         background-color: #00cccc;
         color: #fff7e6 ;
         border-radius: 15;
@@ -47,7 +39,7 @@ QPushButton:hover {
 
 QPushButton:pressed {
         color: #fff7e6 ;
-        background-color: #002e4d;
+        background-color: #000066;
 }
 
 QLineEdit {
@@ -62,7 +54,8 @@ QLabel {
         color: #005c99;
 }
 </string>
-   </property>
+  </property>
+  <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="labelStatus">
     <property name="geometry">
      <rect>

@@ -217,6 +217,12 @@ void StagePrepare::runQueue(){
                 gameStage->ui->listGameLog->insertItem(0,"[Game]: A cheater has cheated!");
                 gameStage->updateDynamicUI();
             }
+            // Case: Update Timely_update ( 400 )
+            if (!strcmp(resultHeader,TIMELY_UPDATE)){
+                gameStage->currentGame.update_timely_response(buffer);
+                gameStage->ui->listGameLog->insertItem(0,"[Day "+ QString::number(gameStage->currentGame.day++) +
+                                                       "]: Game has been updated! Let's check map and inventory.");
+            }
             // Case: Update Game_over ( 40110 )
             if (!strcmp(resultCode,UPDATE_GAME_OVER)){
 

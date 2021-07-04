@@ -525,7 +525,7 @@ public:
         buttonAttack = new QPushButton(inventoryTabPage);
         buttonAttack->setObjectName(QString::fromUtf8("buttonAttack"));
         buttonAttack->setEnabled(true);
-        buttonAttack->setGeometry(QRect(95, 470, 200, 50));
+        buttonAttack->setGeometry(QRect(95, 485, 200, 50));
         QFont font6;
         font6.setFamily(QString::fromUtf8("Roboto"));
         font6.setPointSize(20);
@@ -537,20 +537,20 @@ public:
         buttonAttack->setCheckable(false);
         text2_4 = new QLabel(inventoryTabPage);
         text2_4->setObjectName(QString::fromUtf8("text2_4"));
-        text2_4->setGeometry(QRect(40, 390, 301, 30));
+        text2_4->setGeometry(QRect(40, 405, 301, 30));
         text2_4->setFont(font3);
         miniText2_3 = new QLabel(inventoryTabPage);
         miniText2_3->setObjectName(QString::fromUtf8("miniText2_3"));
-        miniText2_3->setGeometry(QRect(40, 420, 450, 30));
+        miniText2_3->setGeometry(QRect(40, 435, 450, 30));
         miniText2_3->setFont(font4);
         line2_4 = new QFrame(inventoryTabPage);
         line2_4->setObjectName(QString::fromUtf8("line2_4"));
-        line2_4->setGeometry(QRect(40, 450, 540, 3));
+        line2_4->setGeometry(QRect(40, 465, 540, 3));
         line2_4->setFrameShape(QFrame::HLine);
         line2_4->setFrameShadow(QFrame::Sunken);
         buttonCheat = new QPushButton(inventoryTabPage);
         buttonCheat->setObjectName(QString::fromUtf8("buttonCheat"));
-        buttonCheat->setGeometry(QRect(340, 470, 200, 50));
+        buttonCheat->setGeometry(QRect(340, 485, 200, 50));
         buttonCheat->setFont(font6);
         buttonCheat->setStyleSheet(QString::fromUtf8(""));
         textTeam1Weapon = new QLabel(inventoryTabPage);
@@ -847,7 +847,7 @@ public:
 
         retranslateUi(StageGame);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(StageGame);
