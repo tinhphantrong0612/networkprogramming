@@ -61,7 +61,7 @@ void setResponseAndSend(PLAYER player, char *opcode, char *response, int respons
 * @return	Nothing
 */
 void handleLogin(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state != NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) LOGIN_E_ALREADY, strlen(LOGIN_E_ALREADY), buff);
 	else {
 		char *sharp = strchr(buff, '#');
@@ -106,7 +106,7 @@ void handleLogin(PLAYER player, char *opcode, char *buff) {
 * @return	Nothing
 */
 void handleSignUp(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state != NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) SIGNUP_E_LOGGEDIN, strlen(SIGNUP_E_LOGGEDIN), buff);
 	else {
 		char *sharp = strchr(buff, '#');
@@ -151,7 +151,7 @@ void handleSignUp(PLAYER player, char *opcode, char *buff) {
 * @return	Nothing
 */
 void handleCreateGame(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state == NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) CREATE_E_NOTAUTH, strlen(CREATE_E_NOTAUTH), buff);
 	else if (player->state != AUTHORIZED) setResponseAndSend(player, opcode, (char *) CREATE_E_INGAME, strlen(CREATE_E_INGAME), buff);
 	else {
@@ -190,7 +190,7 @@ void handleCreateGame(PLAYER player, char *opcode, char *buff) {
 * @return	Send Response result
 */
 void handleGetLobby(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state == NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) LOBBY_E_NOTAUTH, strlen(LOBBY_E_NOTAUTH), buff);
 	else if (player->state != AUTHORIZED) setResponseAndSend(player, opcode, (char *) LOBBY_E_INGAME, strlen(LOBBY_E_INGAME), buff);
 	else {
@@ -252,7 +252,7 @@ void getTeamPlayerString(GAME game, char *buff) {
 * @return	Nothing
 */
 void handleJoinGame(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state == NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) JOIN_E_NOTAUTH, strlen(JOIN_E_NOTAUTH), buff);
 	else if (player->state != AUTHORIZED) setResponseAndSend(player, opcode, (char *) JOIN_E_ALREADY, strlen(JOIN_E_ALREADY), buff);
 	else {
@@ -398,7 +398,7 @@ void sendToAllPlayersInGameRoom(GAME game, char *buff) {
 * @return	Nothing
 */
 void handleChangeTeam(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) CHANGE_E_NOTINGAME, strlen(CHANGE_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -440,7 +440,7 @@ void handleChangeTeam(PLAYER player, char *opcode, char *buff) {
 * @return	Nothing
 */
 void handleReadyPlay(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) READY_E_NOTINGAME, strlen(READY_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -469,7 +469,7 @@ void handleReadyPlay(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 void handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) UNREADY_E_NOTINGAME, strlen(UNREADY_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -498,7 +498,7 @@ void handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 void handleQuitGame(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) QUIT_E_NOTINGAME, strlen(QUIT_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -538,7 +538,7 @@ void handleQuitGame(PLAYER player, char *opcode, char *buff) {
 * @return	Nothing
 */
 void handleStartGame(PLAYER player, char *opcode, char * buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) START_E_NOTINGAME, strlen(START_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -648,7 +648,7 @@ void sendNewMineQuestion(GAME game, int mineId, int type, char *buff) {
 * @return	Nothing
 */
 void handleKick(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) KICK_E_NOTINGAME, strlen(KICK_E_NOTINGAME), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -688,7 +688,7 @@ void handleKick(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 void handleLogOut(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->state == NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *) LOGOUT_E_NOTAUTH, strlen(LOGOUT_E_NOTAUTH), buff);
 	else if (player->state != AUTHORIZED) setResponseAndSend(player, opcode, (char *) LOGOUT_E_INGAME, strlen(LOGOUT_E_INGAME), buff);
 	else {
@@ -709,7 +709,7 @@ void handleLogOut(PLAYER player, char *opcode, char *buff) {
 * @return	1
 */
 void handleAttackCastle(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -826,7 +826,7 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 * @return	Nothing
 */
 void handleAttackMine(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) ATK_MINE_E_NOTPLAYING, strlen(ATK_MINE_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -916,7 +916,7 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 * @return	Nothing
 */
 void handleBuyWeapon(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) BUY_WEAPON_E_NOTPLAYING, strlen(BUY_WEAPON_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -1008,7 +1008,7 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 * @return	Nothing
 */
 void handleBuyWall(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) BUY_WALL_E_NOTPLAYING, strlen(BUY_WALL_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -1119,7 +1119,7 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 * @return	Nothing
 */
 void handleCheat(PLAYER player, char *opcode, char *buff) {
-	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
 		setResponseAndSend(player, opcode, (char *) BUY_WALL_E_NOTPLAYING, strlen(BUY_WALL_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
@@ -1176,7 +1176,7 @@ void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, c
 void informUpdate(GAME game, char *opcode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
 	getGameProperties(game, buff + HEADER_SIZE);
-	buff[strlen(buff) - 1] = 0;
+	buff[BUFFLEN - 1] = 0;
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 };
