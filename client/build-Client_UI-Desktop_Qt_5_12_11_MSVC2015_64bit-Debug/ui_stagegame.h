@@ -525,7 +525,7 @@ public:
         buttonAttack = new QPushButton(inventoryTabPage);
         buttonAttack->setObjectName(QString::fromUtf8("buttonAttack"));
         buttonAttack->setEnabled(true);
-        buttonAttack->setGeometry(QRect(95, 470, 200, 50));
+        buttonAttack->setGeometry(QRect(95, 485, 200, 50));
         QFont font6;
         font6.setFamily(QString::fromUtf8("Roboto"));
         font6.setPointSize(20);
@@ -537,20 +537,20 @@ public:
         buttonAttack->setCheckable(false);
         text2_4 = new QLabel(inventoryTabPage);
         text2_4->setObjectName(QString::fromUtf8("text2_4"));
-        text2_4->setGeometry(QRect(40, 390, 301, 30));
+        text2_4->setGeometry(QRect(40, 405, 301, 30));
         text2_4->setFont(font3);
         miniText2_3 = new QLabel(inventoryTabPage);
         miniText2_3->setObjectName(QString::fromUtf8("miniText2_3"));
-        miniText2_3->setGeometry(QRect(40, 420, 450, 30));
+        miniText2_3->setGeometry(QRect(40, 435, 450, 30));
         miniText2_3->setFont(font4);
         line2_4 = new QFrame(inventoryTabPage);
         line2_4->setObjectName(QString::fromUtf8("line2_4"));
-        line2_4->setGeometry(QRect(40, 450, 540, 3));
+        line2_4->setGeometry(QRect(40, 465, 540, 3));
         line2_4->setFrameShape(QFrame::HLine);
         line2_4->setFrameShadow(QFrame::Sunken);
         buttonCheat = new QPushButton(inventoryTabPage);
         buttonCheat->setObjectName(QString::fromUtf8("buttonCheat"));
-        buttonCheat->setGeometry(QRect(340, 470, 200, 50));
+        buttonCheat->setGeometry(QRect(340, 485, 200, 50));
         buttonCheat->setFont(font6);
         buttonCheat->setStyleSheet(QString::fromUtf8(""));
         textTeam1Weapon = new QLabel(inventoryTabPage);
@@ -746,10 +746,10 @@ public:
         line3_3->setFrameShadow(QFrame::Sunken);
         buttonBuyItem = new QPushButton(shopTabPage);
         buttonBuyItem->setObjectName(QString::fromUtf8("buttonBuyItem"));
-        buttonBuyItem->setGeometry(QRect(170, 510, 120, 30));
+        buttonBuyItem->setGeometry(QRect(30, 500, 280, 41));
         QFont font8;
         font8.setFamily(QString::fromUtf8("Roboto"));
-        font8.setPointSize(8);
+        font8.setPointSize(16);
         font8.setBold(true);
         font8.setItalic(false);
         font8.setWeight(75);
@@ -757,7 +757,7 @@ public:
         buttonBuyItem->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "        background-color: #00cccc;\n"
 "        color: #fff7e6 ;\n"
-"        border-radius: 15;\n"
+"        border-radius: 20;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
@@ -778,7 +778,7 @@ public:
         font9.setBold(true);
         font9.setWeight(75);
         labelResourceShop->setFont(font9);
-        labelResourceShop->setAlignment(Qt::AlignCenter);
+        labelResourceShop->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         tabWidget->addTab(shopTabPage, QString());
         listGameLog = new QListWidget(centralwidget);
         listGameLog->setObjectName(QString::fromUtf8("listGameLog"));
@@ -847,7 +847,7 @@ public:
 
         retranslateUi(StageGame);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(StageGame);

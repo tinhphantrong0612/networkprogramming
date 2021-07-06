@@ -71,7 +71,7 @@
 #define CHEAT					"304" // Add 1000 to every resource, include gold
 
 // Update header - Server send back only
-#define TIMELY_UPDATE			"400"
+#define TIMELY_UPDATE			"40000"
 #define UPDATE_GAME				"401"
 #define UPDATE_LOBBY			"402"
 

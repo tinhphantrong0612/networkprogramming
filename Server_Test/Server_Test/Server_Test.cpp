@@ -214,7 +214,7 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 	char buff[BUFF_SIZE];
 
 	while (TRUE) {
-		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (LPDWORD)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
+		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (PULONG_PTR)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
 			printf("GetQueuedCompletionStatus() failed with error %d\n", GetLastError());
 			// Handle client disconnect here, use perHandleData->index to find player
 			closesocket(perHandleData->socket);

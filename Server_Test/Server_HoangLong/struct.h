@@ -237,6 +237,7 @@ void createEmptyGame(GAME game) {
 	for (int i = 0; i < TEAM_NUM; i++) { // Unlink and clear team
 		game->teams[i] = (TEAM)malloc(sizeof(_team));
 		game->teams[i]->game = game;
+		game->teams[i]->index = i;
 		game->teams[i]->weapon = (WEAPON)malloc(sizeof(_weapon));
 		game->teams[i]->weapon->type = NO_WEAPON;
 		game->teams[i]->weapon->attack = NO_WEAPON_ATK;

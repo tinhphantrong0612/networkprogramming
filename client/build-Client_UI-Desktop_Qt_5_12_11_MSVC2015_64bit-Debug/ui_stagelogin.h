@@ -47,14 +47,7 @@ public:
         sizePolicy.setHeightForWidth(StageLogin->sizePolicy().hasHeightForWidth());
         StageLogin->setSizePolicy(sizePolicy);
         StageLogin->setAutoFillBackground(false);
-        StageLogin->setStyleSheet(QString::fromUtf8(""));
-        centralwidget = new QWidget(StageLogin);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        centralwidget->setStyleSheet(QString::fromUtf8("QMainWindow {\n"
-"        background-color: #ffffe6;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
+        StageLogin->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "        background-color: #00cccc;\n"
 "        color: #fff7e6 ;\n"
 "        border-radius: 15;\n"
@@ -67,7 +60,7 @@ public:
 "\n"
 "QPushButton:pressed {\n"
 "        color: #fff7e6 ;\n"
-"        background-color: #002e4d;\n"
+"        background-color: #000066;\n"
 "}\n"
 "\n"
 "QLineEdit {\n"
@@ -82,6 +75,8 @@ public:
 "        color: #005c99;\n"
 "}\n"
 ""));
+        centralwidget = new QWidget(StageLogin);
+        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         labelStatus = new QLabel(centralwidget);
         labelStatus->setObjectName(QString::fromUtf8("labelStatus"));
         labelStatus->setGeometry(QRect(130, 70, 340, 35));

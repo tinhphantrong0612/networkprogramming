@@ -140,7 +140,8 @@ void StagePrepare::runQueue(){
         strncpy_s(resultHeader, buffer, CODE_SIZE);
         strncpy_s(resultCode, buffer, RESULT_CODE_SIZE);
 
-        qDebug() << "Receive (from emit) (from server): " << buffer << " strlen: " << strlen(buffer) ;
+        qDebug() << "Receive (from emit) (from server): " << buffer ;
+        qDebug() << resultHeader << resultCode ;
 
         // UPDATE GAME / LOBBY handle below
         // Update_lobby response handle (402) : call for update_lobby_response only
@@ -217,10 +218,20 @@ void StagePrepare::runQueue(){
                 gameStage->ui->listGameLog->insertItem(0,"[Game]: A cheater has cheated!");
                 gameStage->updateDynamicUI();
             }
-            // Case: Update Game_over ( 40110 )
-            if (!strcmp(resultCode,UPDATE_GAME_OVER)){
+        }
 
-            }
+        // Timely_update and endgame handle
+        //  Case: Update Timely_update ( 400 )
+        if (!strcmp(resultHeader,TIMELY_UPDATE)){
+            qDebug() << "Timely update here!" ;
+            gameStage->currentGame.update_timely_response(buffer);
+            gameStage->ui->listGameLog->insertItem(0,"[Day "+ QString::number(gameStage->currentGame.day++) +
+                                                   "]: Game has been updated! Let's check map and inventory.");
+            gameStage->updateDynamicUI();
+        }
+        //   Case: Update Game_over ( 40110 )
+        if (!strcmp(resultCode,UPDATE_GAME_OVER)){
+
         }
 
         // ERROR & OTHER CASE handle below
