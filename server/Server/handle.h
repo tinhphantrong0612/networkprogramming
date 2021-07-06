@@ -22,8 +22,8 @@ void	informBuyWeapon(GAME, int, int, char *, char *, char *);
 void	setNewWall(TEAM, CASTLE, int, int, int, int, int);
 void	informBuyWall(GAME, int, int, int, char *, char *, char *);
 void	informCheat(GAME, int, char *, char *, char *);
-//void	informUpdate(GAME, char *, char *);
-void	informEndGame(GAME, char *, char *, char *);
+GAME	informUpdate(GAME, char *, char *);
+GAME	informEndGame(GAME, char *, char *, char *);
 
 /* The setResponseAndSend function sets response, then send to player
 * @param	opcode				[IN]		Operation code
@@ -1191,9 +1191,10 @@ GAME informUpdate(GAME game, char *opcode, char *buff) {
 * @param	buff				[IN/OUT]	Buffer to store result
 * @return	Nothing
 */
-void informEndGame(GAME game, char *opcode, char* responseCode, char *buff) {
+GAME informEndGame(GAME game, char *opcode, char* responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
+	return game;
 };

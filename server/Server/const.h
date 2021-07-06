@@ -36,7 +36,6 @@
 // Game state
 #define WAITING					0
 #define ONGOING					1
-#define FINISHED				2
 
 // Mine resources
 #define RESOURCE_NUM			3

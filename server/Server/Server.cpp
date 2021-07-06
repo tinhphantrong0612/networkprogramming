@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 	LPPER_IO_OPERATION_DATA perIoData;
 	DWORD transferredBytes;
 	DWORD flags;
+	char buff[BUFF_SIZE];
 
 	// Initiate WinSock
 	WSADATA wsaData;
@@ -183,7 +184,8 @@ int main(int argc, char* argv[])
 			if (WSARecv(connSock, &(perIoData->dataBuff), 1, &transferredBytes, &flags, &(perIoData->overlapped), NULL) == SOCKET_ERROR) {
 				if (WSAGetLastError() != ERROR_IO_PENDING) {
 					printf("WSARecv() failed with error %d\n", WSAGetLastError());
-					deleteClient(perHandleData->index);
+					closesocket(perHandleData->socket);
+					clearPlayerInfo(players[perHandleData->index], buff);
 					continue;
 				}
 			}
@@ -208,11 +210,13 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 	LPPER_HANDLE_DATA perHandleData;
 	LPPER_IO_OPERATION_DATA perIoData;
 	DWORD flags = 0;
+	char buff[BUFF_SIZE];
 
 	while (TRUE) {
 		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (LPDWORD)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
 			printf("GetQueuedCompletionStatus() failed with error %d\n", GetLastError());
-			deleteClient(perHandleData->index);
+			closesocket(perHandleData->socket);
+			clearPlayerInfo(players[perHandleData->index], buff);
 			GlobalFree(perHandleData);
 			GlobalFree(perIoData);
 			continue;
@@ -222,7 +226,8 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 		// then close the socket and cleanup the SOCKET_INFORMATION structure
 		// associated with the socket
 		if (transferredBytes == 0) {
-			deleteClient(perHandleData->index);
+			closesocket(perHandleData->socket);
+			clearPlayerInfo(players[perHandleData->index], buff);
 			GlobalFree(perHandleData);
 			GlobalFree(perIoData);
 			continue;
@@ -254,7 +259,8 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 				}
 				if (requestLen == -1) {
 					printf("Invalid message from %d\n", perHandleData->socket);
-					deleteClient(perHandleData->index);
+					closesocket(perHandleData->socket);
+					clearPlayerInfo(players[perHandleData->index], buff);
 					GlobalFree(perIoData);
 					GlobalFree(perHandleData);
 					continue;
@@ -311,15 +317,15 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 		}
 		//End game
 		if (index == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
-			informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, updateBuff);
+			currGame = informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, updateBuff);
 			resetGame(currGame);
+			LeaveCriticalSection(&currGame->criticalSection);
 			break;
 		}
 		LeaveCriticalSection(&currGame->criticalSection);
 		Sleep(2000);
 	}
-
-	return 0;
+	return 1;
 }
 
 int deleteClient(int index) {
@@ -522,12 +528,15 @@ void clearPlayerInfo(PLAYER player, char *buff) {
 		}
 		if (i == PLAYER_NUM) emptyGame(game);
 		else {
-			if (player->gameIndex == game->host) game->host = i;
+			if (player->gameIndex == game->host) {
+				game->host = i;
+				if (game->gameState == ONGOING) game->players[game->host]->state = PLAYING;
+				else if (game->gameState == WAITING) game->players[game->host]->state = JOINT;
+			}
 			informGameRoomChange(game, player->gameIndex, (char *) UPDATE_LOBBY, (char *) UPDATE_LOBBY_QUIT, buff);
 		}
 		LeaveCriticalSection(&game->criticalSection);
 	}
-	printf("%p\n", accountMap);
 	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
 	if (it != accountMap.end()) it->second.second = NOT_AUTHORIZED;
 	updatePlayerInfo(player, INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
