@@ -1,0 +1,61 @@
+3#0#The plane's departure was delayed because of mechanical difficulties. When the weary passengers finally boarded the aircraft, many were annoyed and irritable because they ____ in the airport for three and a half hours.#are waiting#were waiting#have been waiting#had been waiting
+3#1#"You must have had a very good time on holiday." "__________, it was a disaster. Everything went wrong."#By tradition#In short#On the condition#On the contrary
+3#2#They are trying to persuade the rich to__________their money to the charities.#provide#invest#finance#contribute
+3#3#Local authorities have to learn to allocate resources____.#efficient#efficiency#inefficient#efficiently
+0#4#Thousands of factory workers are attending evening classes in an attempt to______themselves.#better#be better#being better#better than
+0#5#He eats nothing __________hamburgers.#but#unless#despite#apart
+2#6#He worked hard __________a mechanic for ten years before being appointed manager.#like#alike#as#same as
+1#7#This organization is quick_____sending relief goods to the flooded areas.#with#at#for#about
+0#8#When are you leaving_____Singapore? This week or next week?#for#in#to#at
+2#9#Can you help me, please? I can't see the difference _________ these words.#from#in#between#about
+0#10#That house reminds me __________the one where I used to live.#of#for#about#with
+1#11#It was very kind__________you to lend me the money I needed.#for#of#to#with
+2#12#The company made very good profit in __________.#the 1990#1990s#the 1990s#1990's
+1#13#Her eyes are different colors. One eye is gray, and ________ is green.#another#the other#the others#other
+2#14#Fred refused to travel by air because he was afraid of ________.#long#lengths#heights#high
+2#15#He __________for that company for five months when it went bankrupt.#has been worked#has worked#had been working#was working
+3#16#Most people prefer spending money ___it.#than earning#from earning#to earn#to earning
+0#17#Find the wrong word: "Mr. Carlos, along by his cousins from Mexico City, is planning to attend the festivities."#by#from#is#to attend
+0#18#Find the wrong word: "You had better to tell her the truth or she'll get angry with you."#to tell#truth#angry#with
+3#19#Find the wrong word: "Many superstitions and symbols are connected for Halloween."#Many#superstitions#are#for
+1#20#Almost half of turtles and tortoises are known to be threatened with ____.#extinct#extinction#extinctive#extinctly
+1#21#Current extinction rates are at least 100 to 1,000 times higher than __ rates found in the fossil record.#nature#natural#naturally#naturalness
+3#22#It is reported that humans are the main reason for most species' declines and habitat _______ and degradation are the leading threats.#destroy#destructive#destructor#destruction
+0#23#We have to apply effective measures to save many plant and animal species _______ extinction.#from#in#for#on
+2#24#Clearing forests for timber has resulted ___the loss of biodiversity.#with#at#in#for
+2#25#Toxic chemicals from factories are serious factors that leads wildlife to the _______ of extinction.#wall#fence#verge#bridge
+1#26#Since _______ 1600s, worldwide overexploitation of animals for _______ food and other products has caused numerous species to become extinct or endangered.#the / a#the / Ø#Ø / the#the / the
+1#27#You _______ forget to pay the rent tomorrow. The landlord is very strict about paying on time.#needn't#mustn't#do not have to#may not
+2#28#The television isn't working. It _______ during the move.#should have been damaged#needn't be damaged#must have been damaged#ought not be damaged
+1#29#I am not deaf. You _______ shout.#must#mustn't#need#needn't
+1#30#John failed again. He _______ harder.#must have tried#should have tried#can tried#may have tried
+0#31#We have plenty of time for doing the work. We _______ be hurried.#needn't#shouldn't#mustn't#mayn't
+0#32#You should __ more attention to what your teacher explains.#pay#get#set#make
+2#33#Without the traffic jam on the high way this morning, I ______ late for the meeting.#hadn't been#would have been#wouldn't have been#would be
+3#34#Remember to appreciate what your friends do for you. You shouldn't take them______.#out of habit#as usual#as a rule#for granted
+1#35#Nobody seemed to be interested in the news. It was greeted with a lack of ______.#enthusiastically#enthusiasm#enthusiastic#enthusiast
+1#36#Isn't there anyone______ of using this digital camera?#skilled#capable#affordable#possible
+0#37#The plane would have landed easily __ the thick fog.#but for#because of#due to#unless
+2#38#This letter___ be from Harry. He doesn't know my new address.#might#shouldn't#can't#mustn't
+1#39#Body language is a potent form of ______ communication.#verbal#non-verbal#tongue#oral
+1#40#It is important that every student______ attentive in class.#was#be#were#is
+2#41#With black hair and eyes, she is______ of the people from her country.#identical#the same#typical#similar
+0#42#______ you known he was a liar, would you have agreed to support him?#Had#If#Did#Since
+0#43#It was only __.. he told me his surname that I realized that we had been to the same school.#when#until#as soon as#the
+1#44#Many teenagers show signs of anxiety and _______ when being asked about their future.#depress#depression#depressing#depressed
+0#45#Constant __ of attack makes everyday life dangerous here.#threat#threaten#threatening#threateningly
+3#46#No one can predict the future exactly. Things may happen _______.#expected#unexpected#expectedly#unexpectedly
+1#47#An economic _______ is a time when there is very little economic activity, which causes a lot of unemployment and poverty.#improvement#depression#development#mission
+0#48#In the future many large (corporations) will be wiped out and millions of jobs will be lost.#companies#services#supermarkets#farms
+2#49#The more powerful weapons are, the more terrible the _______ is.#creativity#history#terrorism#technology
+2#50#The medical community continues to make (progress) in the fight against cancer.#speed#expectation#improvement#treatment
+0#51#Let's (put off) that meeting to next Monday.#postpone#schedule#arrange#appoint
+1#52#A nuclear station may take risk (going off) due to unexpected incidents.#demolishing#exploding#developing#running
+0#53#She is looking____ a new place to live because she does not want to depend ____ her parents any more.#for / on#after / with#up / forward#at / into
+3#54#I was brought _______ in the countryside by my aunt after my parents had pass _______.#on / over#for / on#on / off#up / away
+3#55#Due to industrialization, we have to cope __ the fact that many species are____ danger ____ extinction.#over / at / for#at / upon / over#for / on / with#with / in / of
+1#56#Boys! Put your toys ______. It is time to go to bed. Don't stay _____ late.#off / on#away / up#down / off#around/ for
+1#57#She intended to quit her job to stay _______ home and look _______ her sick mother.#in / at#at / after#for / over#up / on
+2#58#He is very worried _______ his new job because he is not quite prepared _______ working.#on / over#to / off#about / for#in / at
+0#59#Instead _____ petrol, cars will only run ____ solar energy and electricity.#of / on#for / by#in / over#from/ upon
+3#60#She has a promising future ahead _______ her.#for#from#on#of
