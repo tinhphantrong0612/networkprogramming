@@ -31,16 +31,10 @@ CRITICAL_SECTION				gameListCriticalSection;
 GAME                            games[GAME_NUM];
 DWORD                           num_player = 0;
 PLAYER                          players[MAX_CLIENT];
+char							updateBuff[BUFF_SIZE];
 
 unsigned __stdcall serverWorkerThread(LPVOID CompletionPortID);
-unsigned __stdcall timelyUpdate(LPVOID game) {
-	while (1) {
-		printf("Thread HERE");
-		Sleep(30000);
-	}
-	return 1;
-};
-
+unsigned __stdcall timelyUpdate(LPVOID game);
 int		header_data_check(char *, int, int&);
 int		deleteClient(int);
 LPPER_IO_OPERATION_DATA	Communicate(LPPER_IO_OPERATION_DATA, PLAYER, char *);
@@ -111,7 +105,7 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
-	loadAccountMap(ACCOUNT_FILE);
+	loadAccountMap((char*) ACCOUNT_FILE);
 
 	SOCKET connSock;
 	sockaddr_in clientAddr;
@@ -122,17 +116,17 @@ int main(int argc, char* argv[])
 	for (i = 0; i < MAX_CLIENT; i++) {
 		players[i] = (PLAYER)malloc(sizeof(_player));
 		updatePlayerInfo(players[i], INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
-		InitializeCriticalSection(&players[i]->criticalSection);
+		InitializeCriticalSectionAndSpinCount(&players[i]->criticalSection, 1000);
 	}
 
 	for (i = 0; i < GAME_NUM; i++) {
 		games[i] = (GAME)malloc(sizeof(_game));
 		createEmptyGame(games[i]);
-		InitializeCriticalSection(&games[i]->criticalSection);
+		InitializeCriticalSectionAndSpinCount(&games[i]->criticalSection, 1000);
 	}
 
-	InitializeCriticalSection(&accountMapCriticalSection);
-	InitializeCriticalSection(&gameListCriticalSection);
+	InitializeCriticalSectionAndSpinCount(&accountMapCriticalSection, 1000);
+	InitializeCriticalSectionAndSpinCount(&gameListCriticalSection, 1000);
 
 	while (1) {
 		if (num_player == MAX_CLIENT) {
@@ -198,6 +192,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	for (i = 0; i < MAX_CLIENT; i++) {
+		DeleteCriticalSection(&players[i]->criticalSection);
+	}
+	for (i = 0; i < GAME_NUM; i++) {
+		DeleteCriticalSection(&games[i]->criticalSection);
+	}
+	DeleteCriticalSection(&accountMapCriticalSection);
+	DeleteCriticalSection(&gameListCriticalSection);
 	return 0;
 }
 
@@ -270,6 +272,52 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 		}
 	}
 
+}
+
+unsigned __stdcall timelyUpdate(LPVOID game) {
+	GAME currGame = (GAME)game;
+	int loopCount = 0;
+	int index = 0, tmpTeam;
+
+	while (TRUE) {
+		while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
+		//Check if one team remain
+		tmpTeam = TEAM_NUM;
+		for (index = 0; index < PLAYER_NUM; index++) {
+			if (currGame->players[index] != NULL) {
+				if (tmpTeam == TEAM_NUM)
+					tmpTeam = currGame->players[index]->teamIndex;
+				else {
+					if (currGame->players[index]->teamIndex != tmpTeam)
+						break;
+				}
+			}
+		}
+		//Update resource
+		if ((getTime() - currGame->startAt) >= loopCount * LOOP_TIME) {
+			loopCount++;
+			for (int i = 0; i < CASTLE_NUM; i++) {
+				if (currGame->castles[i]->occupiedBy >= 0 && currGame->castles[i]->occupiedBy < TEAM_NUM) {
+					currGame->teams[currGame->castles[i]->occupiedBy]->gold += ADDITION_GOLD;
+				}
+			}
+			for (int i = 0; i < MINE_NUM; i++) {
+				currGame->mines[i]->resources[WOOD] += ADDITION_WOOD;
+				currGame->mines[i]->resources[STONE] += ADDITION_STONE;
+				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
+			}
+			informUpdate(currGame, (char *)TIMELY_UPDATE, updateBuff);
+		}
+		//End game
+		if (index == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
+			informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, updateBuff);
+			resetGame(currGame);
+			break;
+		}
+		LeaveCriticalSection(&currGame->criticalSection);	
+	}
+
+	return 0;
 }
 
 int deleteClient(int index) {
@@ -447,7 +495,7 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 	}
 	else {
 		printf("Unknown header from player [%s:%d]: %s\n", player->IP, player->port, buff);
-		setResponseAndSend(player, UNKNOWN_HEADER, UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
+		setResponseAndSend(player, (char *) UNKNOWN_HEADER, (char *) UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
 	}
 	return;
 }
@@ -459,9 +507,9 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 */
 void clearPlayerInfo(PLAYER player, char *buff) {
 	// Remove player from game and team
-	EnterCriticalSection(&player->criticalSection);
+	while (!TryEnterCriticalSection(&player->criticalSection)) {}
 	if (player->game != NULL) {
-		EnterCriticalSection(&player->game->criticalSection);
+		while (!TryEnterCriticalSection(&player->game->criticalSection)) {}
 		GAME game = player->game;
 		int i;
 		game->players[player->gameIndex] = NULL;
@@ -474,7 +522,7 @@ void clearPlayerInfo(PLAYER player, char *buff) {
 		if (i == PLAYER_NUM) emptyGame(game);
 		else {
 			if (player->gameIndex == game->host) game->host = i;
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
+			informGameRoomChange(game, player->gameIndex, (char *) UPDATE_LOBBY, (char *) UPDATE_LOBBY_QUIT, buff);
 		}
 		LeaveCriticalSection(&game->criticalSection);
 	}

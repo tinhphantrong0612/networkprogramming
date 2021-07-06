@@ -15,7 +15,7 @@
 
 // Server address
 #define SERVER_ADDR				"127.0.0.1"
-#define SERVER_PORT				6000
+#define SERVER_PORT				5500
 
 // Completion Port Operation
 #define RECEIVE					0
@@ -198,6 +198,7 @@
 #define UPDATE_GAME_BUY_WPN		"40107" // Buy weapon
 #define UPDATE_GAME_BUY_WALL	"40108" // Buy wall
 #define UPDATE_GAME_CHEAT		"40109" // Cheat
+#define UPDATE_GAME_OVER        "40110" // When game end
 
 #define UPDATE_LOBBY_QUIT		"40200" // Inform disconnect from player
 #define UPDATE_LOBBY_JOIN		"40201" // Inform join from player
@@ -216,8 +217,8 @@
 #define MINE_NUM				6
 #define WALL_NUM				5
 #define WEAPON_NUM				4
-#define HARDQUESTION_NUM		24
-#define EASYQUESTION_NUM		200
+#define HARDQUESTION_NUM		200
+#define EASYQUESTION_NUM		100
 
 // Wall type
 #define NO_WALL					0
@@ -283,6 +284,10 @@
 #define BALLISTA_IRON			200
 #define CATAPULT_IRON			300
 #define CANNON_IRON				1800
+
+// Update loop info
+#define LOOP_TIME               30000 
+#define MAX_LOOP                480 // 4 hour
 
 // Addtion per 30 seconds
 #define ADDITION_GOLD			5

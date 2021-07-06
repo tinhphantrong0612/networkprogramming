@@ -1,28 +1,79 @@
-﻿Build started 19/06/2021 3:26:56 PM.
-     1>Project "E:\Documents\Visual Studio 2013\network\client\client\client.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt util.cpp
-         util.cpp
-       Link:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Documents\Visual Studio 2013\network\client\Debug\client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Documents\Visual Studio 2013\network\client\Debug\client.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Documents\Visual Studio 2013\network\client\Debug\client.lib" /MACHINE:X86 Debug\castle.obj
-         Debug\client.obj
-         Debug\auth.obj
-         Debug\game.obj
-         Debug\lobby.obj
-         Debug\mine.obj
-         Debug\player.obj
-         Debug\question.obj
-         Debug\response.obj
-         Debug\stdafx.obj
-         Debug\stream.obj
-         Debug\team.obj
-         Debug\util.obj
-         Debug\wall.obj
-         Debug\weapon.obj
-         LINK : E:\Documents\Visual Studio 2013\network\client\Debug\client.exe not found or not built by the last incremental link; performing full link
-         client.vcxproj -> E:\Documents\Visual Studio 2013\network\client\Debug\client.exe
-     1>Done Building Project "E:\Documents\Visual Studio 2013\network\client\client\client.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.95
+﻿  auth.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+  castle.cpp
+  client.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\client.cpp(23): warning C4101: 'payload': unreferenced local variable
+  game.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(63): error C2511: 'void Game::update_game_response(char *,Lobby &)': overloaded member function not found in 'Game'
+  f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.h(7): note: see declaration of 'Game'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(66): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(71): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(75): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(82): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(82): error C2530: 'castle': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(83): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(83): error C2530: 'team': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(85): error C2065: 'player': undeclared identifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(94): error C2065: 'player': undeclared identifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(114): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(114): error C2530: 'mine': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(115): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(115): error C2530: 'team': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(135): error C2065: 'player': undeclared identifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(138): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(138): error C2530: 'team': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(146): error C2065: 'player': undeclared identifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(150): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(150): error C2530: 'team': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(151): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(151): error C2530: 'castle': references must be initialized
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(164): error C2671: 'Game::update_game_response': static member functions do not have 'this' pointers
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(164): error C2672: 'std::sort': no matching overloaded function found
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\game.cpp(164): error C2780: 'void std::sort(const _RanIt,const _RanIt,_Pr)': expects 3 arguments - 2 provided
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\algorithm(4029): note: see declaration of 'std::sort'
+  lobby.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\lobby.cpp(19): error C2511: 'Lobby::Lobby(int)': overloaded member function not found in 'Lobby'
+  f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\lobby.h(6): note: see declaration of 'Lobby'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\lobby.cpp(19): error C2550: 'Lobby::{ctor}': constructor initializer lists are only allowed on constructor definitions
+  mine.cpp
+  player.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+  question.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+  response.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+  stream.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+  team.cpp
+  util.cpp
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C3646: 'castle_info': unknown override specifier
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ',' before '['
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2143: syntax error: missing ')' before ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\response.h(138): error C2238: unexpected token(s) preceding ';'
+f:\tài liệu\lập trình mạng\project\networkprogramming\client\client\util.cpp(107): error C2398: Element '1': conversion from 'int' to 'unsigned __int64' requires a narrowing conversion
+  wall.cpp
+  weapon.cpp
+  Generating Code...
