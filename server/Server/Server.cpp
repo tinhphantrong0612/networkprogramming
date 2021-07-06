@@ -1,5 +1,6 @@
 // SingleIOCPServer.cpp : Defines the entry point for the console application.
 //
+
 #include "stdafx.h"
 #include <winsock2.h>
 #include <WS2tcpip.h>
@@ -10,7 +11,9 @@
 #include <iostream>
 #include <map>
 #include <time.h>
+
 using namespace std;
+
 #pragma comment(lib, "Ws2_32.lib")
 #include "const.h"
 #include "util.h"
@@ -21,20 +24,22 @@ typedef struct {
 	SOCKET socket;
 	int index; // To refer to player
 } PER_HANDLE_DATA, *LPPER_HANDLE_DATA;
+
 map <string, pair<string, int>> accountMap;
 CRITICAL_SECTION                accountMapCriticalSection;
-CRITICAL_SECTION                gameListCriticalSection;
+CRITICAL_SECTION				gameListCriticalSection;
 GAME                            games[GAME_NUM];
 DWORD                           num_player = 0;
 PLAYER                          players[MAX_CLIENT];
-char                            updateBuff[BUFF_SIZE];
+
 unsigned __stdcall serverWorkerThread(LPVOID CompletionPortID);
 unsigned __stdcall timelyUpdate(LPVOID game);
-int     header_data_check(char *, int, int&);
-int     deleteClient(int);
-LPPER_IO_OPERATION_DATA Communicate(LPPER_IO_OPERATION_DATA, PLAYER, char *);
-void    processPayload(PLAYER, char *, char *);
-void    clearPlayerInfo(PLAYER, char *);
+int		header_data_check(char *, int, int&);
+int		deleteClient(int);
+LPPER_IO_OPERATION_DATA	Communicate(LPPER_IO_OPERATION_DATA, PLAYER, char *);
+void	processPayload(PLAYER, char *, char *);
+void	clearPlayerInfo(PLAYER, char *);
+
 int main(int argc, char* argv[])
 {
 	HANDLE completionPort;
@@ -43,7 +48,6 @@ int main(int argc, char* argv[])
 	LPPER_IO_OPERATION_DATA perIoData;
 	DWORD transferredBytes;
 	DWORD flags;
-	char buff[BUFF_SIZE];
 
 	// Initiate WinSock
 	WSADATA wsaData;
@@ -52,13 +56,16 @@ int main(int argc, char* argv[])
 		printf("Winsock 2.2 is not supported\n");
 		return 0;
 	}
+
 	// Setup an I/O completion port
 	if ((completionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0)) == NULL) {
 		printf("CreateIoCompletionPort() failed with error %d\n", GetLastError());
 		return 1;
 	}
+
 	//  Determine how many processors are on the system
 	GetSystemInfo(&systemInfo);
+
 	//Create worker threads based on the number of processors available on the
 	// system. Create two worker threads for each processor 
 	for (int i = 0; i < (int)systemInfo.dwNumberOfProcessors * 2; i++) {
@@ -68,46 +75,57 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 	}
+
 	// Construct LISTEN socket  
 	SOCKET listenSock;
 	if ((listenSock = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET) {
 		printf("WSASocket() failed with error %d\n", WSAGetLastError());
 		return 1;
 	}
+
+
 	//Step 3: Bind address to socket
 	sockaddr_in serverAddr;
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(SERVER_PORT);
 	inet_pton(AF_INET, SERVER_ADDR, &serverAddr.sin_addr);
+
+
 	if (bind(listenSock, (sockaddr *)&serverAddr, sizeof(serverAddr)))
 	{
 		printf("Error %d: Cannot associate a local address with server socket.", WSAGetLastError());
 		return 0;
 	}
+
 	//Step 4: Listen request from client
 	if (listen(listenSock, 20)) {
 		printf("Error %d: Cannot place server socket in state LISTEN.", WSAGetLastError());
 		return 0;
 	}
+
 	printf("Server started!\n");
-	loadAccountMap((char*)ACCOUNT_FILE);
+	loadAccountMap((char*) ACCOUNT_FILE);
 	SOCKET connSock;
 	sockaddr_in clientAddr;
 	char clientIP[INET_ADDRSTRLEN];
 	int clientAddrLen = sizeof(clientAddr);
 	int i, clientPort;
+
 	for (i = 0; i < MAX_CLIENT; i++) {
 		players[i] = (PLAYER)malloc(sizeof(_player));
 		updatePlayerInfo(players[i], INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
 		InitializeCriticalSectionAndSpinCount(&players[i]->criticalSection, 1000);
 	}
+
 	for (i = 0; i < GAME_NUM; i++) {
 		games[i] = (GAME)malloc(sizeof(_game));
 		createEmptyGame(games[i]);
 		InitializeCriticalSectionAndSpinCount(&games[i]->criticalSection, 1000);
 	}
+
 	InitializeCriticalSectionAndSpinCount(&accountMapCriticalSection, 1000);
 	InitializeCriticalSectionAndSpinCount(&gameListCriticalSection, 1000);
+
 	while (1) {
 		if (num_player == MAX_CLIENT) {
 			printf("\nToo many clients.");
@@ -118,16 +136,20 @@ int main(int argc, char* argv[])
 				printf("WSAAccept() failed with error %d\n", WSAGetLastError());
 				return 1;
 			}
+
 			// Create a socket information structure to associate with the socket
 			if ((perHandleData = (LPPER_HANDLE_DATA)GlobalAlloc(GPTR, sizeof(PER_HANDLE_DATA))) == NULL) {
 				printf("GlobalAlloc() failed with error %d\n", GetLastError());
 				return 1;
 			}
+
 			// Associate the accepted socket with the original completion port
 			printf("Socket number %d got connected...\n", connSock);
+
 			// Add information to players
 			inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
 			clientPort = ntohs(clientAddr.sin_port);
+
 			// Find empty slot
 			for (int i = 0; i < MAX_CLIENT; i++) {
 				if (players[i]->socket == INVALID_SOCKET) {
@@ -137,15 +159,19 @@ int main(int argc, char* argv[])
 					break;
 				}
 			}
+
 			if (CreateIoCompletionPort((HANDLE)connSock, completionPort, (DWORD)perHandleData, 0) == NULL) {
 				printf("CreateIoCompletionPort() failed with error %d\n", GetLastError());
 				return 1;
 			}
+
+
 			// Create per I/O socket information structure to associate with the WSARecv call
 			if ((perIoData = (LPPER_IO_OPERATION_DATA)GlobalAlloc(GPTR, sizeof(PER_IO_OPERATION_DATA))) == NULL) {
 				printf("GlobalAlloc() failed with error %d\n", GetLastError());
 				return 1;
 			}
+
 			ZeroMemory(&(perIoData->overlapped), sizeof(OVERLAPPED));
 			perIoData->sentBytes = 0;
 			perIoData->recvBytes = 0;
@@ -153,16 +179,17 @@ int main(int argc, char* argv[])
 			perIoData->dataBuff.buf = perIoData->buffer;
 			perIoData->operation = RECEIVE;
 			flags = 0;
+
 			if (WSARecv(connSock, &(perIoData->dataBuff), 1, &transferredBytes, &flags, &(perIoData->overlapped), NULL) == SOCKET_ERROR) {
 				if (WSAGetLastError() != ERROR_IO_PENDING) {
 					printf("WSARecv() failed with error %d\n", WSAGetLastError());
-					closesocket(perHandleData->socket);
-					clearPlayerInfo(players[perHandleData->index], buff);
+					deleteClient(perHandleData->index);
 					continue;
 				}
 			}
 		}
 	}
+
 	for (i = 0; i < MAX_CLIENT; i++) {
 		DeleteCriticalSection(&players[i]->criticalSection);
 	}
@@ -173,6 +200,7 @@ int main(int argc, char* argv[])
 	DeleteCriticalSection(&gameListCriticalSection);
 	return 0;
 }
+
 unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 {
 	HANDLE completionPort = (HANDLE)completionPortID;
@@ -180,26 +208,26 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 	LPPER_HANDLE_DATA perHandleData;
 	LPPER_IO_OPERATION_DATA perIoData;
 	DWORD flags = 0;
-	char buff[BUFF_SIZE];
 
 	while (TRUE) {
-		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (PULONG_PTR)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
+		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (LPDWORD)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
 			printf("GetQueuedCompletionStatus() failed with error %d\n", GetLastError());
-			// Handle client disconnect here, use perHandleData->index to find player
-			closesocket(perHandleData->socket);
-			clearPlayerInfo(players[perHandleData->index], buff);
-			continue;
-		}
-		// Check to see if an error has occurred on the socket and if so
-		// then close the socket and cleanup the SOCKET_INFORMATION structure
-		// associated with the socket
-		if (transferredBytes == 0) {
-			closesocket(perHandleData->socket);
-			clearPlayerInfo(players[perHandleData->index], buff);
+			deleteClient(perHandleData->index);
 			GlobalFree(perHandleData);
 			GlobalFree(perIoData);
 			continue;
 		}
+
+		// Check to see if an error has occurred on the socket and if so
+		// then close the socket and cleanup the SOCKET_INFORMATION structure
+		// associated with the socket
+		if (transferredBytes == 0) {
+			deleteClient(perHandleData->index);
+			GlobalFree(perHandleData);
+			GlobalFree(perIoData);
+			continue;
+		}
+
 		if (perIoData->operation == RECEIVE) {
 			perIoData->bufLen += transferredBytes;
 			perIoData->buffer[perIoData->bufLen] = 0;
@@ -219,34 +247,39 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 					strcpy_s(perIoData->buffer, BUFF_SIZE, perIoData->buffer + requestLen);
 					perIoData->bufLen -= requestLen;
 					memset(perIoData->buffer + perIoData->bufLen, 0, BUFF_SIZE - perIoData->bufLen);
+
 					// Process data with request
 					perIoData = Communicate(perIoData, players[perHandleData->index], request);
 					/*printf("After Communicate: %p\n", perIoData);*/
 				}
 				if (requestLen == -1) {
 					printf("Invalid message from %d\n", perHandleData->socket);
-					closesocket(perHandleData->socket);
-					clearPlayerInfo(players[perHandleData->index], buff);
+					deleteClient(perHandleData->index);
 					GlobalFree(perIoData);
 					GlobalFree(perHandleData);
 					continue;
 				}
-				else
+				else {
 					Receive(players[perHandleData->index], perIoData);
+				}
 			}
+
 		}
 		else if (perIoData->sentBytes + transferredBytes < perIoData->bufLen) {
 			Send(players[perHandleData->index], perIoData, transferredBytes);
 		}
-		else if (perIoData->sentBytes + transferredBytes >= perIoData->bufLen) { // Free perIoData after send
+		else if (perIoData->sentBytes + transferredBytes >= perIoData->bufLen){ // Free perIoData after send
 			GlobalFree(perIoData);
 		}
 	}
+
 }
+
 unsigned __stdcall timelyUpdate(LPVOID game) {
 	GAME currGame = (GAME)game;
 	int loopCount = 0;
 	int index = 0, tmpTeam;
+	char updateBuff[BUFF_SIZE];
 	while (TRUE) {
 		while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
 		//Check if one team remain
@@ -274,7 +307,7 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 				currGame->mines[i]->resources[STONE] += ADDITION_STONE;
 				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
 			}
-			informUpdate(currGame, (char *)TIMELY_UPDATE, updateBuff);
+			currGame = informUpdate(currGame, (char *)TIMELY_UPDATE, updateBuff);
 		}
 		//End game
 		if (index == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
@@ -283,9 +316,12 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 			break;
 		}
 		LeaveCriticalSection(&currGame->criticalSection);
+		Sleep(2000);
 	}
+
 	return 0;
 }
+
 int deleteClient(int index) {
 	printf("%d ", index);
 	printf("Closing socket %d\n", players[index]->socket);
@@ -296,6 +332,7 @@ int deleteClient(int index) {
 	clearPlayerInfo(players[index], buff);
 	return index;
 }
+
 int header_data_check(char * buffer, int size, int &requestLen) {
 	if (size > OP_SIZE) {
 		if ((buffer[HEADER_SIZE - 2] + 255) % 256 > 8) { // When the payload is too big
@@ -306,6 +343,7 @@ int header_data_check(char * buffer, int size, int &requestLen) {
 	requestLen = ((buffer[HEADER_SIZE - 2] + 255) % 256) * 255 + (buffer[HEADER_SIZE - 1] + 255) % 256 + HEADER_SIZE; // Calculate payload length
 	return size < requestLen ? false : true;
 }
+
 int Receive(PLAYER player, LPPER_IO_OPERATION_DATA perIoData) {
 	DWORD transferredBytes;
 	DWORD flags = 0;
@@ -320,18 +358,22 @@ int Receive(PLAYER player, LPPER_IO_OPERATION_DATA perIoData) {
 	}
 	return 0;
 }
+
 /* The send() wrapper function*/
 // To send message to player, create a new perIoData Structure, to send, seperate send and receive and each send
 int Send(PLAYER player, char* buff) {
 	DWORD transferredBytes;
 	LPPER_IO_OPERATION_DATA perIoData;
+
 	// Create per I/O socket information structure to associate with the WSASend call
 	if ((perIoData = (LPPER_IO_OPERATION_DATA)GlobalAlloc(GPTR, sizeof(PER_IO_OPERATION_DATA))) == NULL) {
 		printf("GlobalAlloc() failed with error %d\n", GetLastError());
 		return 1;
 	}
+
 	ZeroMemory(&(perIoData->overlapped), sizeof(OVERLAPPED));
 	strcpy_s(perIoData->buffer, BUFF_SIZE, buff);
+
 	perIoData->bufLen = strlen(buff);
 	perIoData->dataBuff.buf = perIoData->buffer;
 	perIoData->dataBuff.len = perIoData->bufLen;
@@ -344,8 +386,10 @@ int Send(PLAYER player, char* buff) {
 			return 0;
 		}
 	}
+
 	return 1;
 }
+
 int Send(PLAYER player, LPPER_IO_OPERATION_DATA perIoData, DWORD transferredBytes) {
 	ZeroMemory(&(perIoData->overlapped), sizeof(OVERLAPPED));
 	perIoData->sentBytes += transferredBytes;
@@ -360,25 +404,26 @@ int Send(PLAYER player, LPPER_IO_OPERATION_DATA perIoData, DWORD transferredByte
 	}
 	return 1;
 }
+
 /* The Communicate function slit opcode and payload
-* @param    perIoData       [IN/OUT]    Somehow after join game, perIoData from thread will be lost, so store it in this function
-* @param    player          [IN/OUT]    Player
-* @param    buff            [IN]        A message from client
-* @return   passed in perIoData
+* @param	perIoData		[IN/OUT]	Somehow after join game, perIoData from thread will be lost, so store it in this function
+* @param	player			[IN/OUT]	Player
+* @param	buff			[IN]		A message from client
+* @return	passed in perIoData
 */
 LPPER_IO_OPERATION_DATA Communicate(LPPER_IO_OPERATION_DATA perIoData, PLAYER player, char *buff) {
 	char opcode[OP_SIZE + 1];
 	strncpy_s(opcode, OP_SIZE + 1, buff, OP_SIZE);
 	strcpy_s(buff, BUFF_SIZE, buff + HEADER_SIZE);
 	processPayload(player, opcode, buff);
-	printf("End Communication: %p\n", perIoData);
 	return perIoData;
 }
+
 /* The processPayload function handle request from client
-* @param    player          [IN/OUT]    Player
-* @param    opcode          [IN]        Operation code
-* @param    buff            [IN]        Buffer to send message
-* @return   nothing
+* @param	player			[IN/OUT]	Player
+* @param	opcode			[IN]		Operation code
+* @param	buff			[IN]		Buffer to send message
+* @return	nothing
 */
 void processPayload(PLAYER player, char *opcode, char *buff) {
 	if (strcmp(opcode, LOGIN) == 0) {
@@ -451,14 +496,15 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 	}
 	else {
 		printf("Unknown header from player [%s:%d]: %s\n", player->IP, player->port, buff);
-		setResponseAndSend(player, (char *)UNKNOWN_HEADER, (char *)UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
+		setResponseAndSend(player, (char *) UNKNOWN_HEADER, (char *) UNKNOWN_HEADER, strlen(UNKNOWN_HEADER), buff);
 	}
 	return;
 }
+
 /* The updatePlayerInfo function clear a player info
-* @param    player          [IN/OUT]    Player
-* @param    buff            [IN]        Buffer to send message to all other player in game room
-* @return   nothing
+* @param	player			[IN/OUT]	Player
+* @param	buff			[IN]		Buffer to send message to all other player in game room
+* @return	nothing
 */
 void clearPlayerInfo(PLAYER player, char *buff) {
 	// Remove player from game and team
@@ -476,14 +522,12 @@ void clearPlayerInfo(PLAYER player, char *buff) {
 		}
 		if (i == PLAYER_NUM) emptyGame(game);
 		else {
-			if (player->gameIndex == game->host) {
-				game->host = i;
-				game->players[game->host]->state = JOINT;
-			}
-			informGameRoomChange(game, player->gameIndex, UPDATE_LOBBY, UPDATE_LOBBY_QUIT, buff);
+			if (player->gameIndex == game->host) game->host = i;
+			informGameRoomChange(game, player->gameIndex, (char *) UPDATE_LOBBY, (char *) UPDATE_LOBBY_QUIT, buff);
 		}
 		LeaveCriticalSection(&game->criticalSection);
 	}
+	printf("%p\n", accountMap);
 	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
 	if (it != accountMap.end()) it->second.second = NOT_AUTHORIZED;
 	updatePlayerInfo(player, INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
