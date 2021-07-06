@@ -1,3 +1,6 @@
+// SingleIOCPServer.cpp : Defines the entry point for the console application.
+//
+
 #include "stdafx.h"
 #include <winsock2.h>
 #include <WS2tcpip.h>
@@ -28,6 +31,7 @@ CRITICAL_SECTION				gameListCriticalSection;
 GAME                            games[GAME_NUM];
 DWORD                           num_player = 0;
 PLAYER                          players[MAX_CLIENT];
+char							updateBuff[BUFF_SIZE];
 
 unsigned __stdcall serverWorkerThread(LPVOID CompletionPortID);
 unsigned __stdcall timelyUpdate(LPVOID game);
@@ -208,7 +212,7 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 	DWORD flags = 0;
 
 	while (TRUE) {
-		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (LPDWORD)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
+		if (GetQueuedCompletionStatus(completionPort, &transferredBytes, (PULONG_PTR)&perHandleData, (LPOVERLAPPED *)&perIoData, INFINITE) == 0) {
 			printf("GetQueuedCompletionStatus() failed with error %d\n", GetLastError());
 			// Handle client disconnect here, use perHandleData->index to find player
 			continue;
@@ -272,35 +276,28 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 
 unsigned __stdcall timelyUpdate(LPVOID game) {
 	GAME currGame = (GAME)game;
-	char buff[BUFF_SIZE];
 	int loopCount = 0;
-	int tmp = 0;
-	int tmpTeam = TEAM_NUM;
+	int index = 0, tmpTeam;
 
-	while (1) {
+	while (TRUE) {
+		while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
 		//Check if one team remain
 		tmpTeam = TEAM_NUM;
-		for (tmp = 0; tmp < PLAYER_NUM; tmp++) {
-			if (currGame->players[tmp] != NULL) {
+		for (index = 0; index < PLAYER_NUM; index++) {
+			if (currGame->players[index] != NULL) {
 				if (tmpTeam == TEAM_NUM)
-					tmpTeam = currGame->players[tmp]->teamIndex;
+					tmpTeam = currGame->players[index]->teamIndex;
 				else {
-					if (currGame->players[tmp]->teamIndex != tmpTeam)
+					if (currGame->players[index]->teamIndex != tmpTeam)
 						break;
 				}
 			}
 		}
-		//End game
-		if (tmp == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
-			informEndGame(currGame, (char*)UPDATE_GAME, (char*)UPDATE_GAME_OVER, buff);
-			resetGame(currGame);
-			break;
-		}
 		//Update resource
 		if ((getTime() - currGame->startAt) >= loopCount * LOOP_TIME) {
-			while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
+			loopCount++;
 			for (int i = 0; i < CASTLE_NUM; i++) {
-				if (currGame->castles[i]->occupiedBy > -1) {
+				if (currGame->castles[i]->occupiedBy >= 0 && currGame->castles[i]->occupiedBy < TEAM_NUM) {
 					currGame->teams[currGame->castles[i]->occupiedBy]->gold += ADDITION_GOLD;
 				}
 			}
@@ -309,17 +306,18 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 				currGame->mines[i]->resources[STONE] += ADDITION_STONE;
 				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
 			}
-
-			informUpdate(currGame, (char*)TIMELY_UPDATE, buff);
-			loopCount++;
-			printf("Before Leaving");
-			LeaveCriticalSection(&currGame->criticalSection);
-			printf("After Leave");
+			informUpdate(currGame, (char *)TIMELY_UPDATE, updateBuff);
 		}
-		Sleep(5000);
+		//End game
+		if (index == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
+			informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, updateBuff);
+			resetGame(currGame);
+			break;
+		}
+		LeaveCriticalSection(&currGame->criticalSection);
 	}
 
-	return 1;
+	return 0;
 }
 
 int deleteClient(int index) {
