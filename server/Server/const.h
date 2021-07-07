@@ -187,6 +187,8 @@
 #define CHEAT_E_NOTPLAYING		"30401"
 #define CHEAT_E_GREEDY			"30402"
 
+#define UPDATE_TIMELY			"40000"
+
 #define UPDATE_GAME_START		"40100" // When game start
 #define UPDATE_GAME_CSTQUEST	"40101" // Send new castle question
 #define UPDATE_GAME_MINEQUEST	"40102" // Send new mine question
@@ -285,8 +287,8 @@
 #define CANNON_IRON				1800
 
 // Update loop info
-#define LOOP_TIME               30000 
-#define MAX_LOOP                480 // 4 hour
+#define LOOP_TIME               10000 
+#define MAX_LOOP                10 // 4 hour
 
 // Addtion per 30 seconds
 #define ADDITION_GOLD			5

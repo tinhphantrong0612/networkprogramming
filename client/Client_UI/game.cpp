@@ -232,3 +232,20 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
     }
     */
 }
+
+bool Game::rank_sort(int t1, int t2){
+    Team& a = this->teams[t1];
+    Team& b = this->teams[t2];
+    if (a.gold == b.gold) {
+        if (a.iron == b.iron) {
+            if (a.stone == b.stone) {
+             return a.wood > b.wood;
+            }
+            return a.stone > b.stone;
+        }
+        return a.iron > b.iron;
+    }
+    int result = ( a.gold > b.gold ) ? 1 : 0;
+    qDebug() << "Team " << t1 << " and Team " << t2 << "is " << result ;
+    return a.gold > b.gold;
+}
