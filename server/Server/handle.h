@@ -1,8 +1,8 @@
 #pragma once
-extern CRITICAL_SECTION				accountMapCriticalSection;
-extern CRITICAL_SECTION				gameListCriticalSection;
-extern GAME							games[GAME_NUM];
-extern unsigned __stdcall			timelyUpdate(LPVOID game);
+extern CRITICAL_SECTION					accountMapCriticalSection;
+extern CRITICAL_SECTION					gameListCriticalSection;
+extern GAME								games[GAME_NUM];
+extern unsigned __stdcall				timelyUpdate(LPVOID game);
 
 int		Send(PLAYER, char *);
 int		Send(PLAYER, LPPER_IO_OPERATION_DATA, DWORD);
@@ -22,15 +22,15 @@ void	informBuyWeapon(GAME, int, int, char *, char *, char *);
 void	setNewWall(TEAM, CASTLE, int, int, int, int, int);
 void	informBuyWall(GAME, int, int, int, char *, char *, char *);
 void	informCheat(GAME, int, char *, char *, char *);
-void    informUpdate(GAME, char *, char *);
-void    informEndGame(GAME, char *, char *, char *);
+GAME	informUpdate(GAME, char *, char *);
+GAME	informEndGame(GAME, char *, char *, char *);
 
 /* The setResponseAndSend function sets response, then send to player
-* @param    opcode              [IN]        Operation code
-* @param    response            [IN]        Response buffer
-* @param    responseLen         [IN]        Size of response
-* @param    buff                [IN/OUT]    Buffer contain full message
-* @return   Nothing
+* @param	opcode				[IN]		Operation code
+* @param	response			[IN]		Response buffer
+* @param	responseLen			[IN]		Size of response
+* @param	buff				[IN/OUT]	Buffer contain full message
+* @return	Nothing
 */
 void setResponse(char *opcode, char *response, int responseLen, char *buff) {
 	for (int i = 0; i < OP_SIZE; i++) {
@@ -42,12 +42,12 @@ void setResponse(char *opcode, char *response, int responseLen, char *buff) {
 }
 
 /* The setResponseAndSend function sets response, then send to player
-* @param    player              [IN]        Player's info
-* @param    opcode              [IN]        Operation code
-* @param    response            [IN]        Response buffer
-* @param    responseLen         [IN]        Size of response
-* @param    buff                [IN/OUT]    Buffer contain full message
-* @return   Nothing
+* @param	player				[IN]		Player's info
+* @param	opcode				[IN]		Operation code
+* @param	response			[IN]		Response buffer
+* @param	responseLen			[IN]		Size of response
+* @param	buff				[IN/OUT]	Buffer contain full message
+* @return	Nothing
 */
 void setResponseAndSend(PLAYER player, char *opcode, char *response, int responseLen, char *buff) {
 	setResponse(opcode, response, responseLen, buff);
@@ -55,10 +55,10 @@ void setResponseAndSend(PLAYER player, char *opcode, char *response, int respons
 }
 
 /* The handleLogin function handle login request from a player
-* @param    player      [IN]        Player's info
-* @param    opcode      [IN]        Operation code
-* @param    buff        [IN]        Buffer to handle
-* @return   Nothing
+* @param	player		[IN]		Player's info
+* @param	opcode		[IN]		Operation code
+* @param	buff		[IN]		Buffer to handle
+* @return	Nothing
 */
 void handleLogin(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -100,10 +100,10 @@ void handleLogin(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleSignUp function handle signup request from a player
-* @param    player      [IN]        Player's info
-* @param    opcode      [IN]        Operation code
-* @param    buff        [IN]        Buffer to handle
-* @return   Nothing
+* @param	player		[IN]		Player's info
+* @param	opcode		[IN]		Operation code
+* @param	buff		[IN]		Buffer to handle
+* @return	Nothing
 */
 void handleSignUp(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -145,10 +145,10 @@ void handleSignUp(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleCreateGame function handle create game request from a player, include validate, create game (include create a new game, connect game and player)
-* @param    player      [IN]        Player's info
-* @param    opcode      [IN]        Operation code
-* @param    buff        [IN]        Buffer to handle
-* @return   Nothing
+* @param	player		[IN]		Player's info
+* @param	opcode		[IN]		Operation code
+* @param	buff		[IN]		Buffer to handle
+* @return	Nothing
 */
 void handleCreateGame(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -184,10 +184,10 @@ void handleCreateGame(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleGetLobby function handle get lobby request from a player
-* @param    player      [IN]        Player's info
-* @param    opcode      [IN]        Operation code
-* @param    buff        [IN]        Buffer to handle
-* @return   Send Response result
+* @param	player		[IN]		Player's info
+* @param	opcode		[IN]		Operation code
+* @param	buff		[IN]		Buffer to handle
+* @return	Send Response result
 */
 void handleGetLobby(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -203,10 +203,9 @@ void handleGetLobby(PLAYER player, char *opcode, char *buff) {
 	LeaveCriticalSection(&player->criticalSection);
 }
 
-
 /* The getLobbyList function get lobby list from all games, start with buff + BUFFLEN, used in handleGetLobby
-* @param    buff        [IN/OUT]    Buffer to store lobby list
-* @return   Nothing
+* @param	buff		[IN/OUT]	Buffer to store lobby list
+* @return	Nothing
 */
 void getLobbyList(char *buff) {
 	for (int i = 0; i < GAME_NUM; i++) {
@@ -218,9 +217,9 @@ void getLobbyList(char *buff) {
 }
 
 /* The getGameInfo function handle get a single game info
-* @param    game        [IN]        Game to get info
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	game		[IN]		Game to get info
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void getGameInfo(GAME game, char *buff) {
 	_i64toa_s(game->id, buff + BUFFLEN, BUFF_SIZE, 10); // 13 bytes
@@ -231,9 +230,9 @@ void getGameInfo(GAME game, char *buff) {
 }
 
 /* The getTeamPlayerString function get game-team-player info, example: Player 0, 3, 7 in team 0, player 4, 5, 9 in team 2, result: 0xx022x0x2xx
-* @param    game        [IN]        Game
-* @param    buff        [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game		[IN]		Game
+* @param	buff		[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void getTeamPlayerString(GAME game, char *buff) {
 	for (int i = 0; i < PLAYER_NUM; i++) {
@@ -247,10 +246,10 @@ void getTeamPlayerString(GAME game, char *buff) {
 }
 
 /* The handleJoinGame function handle a join request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleJoinGame(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -319,6 +318,7 @@ void handleJoinGame(PLAYER player, char *opcode, char *buff) {
 								informGameRoomChange(game, emptyPlaceInGame, (char *)UPDATE_LOBBY, (char *)UPDATE_LOBBY_JOIN, buff);
 							}
 						}
+
 					}
 					LeaveCriticalSection(&game->criticalSection);
 					if (isLeavedGameListCriticalSection == false) LeaveCriticalSection(&gameListCriticalSection);
@@ -330,11 +330,11 @@ void handleJoinGame(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The informGameRoomChange function create a response and send to all players in a room whenever someone join, leave, ready or unready
-* @param    game                [IN]        Game
-* @param    requestPlayer       [IN]        Place of request player in game
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in game
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void informGameRoomChange(GAME game, int index, char *opcode, char *responseCode, char *buff) {
 	getGameRoomChangeSuccessResponse(game, index, responseCode, buff);
@@ -343,11 +343,11 @@ void informGameRoomChange(GAME game, int index, char *opcode, char *responseCode
 }
 
 /* The getGameRoomChangeSuccessResponse function create a response to send to all players in a room whenever someone join, leave, ready or unready
-* @param    game                [IN]        Game
-* @param    requestPlayer       [IN]        Place of request player in game
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in game
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
@@ -377,10 +377,11 @@ void getGameRoomChangeSuccessResponse(GAME game, int requestPlayer, char* respon
 		}
 	};
 }
+
 /* The sendToAllPlayersInGameRoom function send message to all players in game room
-* @param    game                [IN]        Game
-* @param    buff                [IN/OUT]    Buffer to sent to all player
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	buff				[IN/OUT]	Buffer to sent to all player
+* @return	Nothing
 */
 void sendToAllPlayersInGameRoom(GAME game, char *buff) {
 	for (int i = 0; i < PLAYER_NUM; i++) {
@@ -389,11 +390,12 @@ void sendToAllPlayersInGameRoom(GAME game, char *buff) {
 		}
 	}
 }
+
 /* The handleChangeTeam function handle a change team request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleChangeTeam(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -432,10 +434,10 @@ void handleChangeTeam(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleReadyPlay function handle a ready play request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleReadyPlay(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -461,10 +463,10 @@ void handleReadyPlay(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleUnreadyPlay function handle a unready request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   1
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	1
 */
 void handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -490,10 +492,10 @@ void handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleQuitGame function handle a quit request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   1
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	1
 */
 void handleQuitGame(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -530,10 +532,10 @@ void handleQuitGame(PLAYER player, char *opcode, char *buff) {
 }
 
 /* The handleStartGame function handle a start request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleStartGame(PLAYER player, char *opcode, char * buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -605,10 +607,10 @@ void handleStartGame(PLAYER player, char *opcode, char * buff) {
 }
 
 /* The sendNewCastleQuestion function send new castle question when game start
-* @param    game                [IN]        Game
-* @param    castleId            [IN]        Id of castle
-* @param    buff                [IN]        Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	castleId			[IN]		Id of castle
+* @param	buff				[IN]		Buffer to store result
+* @return	Nothing
 */
 void sendNewCastleQuestion(GAME game, int castleId, char *buff) {
 	memset(buff + HEADER_SIZE, 0, BUFF_SIZE - 5);
@@ -619,12 +621,13 @@ void sendNewCastleQuestion(GAME game, int castleId, char *buff) {
 	setResponse((char *)UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 }
+
 /* The sendNewCastleQuestion function send new mine question when game start
-* @param    game                [IN]        Game
-* @param    mineId              [IN]        Id of castle
-* @param    type                [IN]        Resource type
-* @param    buff                [IN]        Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	mineId				[IN]		Id of castle
+* @param	type				[IN]		Resource type
+* @param	buff				[IN]		Buffer to store result
+* @return	Nothing
 */
 void sendNewMineQuestion(GAME game, int mineId, int type, char *buff) {
 	memset(buff + HEADER_SIZE, 0, BUFF_SIZE - 5);
@@ -637,11 +640,12 @@ void sendNewMineQuestion(GAME game, int mineId, int type, char *buff) {
 	setResponse((char *)UPDATE_GAME, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 }
+
 /* The handleKick function handle a kick request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleKick(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -676,53 +680,56 @@ void handleKick(PLAYER player, char *opcode, char *buff) {
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The handleLogout function handle a logout request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   1
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	1
 */
 void handleLogOut(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
 	if (player->state == NOT_AUTHORIZED) setResponseAndSend(player, opcode, (char *)LOGOUT_E_NOTAUTH, strlen(LOGOUT_E_NOTAUTH), buff);
 	else if (player->state != AUTHORIZED) setResponseAndSend(player, opcode, (char *)LOGOUT_E_INGAME, strlen(LOGOUT_E_INGAME), buff);
 	else {
-		map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
+		map<string, pair<string, int>>::iterator it;
+		it = accountMap.find(player->account);
 		if (it != accountMap.end()) {
 			it->second.second = NOT_AUTHORIZED;
 		}
+		printf("After");
 		updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
 		setResponseAndSend(player, opcode, (char *)LOGOUT_SUCCESS, strlen(LOGOUT_SUCCESS), buff);
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The handleAttackCastle function handle a attack castle request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   1
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	1
 */
 void handleAttackCastle(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
-		setResponseAndSend(player, opcode, ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
+		setResponseAndSend(player, opcode, (char *)ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
 		LeaveCriticalSection(&player->criticalSection);
 		return;
 	}
-	EnterCriticalSection(&player->game->criticalSection);
-	if (player->state != PLAYING) setResponseAndSend(player, opcode, ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
+	if (player->state != PLAYING) setResponseAndSend(player, opcode, (char *)ATK_CST_E_NOTPLAYING, strlen(ATK_CST_E_NOTPLAYING), buff);
 	else {
 		int castleId = 0, questionId = 0, answerId = 0;
 		char *firstSharp = strchr(buff, '#');
-		if (firstSharp == NULL) setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+		if (firstSharp == NULL) setResponseAndSend(player, opcode, (char *)ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 		else {
 			char *secondSharp = strchr(firstSharp + 1, '#');
-			if (secondSharp == NULL) setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+			if (secondSharp == NULL) setResponseAndSend(player, opcode, (char *)ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 			else {
 				int castleIdSize = (int)(firstSharp - buff);
 				int questionIdSize = (int)(secondSharp - firstSharp - 1);
 				int answerIdSize = strlen(secondSharp + 1);
-				if (castleIdSize != 1 || questionIdSize <= 0 || questionIdSize >= 8 || answerIdSize != 1) setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+				if (castleIdSize != 1 || questionIdSize <= 0 || questionIdSize >= 8 || answerIdSize != 1) setResponseAndSend(player, opcode, (char *)ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 				else {
 					GAME game = player->game;
 					TEAM team = game->teams[player->teamIndex];
@@ -731,15 +738,13 @@ void handleAttackCastle(PLAYER player, char *opcode, char *buff) {
 					castleId = buff[0] - 48;
 					questionId = atoi(firstSharp + 1);
 					answerId = secondSharp[1] - 48;
-					if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
+					if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) setResponseAndSend(player, opcode, (char *)ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 					else {
+						while (!TryEnterCriticalSection(&game->criticalSection)) {}
 						CASTLE targetCastle = game->castles[castleId];
-						printf("\nCastle Question Id: %d, questionId: %d\n", targetCastle->question, questionId);
-						if (targetCastle->occupiedBy == player->teamIndex) setResponseAndSend(player, opcode, ATK_CST_E_YOURS, strlen(ATK_CST_E_YOURS), buff);
-						else if (targetCastle->question != questionId) setResponseAndSend(player, opcode, ATK_CST_E_TOOLATE, strlen(ATK_CST_E_TOOLATE), buff);
+						if (targetCastle->occupiedBy == player->teamIndex) setResponseAndSend(player, opcode, (char *)ATK_CST_E_YOURS, strlen(ATK_CST_E_YOURS), buff);
+						else if (targetCastle->question != questionId) setResponseAndSend(player, opcode, (char *)ATK_CST_E_TOOLATE, strlen(ATK_CST_E_TOOLATE), buff);
 						else {
-							printf("Receive right-form attack request!\n");
-							printf("targetCastle Def: %d ; attack team power: %d \n", targetCastle->wall->defense, team->weapon->attack);
 							if (targetCastle->answer != answerId) { // Wrong answer
 								if (targetCastle->wall->defense >= team->weapon->attack) { // Lost weapon
 									team->weapon->type = NO_WEAPON;
@@ -748,54 +753,48 @@ void handleAttackCastle(PLAYER player, char *opcode, char *buff) {
 								else { // Reduce attack
 									team->weapon->attack -= targetCastle->wall->defense;
 								}
-								informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_W, buff);
+								informCastleAttack(game, castleId, player->gameIndex, (char *)UPDATE_GAME, (char *)UPDATE_GAME_ATK_CST_W, buff);
 							}
-							else { // Right answer
+							else {
 								if (targetCastle->wall->defense > team->weapon->attack) {
-									printf("CASE1: Lost weapon but castle def reduced!\n");
-									printf("Castle occupied by Team %d", targetCastle->occupiedBy);
 									targetCastle->wall->defense -= team->weapon->attack;
 									team->weapon->type = NO_WEAPON;
 									team->weapon->attack = NO_WEAPON_ATK;
-									informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff);
+									informCastleAttack(game, castleId, player->gameIndex, (char *)UPDATE_GAME, (char *)UPDATE_GAME_ATK_CST_R, buff);
 								}
 								else if (targetCastle->wall->defense < team->weapon->attack) {
-									printf("CASE2: Take over castle, reduced atk power ,lost wall!\n");
-									printf("Castle occupied by Team %d", targetCastle->occupiedBy);
 									team->weapon->attack -= targetCastle->wall->defense;
 									targetCastle->wall->type = NO_WALL;
 									targetCastle->wall->defense = NO_WALL_DEF;
 									targetCastle->occupiedBy = player->teamIndex;
-									informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff);
+									informCastleAttack(game, castleId, player->gameIndex, (char *)UPDATE_GAME, (char *)UPDATE_GAME_ATK_CST_R, buff);
 								}
 								else if (targetCastle->wall->defense == team->weapon->attack) {
-									printf("CASE3: Take over castle, lost both weapon and wall\n");
-									printf("Castle occupied by Team %d", targetCastle->occupiedBy);
 									targetCastle->wall->type = NO_WALL;
 									targetCastle->wall->defense = NO_WALL_DEF;
 									team->weapon->type = NO_WEAPON;
 									team->weapon->attack = NO_WEAPON_ATK;
 									targetCastle->occupiedBy = player->teamIndex;
-									informCastleAttack(game, castleId, player->gameIndex, UPDATE_GAME, UPDATE_GAME_ATK_CST_R, buff);
+									informCastleAttack(game, castleId, player->gameIndex, (char *)UPDATE_GAME, (char *)UPDATE_GAME_ATK_CST_R, buff);
 								}
 							}
 						}
+						LeaveCriticalSection(&game->criticalSection);
 					}
 				}
 			}
 		}
 	}
-	LeaveCriticalSection(&player->game->criticalSection);
 	LeaveCriticalSection(&player->criticalSection);
 }
 
 /* The informCastleAttack function create a message with game properties and mine question and send to all players in a room whenever a castle being attack
-* @param    game                [IN]        Game
-* @param    castleId            [IN]        Id of castle being attack
-* @param    playerIndex         [IN]        Place of request player in game
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	castleId			[IN]		Id of castle being attack
+* @param	playerIndex			[IN]		Place of request player in game
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, char* responseCode, char * buff) {
 	memset(buff, 0, BUFF_SIZE);
@@ -811,17 +810,23 @@ void informCastleAttack(GAME game, int castleId, int playerIndex, char *opcode, 
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(game->castles[castleId]->wall->defense, buff + BUFFLEN, BUFF_SIZE, 10); // Defense
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(game->castles[castleId]->occupiedBy, buff + BUFFLEN, BUFF_SIZE, 10); // Team Index
+	_itoa_s(game->players[playerIndex]->teamIndex, buff + BUFFLEN, BUFF_SIZE, 10); // Team Index
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	TEAM team = game->teams[game->players[playerIndex]->teamIndex];
 	_itoa_s(team->weapon->type, buff + BUFFLEN, BUFF_SIZE, 10); // Weapon Type
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	_itoa_s(team->weapon->attack, buff + BUFFLEN, BUFF_SIZE, 10); // Weapon Attack
-	getCastleQuestion(game->castles[castleId], HARD_QUESTION_FILE, buff + BUFFLEN);
+	getCastleQuestion(game->castles[castleId], (char *)HARD_QUESTION_FILE, buff + BUFFLEN);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 }
 
+/* The handleAttackMine function handle a logout request from player
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
+*/
 void handleAttackMine(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
 	if (player->game == NULL) {
@@ -878,14 +883,15 @@ void handleAttackMine(PLAYER player, char *opcode, char *buff) {
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The informMineAttack function create a message with game properties and new question and send to all players in a room whenever a mine being attack
-* @param    game                [IN]        Game
-* @param    mineId              [IN]        Mine's index in game->mines[]
-* @param    resourceType        [IN]        Attack resource
-* @param    playerIndex         [IN]        Place of request player in game
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	mineId				[IN]		Mine's index in game->mines[]
+* @param	resourceType		[IN]		Attack resource
+* @param	playerIndex			[IN]		Place of request player in game
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, char *opcode, char* responseCode, char * buff) {
 	memset(buff, 0, BUFF_SIZE);
@@ -904,11 +910,12 @@ void informMineAttack(GAME game, int mineId, int resourceType, int playerIndex, 
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 }
+
 /* The handleBuyWeapon function handle a buy weapon from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleBuyWeapon(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -954,14 +961,15 @@ void handleBuyWeapon(PLAYER player, char *opcode, char *buff) {
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The setNewWeapon function handle a buy weapon from player
-* @param    team        [IN]        Team buy weapon
-* @param    weaponId    [IN]        WeaponId
-* @param    weaponAtk   [IN]        Weapon Attack
-* @param    weaponWood  [IN]        Wood cost of weapon
-* @param    weaponStone [IN]        Stone cost of weapon
-* @param    weaponIron  [IN]        Iron cost of weapon
-* @return   Nothing
+* @param	team		[IN]		Team buy weapon
+* @param	weaponId	[IN]		WeaponId
+* @param	weaponAtk	[IN]		Weapon Attack
+* @param	weaponWood	[IN]		Wood cost of weapon
+* @param	weaponStone	[IN]		Stone cost of weapon
+* @param	weaponIron	[IN]		Iron cost of weapon
+* @return	Nothing
 */
 void setNewWeapon(TEAM team, int weaponId, int weaponAtk, int weaponWood, int weaponStone, int weaponIron) {
 	team->weapon->type = weaponId;
@@ -972,13 +980,13 @@ void setNewWeapon(TEAM team, int weaponId, int weaponAtk, int weaponWood, int we
 }
 
 /* The informBuyWeapon function inform all player that someone just buy weapon
-* @param    game                [IN]        Game
-* @param    playerIndex         [IN]        Place of request player in team
-* @param    weaponId            [IN]        Weapon id
-* @param    opcode              [IN]        Operation code
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	playerIndex			[IN]		Place of request player in team
+* @param	weaponId			[IN]		Weapon id
+* @param	opcode				[IN]		Operation code
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, char *responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
@@ -994,11 +1002,12 @@ void informBuyWeapon(GAME game, int playerIndex, int weaponId, char *opcode, cha
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 };
+
 /* The handleBuyWall function handle a buy wall from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleBuyWall(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -1059,15 +1068,16 @@ void handleBuyWall(PLAYER player, char *opcode, char *buff) {
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The setNewWall function handle a buy wall from player
-* @param    team        [IN]        Team buy wall
-* @param    castle      [IN]        Castle equip new wall
-* @param    wallId      [IN]        Wall Id
-* @param    wallAtk     [IN]        Wall defense
-* @param    wallWood    [IN]        Wood cost of wall
-* @param    wallStone   [IN]        Stone cost of wall
-* @param    wallIron    [IN]        Iron cost of wall
-* @return   Nothing
+* @param	team		[IN]		Team buy wall
+* @param	castle		[IN]		Castle equip new wall
+* @param	wallId		[IN]		Wall Id
+* @param	wallAtk		[IN]		Wall defense
+* @param	wallWood	[IN]		Wood cost of wall
+* @param	wallStone	[IN]		Stone cost of wall
+* @param	wallIron	[IN]		Iron cost of wall
+* @return	Nothing
 */
 void setNewWall(TEAM team, CASTLE castle, int wallId, int wallDefense, int wallWood, int wallStone, int wallIron) {
 	castle->wall->type = wallId;
@@ -1076,15 +1086,16 @@ void setNewWall(TEAM team, CASTLE castle, int wallId, int wallDefense, int wallW
 	team->basedResources[STONE] -= wallStone;
 	team->basedResources[IRON] -= wallIron;
 }
+
 /* The informBuyWall function inform all player that someone just buy wall
-* @param    game                [IN]        Game
-* @param    playerIndex         [IN]        Place of request player in team
-* @param    castleId            [IN]        Castle equip new wall
-* @param    wallId              [IN]        Wall id
-* @param    opcode              [IN]        Operation code
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	playerIndex			[IN]		Place of request player in team
+* @param	castleId			[IN]		Castle equip new wall
+* @param	wallId				[IN]		Wall id
+* @param	opcode				[IN]		Operation code
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
 void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *opcode, char *responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
@@ -1102,11 +1113,12 @@ void informBuyWall(GAME game, int playerIndex, int castleId, int wallId, char *o
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 };
+
 /* The handleCheat function handle a cheat request from player
-* @param    player      [IN/OUT]    Request player
-* @param    opcode      [IN/OUT]    Operation code
-* @param    buff        [IN/OUT]    Buffer to store game info
-* @return   Nothing
+* @param	player		[IN/OUT]	Request player
+* @param	opcode		[IN/OUT]	Operation code
+* @param	buff		[IN/OUT]	Buffer to store game info
+* @return	Nothing
 */
 void handleCheat(PLAYER player, char *opcode, char *buff) {
 	EnterCriticalSection(&player->criticalSection);
@@ -1134,14 +1146,16 @@ void handleCheat(PLAYER player, char *opcode, char *buff) {
 	}
 	LeaveCriticalSection(&player->criticalSection);
 }
+
 /* The informCheat function inform all player that someone just cheat
-* @param    game                [IN]        Game
-* @param    playerIndex         [IN]        Place of request player in team
-* @param    opcode              [IN]        Operation code
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	playerIndex			[IN]		Place of request player in team
+* @param	opcode				[IN]		Operation code
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
+
 void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
@@ -1154,31 +1168,33 @@ void informCheat(GAME game, int playerIndex, char *opcode, char *responseCode, c
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
 }
+
 /* The informUpdate function inform resource update to all player
-* @param    game                [IN]        Game
-* @param    requestPlayer       [IN]        Place of request player in team
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
-void informUpdate(GAME game, char *opcode, char *buff) {
+GAME informUpdate(GAME game, char *opcode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
-	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, opcode);
-	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
 	getGameProperties(game, buff + HEADER_SIZE);
 	buff[BUFFLEN - 1] = 0;
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
+	return game;
 };
+
 /* The informEndGame function inform endgame signal to all player
-* @param    game                [IN]        Game
-* @param    requestPlayer       [IN]        Place of request player in team
-* @param    responseCode        [IN]        Response code for request
-* @param    buff                [IN/OUT]    Buffer to store result
-* @return   Nothing
+* @param	game				[IN]		Game
+* @param	requestPlayer		[IN]		Place of request player in team
+* @param	responseCode		[IN]		Response code for request
+* @param	buff				[IN/OUT]	Buffer to store result
+* @return	Nothing
 */
-void informEndGame(GAME game, char *opcode, char* responseCode, char *buff) {
+GAME informEndGame(GAME game, char *opcode, char* responseCode, char *buff) {
 	memset(buff, 0, BUFF_SIZE);
 	strcpy_s(buff + HEADER_SIZE, BUFF_SIZE, responseCode);
 	setResponse(opcode, buff + HEADER_SIZE, strlen(buff + HEADER_SIZE), buff);
 	sendToAllPlayersInGameRoom(game, buff);
+	return game;
 };

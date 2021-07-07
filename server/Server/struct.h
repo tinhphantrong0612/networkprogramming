@@ -1,12 +1,13 @@
 #pragma once
-typedef struct _wall        *WALL;
-typedef struct _weapon      *WEAPON;
-typedef struct _castle      *CASTLE;
-typedef struct _mine        *MINE;
-typedef struct _player      *PLAYER;
-typedef struct _team        *TEAM;
-typedef struct _game        *GAME;
-typedef struct _perIoData   PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
+typedef struct _wall		*WALL;
+typedef struct _weapon		*WEAPON;
+typedef struct _castle		*CASTLE;
+typedef struct _mine		*MINE;
+typedef struct _player		*PLAYER;
+typedef struct _team		*TEAM;
+typedef struct _game		*GAME;
+typedef struct _perIoData	PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
+
 typedef struct _perIoData {
 	WSAOVERLAPPED overlapped;
 	WSABUF dataBuff;
@@ -16,72 +17,81 @@ typedef struct _perIoData {
 	int sentBytes;
 	int operation;
 } PER_IO_OPERATION_DATA, *LPPER_IO_OPERATION_DATA;
+
 typedef struct _wall {
-	int                 type;
-	int                 defense;
+	int					type;
+	int					defense;
 } *WALL;
+
+
 typedef struct _weapon {
-	int                 type;
-	int                 attack;
+	int					type;
+	int					attack;
 } *WEAPON;
+
 typedef struct _castle {
-	int                 index;
-	WALL                wall;
-	int                 occupiedBy;
-	int                 question;
-	int                 answer;
-	GAME                game;
+	int					index;
+	WALL				wall;
+	int					occupiedBy;
+	int					question;
+	int					answer;
+	GAME				game;
 } *CASTLE;
+
 typedef struct _mine {
-	int                 index;
-	int                 resources[RESOURCE_NUM];
-	int                 question[3];
-	int                 answer[3];
-	GAME                game;
+	int					index;
+	int					resources[RESOURCE_NUM];
+	int					question[3];
+	int					answer[3];
+	GAME				game;
 } *MINE;
+
 typedef struct _player {
-	SOCKET              socket;
-	char                IP[INET_ADDRSTRLEN];
-	int                 port;
-	int                 teamIndex;
-	int                 placeInTeam;
-	int                 gameIndex;
-	char                account[ACCOUNT_SIZE];
-	int                 state;
-	GAME                game;
-	CRITICAL_SECTION    criticalSection;
+	SOCKET				socket;
+	char				IP[INET_ADDRSTRLEN];
+	int					port;
+	int					teamIndex;
+	int					placeInTeam;
+	int					gameIndex;
+	char				account[ACCOUNT_SIZE];
+	int					state;
+	GAME				game;
+	CRITICAL_SECTION	criticalSection;
 } *PLAYER;
+
 typedef struct _team {
-	int                 index;
-	PLAYER              players[3];
-	WEAPON              weapon;
-	int                 gold;
-	int                 basedResources[RESOURCE_NUM];
-	GAME                game;
+	int					index;
+	PLAYER				players[3];
+	WEAPON				weapon;
+	int					gold;
+	int					basedResources[RESOURCE_NUM];
+	GAME				game;
 } *TEAM;
+
 typedef struct _game {
-	long long           id;
-	long long           startAt;
-	int                 gameState;
-	int                 host;
-	int                 teamNum;
-	PLAYER              players[PLAYER_NUM];
-	TEAM                teams[TEAM_NUM];
-	CASTLE              castles[CASTLE_NUM];
-	MINE                mines[MINE_NUM];
-	CRITICAL_SECTION    criticalSection;
+	long long			id;
+	long long			startAt;
+	int					gameState;
+	int					host;
+	int					teamNum;
+	PLAYER				players[PLAYER_NUM];
+	TEAM				teams[TEAM_NUM];
+	CASTLE				castles[CASTLE_NUM];
+	MINE				mines[MINE_NUM];
+	CRITICAL_SECTION	criticalSection;
 } *GAME;
+
 /* The updatePlayerInfo function update a player info
-* @param    player          [IN/OUT]    Player
-* @param    socket          [IN]        Socket
-* @param    IP              [IN]        IP Address
-* @param    port            [IN]        Port
-* @param    teamIndex       [IN]        Player's team's index
-* @param    placeInTeam     [IN]        Player's place in team
-* @param    gameIndex       [IN]        Player's place in game
-* @param    account         [IN]        Player's account
-* @param    state           [IN]        Player's state
-* @return   nothing
+* @param	player			[IN/OUT]	Player
+* @param	socket			[IN]		Socket
+* @param	IP				[IN]		IP Address
+* @param	port			[IN]		Port
+* @param	teamIndex		[IN]		Player's team's index
+* @param	placeInTeam		[IN]		Player's place in team
+* @param	gameIndex		[IN]		Player's place in game
+* @param	account			[IN]		Player's account
+* @param	state			[IN]		Player's state
+* @return	nothing
 */
 void updatePlayerInfo(PLAYER player, SOCKET socket, char *IP, int port, int teamIndex, int placeInTeam, int gameIndex, GAME game, char *account, int state) {
 	player->socket = socket;
@@ -96,10 +106,11 @@ void updatePlayerInfo(PLAYER player, SOCKET socket, char *IP, int port, int team
 	if (account == 0) memset(player->account, 0, ACCOUNT_SIZE);
 	else strcpy_s(player->account, ACCOUNT_SIZE, account);
 }
+
 /* The calculateACastle function calculate a castle's properties into a buffer
-* @param    castle          [IN]        Castle
-* @param    buff            [IN/OUT]    Calculate result
-* @return   buff
+* @param	castle			[IN]		Castle
+* @param	buff			[IN/OUT]	Calculate result
+* @return	buff
 */
 void calculateACastle(CASTLE castle, char *buff) {
 	_itoa_s(castle->index, buff + strlen(buff), BUFF_SIZE, 10);
@@ -111,10 +122,11 @@ void calculateACastle(CASTLE castle, char *buff) {
 	_itoa_s(castle->wall->defense, buff + strlen(buff), BUFF_SIZE, 10);
 	strcat_s(buff, BUFF_SIZE, "#");
 }
+
 /* The calculateAMine function calculate a mine's properties into a buffer
-* @param    mine            [IN]        Mine
-* @param    buff            [IN/OUT]    Calculate result
-* @return   buff
+* @param	mine			[IN]		Mine
+* @param	buff			[IN/OUT]	Calculate result
+* @return	buff
 */
 void calculateAMine(MINE mine, char *buff) {
 	_itoa_s(mine->index, buff + strlen(buff), BUFF_SIZE, 10);
@@ -124,10 +136,11 @@ void calculateAMine(MINE mine, char *buff) {
 		strcat_s(buff, BUFF_SIZE, "#");
 	}
 }
+
 /* The calculateATeam function calculate a team's properties into a buffer
-* @param    team            [IN]        Team
-* @param    buff            [IN/OUT]    Calculate result
-* @return   buff
+* @param	team			[IN]		Team
+* @param	buff			[IN/OUT]	Calculate result
+* @return	buff
 */
 void calculateATeam(TEAM team, char *buff) {
 	_itoa_s(team->index, buff + strlen(buff), BUFF_SIZE, 10);
@@ -143,10 +156,11 @@ void calculateATeam(TEAM team, char *buff) {
 		strcat_s(buff, BUFF_SIZE, "#");
 	}
 }
+
 /* The calculateGame function calculate a game's info into a buffer
-* @param    game            [IN]        Game
-* @param    buff            [IN/OUT]    Calculate result
-* @return   nothing
+* @param	game			[IN]		Game
+* @param	buff			[IN/OUT]	Calculate result
+* @return	nothing
 */
 void getGameProperties(GAME game, char *buff) {
 	// Start with three castles
@@ -162,9 +176,11 @@ void getGameProperties(GAME game, char *buff) {
 		calculateATeam(game->teams[i], buff + strlen(buff));
 	}
 }
+
 void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
+
 	long long time = getTime();
 	castle->question = (time + castle->index) % HARDQUESTION_NUM; // randomize
 	int question = castle->question;
@@ -177,9 +193,11 @@ void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	castle->answer = buff[0] - 48; // Get answer
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
+
 void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
+
 	long long time = getTime();
 	mine->question[type] = (time + type + mine->index) % EASYQUESTION_NUM; // randomize
 	int question = mine->question[type];
@@ -192,6 +210,7 @@ void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	mine->answer[type] = buff[0] - 48; // Get answer
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
+
 void createEmptyGame(GAME game) {
 	game->id = 0; // set id to 0
 	game->startAt = 0; // set start time to 0
@@ -231,9 +250,10 @@ void createEmptyGame(GAME game) {
 		}
 	}
 }
+
 /* The emptyGame function clear a game
-* @param    game            [IN/OUT]        Game
-* @return   nothing
+* @param	game			[IN/OUT]		Game
+* @return	nothing
 */
 void emptyGame(GAME game) {
 	game->id = 0; // set id to 0
@@ -263,11 +283,12 @@ void emptyGame(GAME game) {
 		}
 	}
 }
+
 /* The createGame function create a game
-* @param    player          [IN/OUT]        Creator
-* @param    game            [IN/OUT]        Pointer to a emptyGame
-* @param    teamNum         [IN]            Number of teams in game
-* @return   nothing
+* @param	player			[IN/OUT]		Creator
+* @param	game			[IN/OUT]		Pointer to a emptyGame
+* @param	teamNum			[IN]			Number of teams in game
+* @return	nothing
 */
 void createGame(PLAYER player, GAME game, int teamNum) {
 	// Init value
@@ -302,9 +323,10 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	// Link player to game and team, 0, 0, 0 means player in team 0, at place 0 in that team, and place 0 in game
 	updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, game, player->account, JOINT);
 }
+
 /* The resetGame function reset a game
-* @param    game            [IN/OUT]        Pointer to a emptyGame
-* @return   nothing
+* @param	game			[IN/OUT]		Pointer to a emptyGame
+* @return	nothing
 */
 void resetGame(GAME game) {
 	// Init value

@@ -27,13 +27,13 @@
     <ClInclude Include="const.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="handle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
