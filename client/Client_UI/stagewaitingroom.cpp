@@ -56,11 +56,11 @@ void StageWaitingRoom::on_btnCreate_clicked()
         if (clientSocket.Receive(buff)) {
             currentPlayer = myLobby.create_lobby_response(buff,clientUser.username);
             if ((myLobby.id != 0) && (strcmp(currentPlayer.username,""))){
-
                  myLobby.team_number = teams;
                  //Bind game ID to Stage "Prepare" and initialize
                  StagePrepare *prepareStage = new StagePrepare();
                  prepareStage->initializeStage(&clientSocket,&myLobby,&currentPlayer,&clientUser);
+                 prepareStage->updateUI();
                  prepareStage->show();
                  this->close();
             }

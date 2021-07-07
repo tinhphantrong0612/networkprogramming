@@ -28,7 +28,6 @@ public:
     StageGame *gameStage;
     Thread_Receive *receiveThread;
     User clientUser;
-    Lobby currentLobby; // current Lobby of prepare Stage
     int readyRequest, unreadyRequest, decisionTeamChange, decisionKickID, roomState;
     bool waitForKickResponse = false, waitForChangeTeamResponse = false;
     bool afterFinish = false;
@@ -38,6 +37,7 @@ public:
     void updateUI();
     void handleDisconnected();
     void gotoPreviousStage();
+    void clearPreviousGame();
     void showGame();
     void endGame();
     void runQueue();

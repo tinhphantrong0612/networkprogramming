@@ -325,7 +325,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>10</pointsize>
+      <pointsize>9</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -346,7 +346,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>10</pointsize>
+      <pointsize>9</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -367,7 +367,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>10</pointsize>
+      <pointsize>9</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -388,7 +388,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>10</pointsize>
+      <pointsize>9</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -519,7 +519,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>8</pointsize>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="text">
@@ -538,7 +538,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>8</pointsize>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="text">
@@ -557,7 +557,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>8</pointsize>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="text">
@@ -576,7 +576,7 @@ QLabel {
     <property name="font">
      <font>
       <family>Roboto</family>
-      <pointsize>8</pointsize>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="text">
@@ -601,7 +601,7 @@ QLabel {
      </font>
     </property>
     <property name="text">
-     <string>NOTICE: LOBBY HAS BEEN UPDATED !</string>
+     <string>NOTICE: LOBBY UPDATED BELOW !</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

@@ -2,11 +2,11 @@
 #include "ui_stageprepare.h"
 
 #include "stagegame.h"
+#include "ui_stagegame.h"
 #include "stagewaitingroom.h"
 #include "util.h"
 #include "qinputdialog.h"
-
-#include "ui_stagegame.h"
+#include "qtimer.h"
 
 StagePrepare::StagePrepare(QWidget *parent) :
     QMainWindow(parent),
@@ -50,23 +50,23 @@ void StagePrepare::updateUI(){
     for ( int i = 0 ; i < gameStage->currentLobby.player_number ; i++ ){
         Player player = gameStage->currentLobby.players[i];
         QString state;
-        if ( player.state == UNREADY) state = "UNREADY";
-        else if ( player.state == READY ) state = "READY";
+        if ( player.state == UNREADY) state = "U";
+        else if ( player.state == READY ) state = "READY!";
 
         if (player.id == gameStage->currentLobby.host) state = "HOST";
 
         switch (player.team_id){
             case 0:
-                team1 += "  [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
+                team1 += " [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
                 break;
             case 1:
-                team2 += "  [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
+                team2 += " [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
                 break;
             case 2:
-                team3 += "  [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
+                team3 += " [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
                 break;
             case 3:
-                team4 += "  [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
+                team4 += " [ \"" + QString::fromLocal8Bit(player.username) + "\" , " + state + " , ID: " + QString::number(player.id) + " ]" ;
                 break;
              default:
                 break;
@@ -110,27 +110,28 @@ void StagePrepare::handleDisconnected(){
     this->close();
 }
 
+void StagePrepare::clearPreviousGame(){
+    // Clear previous game
+    gameStage->close();
+    gameStage->ui->listGameLog->clear();
+    gameStage->ui->tabWidget->setCurrentIndex(0);
+    gameStage->ui->tabWidget->setTabEnabled(0,true);
+    gameStage->ui->tabWidget->setTabEnabled(1,true);
+    gameStage->ui->tabWidget->setTabEnabled(2,true);
+    gameStage->ui->tabWidget->setTabEnabled(3,true);
+}
+
 void StagePrepare::showGame(){
+    clearPreviousGame();
     // show Game stage, also disable Prepare stage so user cannot interactive with this stage
     gameStage->show();
     gameStage->informRule();
     gameStage->loadPlayers();
 
-    // Only quit room works . This only works if i disable widgets one by one, leave it later
-    this->ui->btnChangeTeam->setDisabled(true);
-    this->ui->btnKick->setDisabled(true);
-    this->ui->btnReady->setDisabled(true);
-    this->ui->btnUnready->setDisabled(true);
-    this->ui->btnStart->setDisabled(true);
-
-    // this->setWindowFlags(Qt::Dialog);
-    // this->setWindowTitle("Game Room");
-    // this->roomState = INGAME;
     this->hide();
 }
 
 void StagePrepare::endGame(){
-    QMessageBox::information(nullptr,"Finally","  GG ! The game has ended ! ");
     int team_1st = 3, team_2nd;
     for ( int i = 0 ; i < MAX_TEAM_OF_GAME ; i++ ){
         if (gameStage->currentGame.rank_sort(i,team_1st) == true){
@@ -163,6 +164,23 @@ void StagePrepare::endGame(){
     gameStage->ui->tabWidget->setTabEnabled(2,false);
     gameStage->ui->tabWidget->setTabEnabled(3,true);
     gameStage->ui->btnContinue->setDisabled(false);
+
+    // Reset ready state of players in room
+    for ( int i = 0; i < gameStage->currentLobby.player_number ; i++ ){
+        if (gameStage->currentLobby.players[i].id != gameStage->currentLobby.host){
+            gameStage->currentLobby.players[i].state = UNREADY;
+        }
+    }
+    updateUI();
+
+    if (gameStage->currentPlayer.id != gameStage->currentLobby.host){
+        QMessageBox::information(nullptr,"Finally","  GG ! The game has ended ! ");
+    } else {
+        QMessageBox::information(nullptr,"Finally"," GG ! The game has ended !\n You've been brought back to the room! ");
+        gameStage->ui->btnContinue->setDisabled(true);
+        this->setEnabled(true);
+        this->show();
+    }
 }
 
 void StagePrepare::runQueue(){
@@ -250,7 +268,7 @@ void StagePrepare::runQueue(){
             }
             // Case: Update Game_cheat ( 40109 )
             if (!strcmp(resultCode,UPDATE_GAME_CHEAT)){
-                gameStage->currentGame.update_game_response(buffer,currentLobby,gameStage->currentPlayer);
+                gameStage->currentGame.update_game_response(buffer,gameStage->currentLobby,gameStage->currentPlayer);
                 gameStage->ui->listGameLog->insertItem(0,"[Game]: A cheater has cheated!");
                 gameStage->updateDynamicUI();
             }
