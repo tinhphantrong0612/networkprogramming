@@ -38,6 +38,7 @@ public:
     void handleDisconnected();
     void gotoPreviousStage();
     void showGame();
+    void endGame();
     void runQueue();
 
 private slots:

@@ -729,7 +729,7 @@ void handleAttackCastle(PLAYER player, char *opcode, char *buff) {
 					firstSharp[0] = 0;
 					secondSharp[0] = 0;
 					castleId = buff[0] - 48;
-					questionId = atoi(firstSharp + 1) - 100;
+					questionId = atoi(firstSharp + 1);
 					answerId = secondSharp[1] - 48;
 					if (castleId < 0 || castleId > CASTLE_NUM - 1 || answerId < 0 || answerId > 4) setResponseAndSend(player, opcode, ATK_CST_E_FORMAT, strlen(ATK_CST_E_FORMAT), buff);
 					else {

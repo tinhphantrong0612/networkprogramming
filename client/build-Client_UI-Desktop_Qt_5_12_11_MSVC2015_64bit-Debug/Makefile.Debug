@@ -1954,9 +1954,51 @@ debug\stagegame.obj: ..\Client_UI\stagegame.cpp ..\Client_UI\stagegame.h \
 		..\Client_UI\mine.h \
 		..\Client_UI\uitextconst.h \
 		ui_stagegame.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\QVariant \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QAction \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qaction.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qactiongroup.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QApplication \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qcoreapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qeventloop.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qdesktopwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qguiapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qinputmethod.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QFrame \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QLabel \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlabel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QListWidget \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractscrollarea.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qabstractitemmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qitemselectionmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemdelegate.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyleoption.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractspinbox.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qvalidator.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qregularexpression.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyle.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qtabbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qrubberband.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenu \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenu.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenuBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenubar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QPushButton \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qpushbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QStatusBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstatusbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QTabWidget \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QWidget \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qinputdialog.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlineedit.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextcursor.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextformat.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qpen.h \
@@ -2076,6 +2118,29 @@ debug\stagelogin.obj: ..\Client_UI\stagelogin.cpp ..\Client_UI\stagelogin.h \
 		..\Client_UI\stream.h \
 		..\Client_UI\constant.h \
 		ui_stagelogin.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\QVariant \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QApplication \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qcoreapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qeventloop.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qdesktopwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qguiapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qinputmethod.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QLabel \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlabel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QLineEdit \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlineedit.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextcursor.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextformat.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qpen.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextoption.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QPushButton \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qpushbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QStatusBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstatusbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QWidget \
 		..\Client_UI\stagewaitingroom.h \
 		..\Client_UI\auth.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmessagebox.h \
@@ -2098,13 +2163,7 @@ debug\stagelogin.obj: ..\Client_UI\stagelogin.cpp ..\Client_UI\stagelogin.h \
 		..\Client_UI\uitextconst.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMessageBox \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QInputDialog \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qinputdialog.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlineedit.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextcursor.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextformat.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qpen.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextoption.h
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qinputdialog.h
 
 debug\stageprepare.obj: ..\Client_UI\stageprepare.cpp ..\Client_UI\stageprepare.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMainWindow \
@@ -2237,15 +2296,57 @@ debug\stageprepare.obj: ..\Client_UI\stageprepare.cpp ..\Client_UI\stageprepare.
 		..\Client_UI\uitextconst.h \
 		..\Client_UI\stagelogin.h \
 		ui_stageprepare.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\QVariant \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QAction \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qaction.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qactiongroup.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QApplication \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qcoreapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qeventloop.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qdesktopwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qguiapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qinputmethod.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QFrame \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QLabel \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlabel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenu \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenu.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenuBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenubar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QPushButton \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qpushbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QStatusBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstatusbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QWidget \
 		..\Client_UI\stagewaitingroom.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qinputdialog.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlineedit.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextcursor.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextformat.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qpen.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextoption.h \
-		ui_stagegame.h
+		ui_stagegame.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QListWidget \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractscrollarea.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qabstractitemmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qitemselectionmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemdelegate.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyleoption.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractspinbox.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qvalidator.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qregularexpression.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyle.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qtabbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qrubberband.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QTabWidget
 
 debug\stagewaitingroom.obj: ..\Client_UI\stagewaitingroom.cpp ..\Client_UI\stagewaitingroom.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMainWindow \
@@ -2362,6 +2463,47 @@ debug\stagewaitingroom.obj: ..\Client_UI\stagewaitingroom.cpp ..\Client_UI\stage
 		..\Client_UI\lobby.h \
 		..\Client_UI\player.h \
 		ui_stagewaitingroom.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\QVariant \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QAction \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qaction.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qactiongroup.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QApplication \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qcoreapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qeventloop.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qdesktopwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qguiapplication.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qinputmethod.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QLabel \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlabel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QListWidget \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistwidget.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlistview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemview.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractscrollarea.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qabstractitemmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qitemselectionmodel.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractitemdelegate.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyleoption.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractspinbox.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qvalidator.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtCore\qregularexpression.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractslider.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstyle.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qtabbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qrubberband.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenu \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenu.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QMenuBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qmenubar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QPushButton \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qpushbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qabstractbutton.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QStatusBar \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qstatusbar.h \
+		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\QWidget \
 		..\Client_UI\stageprepare.h \
 		..\Client_UI\game.h \
 		..\Client_UI\team.h \
@@ -2381,7 +2523,6 @@ debug\stagewaitingroom.obj: ..\Client_UI\stagewaitingroom.cpp ..\Client_UI\stage
 		..\Client_UI\stagelogin.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qinputdialog.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qlineedit.h \
-		G:\Qt\5.12.11\msvc2015_64\include\QtWidgets\qframe.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextcursor.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qtextformat.h \
 		G:\Qt\5.12.11\msvc2015_64\include\QtGui\qpen.h \

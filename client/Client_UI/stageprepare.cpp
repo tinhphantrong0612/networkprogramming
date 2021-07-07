@@ -129,6 +129,39 @@ void StagePrepare::showGame(){
     this->hide();
 }
 
+void StagePrepare::endGame(){
+    QMessageBox::information(nullptr,"Finally","  GG ! The game has ended ! ");
+    int team_1st = 3, team_2nd = 3;
+    for ( int i = 0 ; i < MAX_TEAM_OF_GAME ; i++ ){
+        if (gameStage->currentGame.rank_sort(i,team_1st) == true)
+            team_1st = i;
+        if (gameStage->currentGame.rank_sort(i,team_2nd) == true && i != team_1st)
+            team_2nd = i;
+    }
+
+    qDebug() << team_1st << team_2nd ;
+
+    gameStage->ui->labelAsset1->setText("Asset: " + QString::number(gameStage->currentGame.teams[team_1st].gold));
+    gameStage->ui->labelAsset2->setText("Asset: " + QString::number(gameStage->currentGame.teams[team_2nd].gold));
+    QString label1st = "Team " + QString::number(team_1st+1) + ": ";
+    QString label2nd = "Team " + QString::number(team_2nd+1) + ": ";
+    for ( int i = 0 ; i < gameStage->currentLobby.player_number ; i++ ){
+        Player player = gameStage->currentLobby.players[i];
+        if (player.team_id == team_1st){
+            label1st += " [" + QString::fromLocal8Bit(player.username) + "] " ;
+        } else if (player.team_id == team_2nd) {
+            label2nd += " [" + QString::fromLocal8Bit(player.username) + "] " ;
+        }
+    }
+    gameStage->ui->label1st->setText(label1st);
+    gameStage->ui->label2nd->setText(label2nd);
+    gameStage->ui->tabWidget->setTabEnabled(0,false);
+    gameStage->ui->tabWidget->setTabEnabled(1,false);
+    gameStage->ui->tabWidget->setTabEnabled(2,false);
+    gameStage->ui->tabWidget->setTabEnabled(3,true);
+    gameStage->ui->btnContinue->setDisabled(false);
+}
+
 void StagePrepare::runQueue(){
     while (bufferQueue.empty() == false){
         char buffer[BUFF_SIZE];
@@ -231,7 +264,7 @@ void StagePrepare::runQueue(){
         }
         //   Case: Update Game_over ( 40110 )
         if (!strcmp(resultCode,UPDATE_GAME_OVER)){
-
+            endGame();
         }
 
         // ERROR & OTHER CASE handle below

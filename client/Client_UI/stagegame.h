@@ -34,6 +34,7 @@ private slots:
     void on_buttonAttack_clicked();
     void on_buttonCheat_clicked();
     void on_actionQuit_Game_triggered();
+    void on_btnContinue_clicked();
 };
 
 #endif // STAGEGAME_H

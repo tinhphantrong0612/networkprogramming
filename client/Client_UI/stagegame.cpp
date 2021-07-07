@@ -16,6 +16,8 @@ StageGame::StageGame(QWidget *parent) :
     setWindowFlags( Qt::MSWindowsFixedSizeDialogHint | Qt::Widget);
     statusBar()->setVisible(false);
     loadStaticUI();
+    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setTabEnabled(3,false);
 }
 
 StageGame::~StageGame()
@@ -57,6 +59,8 @@ void StageGame::loadStaticUI(){
     ui->imgStone->setPixmap(imageStone.scaled(64,64,Qt::KeepAspectRatio));
     ui->imgIron->setPixmap(imageIron.scaled(64,64,Qt::KeepAspectRatio));
     ui->imgGold->setPixmap(imageGold.scaled(80,80,Qt::KeepAspectRatio));
+    ui->imgGold1->setPixmap(imageGold.scaled(40,40,Qt::KeepAspectRatio));
+    ui->imgGold2->setPixmap(imageGold.scaled(40,40,Qt::KeepAspectRatio));
     ui->imageShop_fence->setPixmap(imageFence.scaled(80,80,Qt::KeepAspectRatio));
     ui->imageShop_woodwall->setPixmap(imageWoodWall.scaled(80,80,Qt::KeepAspectRatio));
     ui->imageShop_stonewall->setPixmap(imageStoneWall.scaled(80,80,Qt::KeepAspectRatio));
@@ -233,7 +237,19 @@ void StageGame::on_actionQuit_Game_triggered()
 {
     // On Quit Lobby Action
     QMessageBox::StandardButton isConfirm;
-    isConfirm = QMessageBox::question(this, "Confirmation", "Quit this game?",QMessageBox::Yes|QMessageBox::No);
+    isConfirm = QMessageBox::question(this, "Confirmation", " Quit this game? ",QMessageBox::Yes|QMessageBox::No);
+    if (isConfirm == QMessageBox::Yes) {
+        //sending quit lobby request
+        this->currentLobby.quit_lobby_request(this->clientSocket);
+    }
+}
+
+
+void StageGame::on_btnContinue_clicked()
+{
+    // Back to previous stage
+    QMessageBox::StandardButton isConfirm;
+    isConfirm = QMessageBox::question(this, "Confirmation", " Continue playing ?",QMessageBox::Yes|QMessageBox::No);
     if (isConfirm == QMessageBox::Yes) {
         //sending quit lobby request
         this->currentLobby.quit_lobby_request(this->clientSocket);
