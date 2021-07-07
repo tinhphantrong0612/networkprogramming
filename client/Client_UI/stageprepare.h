@@ -31,6 +31,7 @@ public:
     Lobby currentLobby; // current Lobby of prepare Stage
     int readyRequest, unreadyRequest, decisionTeamChange, decisionKickID, roomState;
     bool waitForKickResponse = false, waitForChangeTeamResponse = false;
+    bool afterFinish = false;
     std::queue<char*> bufferQueue;
 
     void initializeStage(Socket* ,Lobby* ,Player*, User* );

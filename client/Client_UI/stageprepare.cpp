@@ -131,10 +131,13 @@ void StagePrepare::showGame(){
 
 void StagePrepare::endGame(){
     QMessageBox::information(nullptr,"Finally","  GG ! The game has ended ! ");
-    int team_1st = 3, team_2nd = 3;
+    int team_1st = 3, team_2nd;
     for ( int i = 0 ; i < MAX_TEAM_OF_GAME ; i++ ){
-        if (gameStage->currentGame.rank_sort(i,team_1st) == true)
+        if (gameStage->currentGame.rank_sort(i,team_1st) == true){
             team_1st = i;
+        } else team_2nd = i;
+    }
+    for ( int i = 0 ; i < MAX_TEAM_OF_GAME ; i++ ){
         if (gameStage->currentGame.rank_sort(i,team_2nd) == true && i != team_1st)
             team_2nd = i;
     }

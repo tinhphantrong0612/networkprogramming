@@ -74,6 +74,7 @@ typedef struct _game {
 	int					gameState;
 	int					host;
 	int					teamNum;
+	char*				updateBuff;
 	PLAYER				players[PLAYER_NUM];
 	TEAM				teams[TEAM_NUM];
 	CASTLE				castles[CASTLE_NUM];
@@ -216,6 +217,8 @@ void createEmptyGame(GAME game) {
 	game->startAt = 0; // set start time to 0
 	game->gameState = WAITING; // set game state to waiting
 	game->host = 0;
+	game->updateBuff = (char *)malloc(BUFF_SIZE);
+	memset(game->updateBuff, 0, BUFF_SIZE);
 	for (int i = 0; i < PLAYER_NUM; i++) game->players[i] = NULL; // Disconnect to all player
 	for (int i = 0; i < CASTLE_NUM; i++) { // Unlink and clear castle
 		game->castles[i] = (CASTLE)malloc(sizeof(_castle));

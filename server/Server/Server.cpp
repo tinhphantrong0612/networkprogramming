@@ -285,7 +285,7 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 	GAME currGame = (GAME)game;
 	int loopCount = 0;
 	int index = 0, tmpTeam;
-	char updateBuff[BUFF_SIZE];
+	//char* updateBuff = (char *)malloc(BUFF_SIZE);
 	while (TRUE) {
 		while (!TryEnterCriticalSection(&currGame->criticalSection)) {}
 		//Check if one team remain
@@ -313,11 +313,11 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 				currGame->mines[i]->resources[STONE] += ADDITION_STONE;
 				currGame->mines[i]->resources[IRON] += ADDITION_IRON;
 			}
-			currGame = informUpdate(currGame, (char *)TIMELY_UPDATE, updateBuff);
+			currGame = informUpdate(currGame, (char *)TIMELY_UPDATE, currGame->updateBuff, &loopCount);
 		}
 		//End game
 		if (index == PLAYER_NUM || (getTime() - currGame->startAt) >= MAX_LOOP * LOOP_TIME) {
-			currGame = informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, updateBuff);
+			currGame = informEndGame(currGame, (char *)UPDATE_GAME, (char*)UPDATE_GAME_OVER, currGame->updateBuff);
 			resetGame(currGame);
 			LeaveCriticalSection(&currGame->criticalSection);
 			break;
