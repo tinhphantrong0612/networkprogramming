@@ -124,6 +124,7 @@ void StagePrepare::clearPreviousGame(){
 void StagePrepare::showGame(){
     clearPreviousGame();
     // show Game stage, also disable Prepare stage so user cannot interactive with this stage
+    gameStage->ui->tabWidget->setTabEnabled(3,false);
     gameStage->show();
     gameStage->informRule();
     gameStage->loadPlayers();

@@ -101,6 +101,7 @@ void Game::update_game_response(char* payload, Lobby& lobby, Player& player) {
                 QMessageBox::information(nullptr,"Attack Result","Wrong answer! Failed to attack this castle!",0);
             }
         }
+
         // answer right
         else {
             // Announce to players in game
