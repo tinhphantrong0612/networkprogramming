@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/ballista.png</file>
+        <file>image/cannon.png</file>
+        <file>image/castle.png</file>
+        <file>image/castle1.png</file>
+        <file>image/castle2.png</file>
+        <file>image/catapult.png</file>
+        <file>image/coal.png</file>
+        <file>image/fence.png</file>
+        <file>image/iron.png</file>
+        <file>image/legendwall.png</file>
+        <file>image/stonewall.png</file>
+        <file>image/wood.png</file>
+        <file>image/woodwall.png</file>
+        <file>image/wagon1.png</file>
+        <file>image/wagon2.png</file>
+        <file>image/wagon3.png</file>
+        <file>image/nothing.png</file>
+        <file>image/gold.png</file>
+    </qresource>
+    <qresource prefix="/image"/>
+</RCC>
