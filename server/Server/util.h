@@ -1,6 +1,6 @@
 #pragma once
 extern map<string, pair<string, int>> accountMap;
-/* The getTime function get the current time
+/* The getTime function get the current time, generate game id
 * @return	mili-seconds since 00:00:00 01/01/1970
 */
 long long getTime() {
@@ -9,6 +9,10 @@ long long getTime() {
 	return 1000 * timeSpec.tv_sec + timeSpec.tv_nsec / 1000000;
 }
 
+/* The loadAccountMap function fill account and password in accountMap
+* @param	fileName	[IN]	account file name
+* @return	nothing
+*/
 void loadAccountMap(char *fileName) {
 	FILE *accountFile;
 	fopen_s(&accountFile, fileName, "r");
@@ -22,6 +26,12 @@ void loadAccountMap(char *fileName) {
 	fclose(accountFile);
 }
 
+/* The addNewAccount function add new account in to account file
+* @param	fileName	[IN]	account file name
+* @param	username	[IN]	new username
+* @param	password	[IN]	new password
+* @return	nothing
+*/
 void addNewAccount(char *fileName, char *username, char *password) {
 	FILE *accountFile;
 	fopen_s(&accountFile, fileName, "a");
