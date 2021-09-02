@@ -55,11 +55,11 @@
 #define JOIN_GAME				"105"
 
 // In lobby - Request header
-#define READY_PLAY				"200" // nothing
-#define UNREADY_PLAY			"201" // nothing
-#define START_GAME				"202" // nothing
-#define QUIT_GAME				"203" // nothing
-#define CHANGE_TEAM				"204" // teamIndex
+#define READY_PLAY				"200"
+#define UNREADY_PLAY			"201"
+#define START_GAME				"202"
+#define QUIT_GAME				"203"
+#define CHANGE_TEAM				"204"
 #define KICK					"205"
 
 // Ingame - Request header
@@ -75,40 +75,40 @@
 #define UPDATE_LOBBY			"402"
 
 // Outgame - Response
-#define LOGIN_SUCCESS			"10000" // nothing
-#define LOGIN_E_ALREADY			"10001" // nothing
-#define LOGIN_E_ELSEWHERE		"10002" // nothing
-#define LOGIN_E_PASSWORD		"10003" // nothing
-#define LOGIN_E_NOTEXIST		"10004" // nothing
+#define LOGIN_SUCCESS			"10000"
+#define LOGIN_E_ALREADY			"10001"
+#define LOGIN_E_ELSEWHERE		"10002"
+#define LOGIN_E_PASSWORD		"10003"
+#define LOGIN_E_NOTEXIST		"10004"
 
-#define SIGNUP_SUCCESS			"10100" // nothing
-#define SIGNUP_E_LOGGEDIN		"10101" // nothing
-#define SIGNUP_E_FORMAT			"10102" // nothing
-#define SIGNUP_E_EXIST			"10103" // nothing
+#define SIGNUP_SUCCESS			"10100"
+#define SIGNUP_E_LOGGEDIN		"10101" 
+#define SIGNUP_E_FORMAT			"10102" 
+#define SIGNUP_E_EXIST			"10103" 
 
-#define LOGOUT_SUCCESS			"10200" // nothing
-#define LOGOUT_E_NOTAUTH		"10201" // nothing
-#define LOGOUT_E_INGAME			"10202" // nothing
+#define LOGOUT_SUCCESS			"10200" 
+#define LOGOUT_E_NOTAUTH		"10201" 
+#define LOGOUT_E_INGAME			"10202" 
 
-#define CREATE_SUCCESS			"10300" // gameid
-#define CREATE_E_NOTAUTH		"10301" // nothing
-#define CREATE_E_INGAME			"10302" // nothing
-#define CREATE_E_FULLGAME		"10303" // nothing
-#define CREATE_E_INVALIDTEAM	"10304" // nothing
+#define CREATE_SUCCESS			"10300"
+#define CREATE_E_NOTAUTH		"10301"
+#define CREATE_E_INGAME			"10302"
+#define CREATE_E_FULLGAME		"10303"
+#define CREATE_E_INVALIDTEAM	"10304"
 
-#define LOBBY_SUCCESS			"10400" // lobbylist
-#define LOBBY_E_NOTAUTH			"10401" // nothing
+#define LOBBY_SUCCESS			"10400"
+#define LOBBY_E_NOTAUTH			"10401"
 #define LOBBY_E_INGAME			"10402"
 
 #define JOIN_SUCCESS			"10500" 
-#define JOIN_E_NOTAUTH			"10501" // nothing
-#define JOIN_E_ALREADY			"10502" // lobbylist
-#define JOIN_E_FORMAT			"10503" // lobbylist
-#define JOIN_E_FULLGAME			"10504" // lobbylist
-#define JOIN_E_FULLTEAM			"10505" // lobbylist
-#define JOIN_E_NOGAME			"10506" // lobbylist
-#define JOIN_E_NOTEAM			"10507" // lobbylist
-#define JOIN_E_PLAYING			"10508" // nothing
+#define JOIN_E_NOTAUTH			"10501"
+#define JOIN_E_ALREADY			"10502"
+#define JOIN_E_FORMAT			"10503"
+#define JOIN_E_FULLGAME			"10504"
+#define JOIN_E_FULLTEAM			"10505"
+#define JOIN_E_NOGAME			"10506"
+#define JOIN_E_NOTEAM			"10507"
+#define JOIN_E_PLAYING			"10508"
 
 //#define READY_SUCCESS			"20000" // Using UPDATE_LOBBY_READY instead
 #define READY_E_NOTAUTH			"20001"
