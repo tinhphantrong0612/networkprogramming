@@ -25,17 +25,18 @@ typedef struct {
 	int index; // To refer to player
 } PER_HANDLE_DATA, *LPPER_HANDLE_DATA;
 
-map <string, pair<string, int>> accountMap;
-CRITICAL_SECTION                accountMapCriticalSection;
-CRITICAL_SECTION				gameListCriticalSection;
-GAME                            games[GAME_NUM];
-DWORD                           num_player = 0;
-PLAYER                          players[MAX_CLIENT];
+map <string, pair<string, int>> accountMap; // Account map, <account, pair<password, login_state>>
+CRITICAL_SECTION                accountMapCriticalSection; // Account map's critical section, allow single access at a time
+CRITICAL_SECTION				gameListCriticalSection; // Game list's critical section, allow single access at a time
+GAME                            games[GAME_NUM]; // Game list
+DWORD                           num_player = 0; // Number of current players
+PLAYER                          players[MAX_CLIENT]; // Player list
 
+// Pre-declaration function
 unsigned __stdcall serverWorkerThread(LPVOID CompletionPortID);
-unsigned __stdcall timelyUpdate(LPVOID game);
-int		header_data_check(char *, int, int&);
-int		deleteClient(int);
+unsigned __stdcall timelyUpdate(LPVOID game); // Update resources to player every 30 seconds
+int		header_data_check(char *, int, int&); // Validate header data
+int		deleteClient(int); // Remove client
 LPPER_IO_OPERATION_DATA	Communicate(LPPER_IO_OPERATION_DATA, PLAYER, char *);
 void	processPayload(PLAYER, char *, char *);
 void	clearPlayerInfo(PLAYER, char *);
@@ -232,32 +233,32 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 			GlobalFree(perIoData);
 			continue;
 		}
-
+		// Receive
 		if (perIoData->operation == RECEIVE) {
 			perIoData->bufLen += transferredBytes;
 			perIoData->buffer[perIoData->bufLen] = 0;
-			if (perIoData->bufLen < HEADER_SIZE) {
+			if (perIoData->bufLen < HEADER_SIZE) { // Keep receiving if smaller than header size
 				Receive(players[perHandleData->index], perIoData);
 			}
 			else {
 				int requestLen;
-				while (header_data_check(perIoData->buffer, perIoData->bufLen, requestLen)) {
-					if (requestLen > strlen(perIoData->buffer)) {
+				while (header_data_check(perIoData->buffer, perIoData->bufLen, requestLen)) { // Validate header and get request length
+					if (requestLen > strlen(perIoData->buffer)) { // Invalid request length
 						requestLen = -1;
 						break;
 					}
 					char request[BUFF_SIZE];
 					memset(request, 0, BUFF_SIZE);
-					strncpy_s(request, BUFF_SIZE, perIoData->buffer, requestLen);
-					strcpy_s(perIoData->buffer, BUFF_SIZE, perIoData->buffer + requestLen);
-					perIoData->bufLen -= requestLen;
-					memset(perIoData->buffer + perIoData->bufLen, 0, BUFF_SIZE - perIoData->bufLen);
+					strncpy_s(request, BUFF_SIZE, perIoData->buffer, requestLen); // Get request
+					strcpy_s(perIoData->buffer, BUFF_SIZE, perIoData->buffer + requestLen); // Push the leftover to the head of buffer
+					perIoData->bufLen -= requestLen; // Update data length in buffer
+					memset(perIoData->buffer + perIoData->bufLen, 0, BUFF_SIZE - perIoData->bufLen); // Clear data after buff length
 
 					// Process data with request
 					perIoData = Communicate(perIoData, players[perHandleData->index], request);
 					/*printf("After Communicate: %p\n", perIoData);*/
 				}
-				if (requestLen == -1) {
+				if (requestLen == -1) { // Handle invalid request length
 					printf("Invalid message from %d\n", perHandleData->socket);
 					closesocket(perHandleData->socket);
 					clearPlayerInfo(players[perHandleData->index], buff);
@@ -271,6 +272,7 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 			}
 
 		}
+		// Send the leftover if not completed
 		else if (perIoData->sentBytes + transferredBytes < perIoData->bufLen) {
 			Send(players[perHandleData->index], perIoData, transferredBytes);
 		}
@@ -328,19 +330,28 @@ unsigned __stdcall timelyUpdate(LPVOID game) {
 	return 1;
 }
 
+/* The deleteClient function remove player from player list
+* @param	index			[IN]	Player's index in player list
+* @return	Player's index in player list
+*/
 int deleteClient(int index) {
-	printf("%d ", index);
 	printf("Closing socket %d\n", players[index]->socket);
 	if (closesocket(players[index]->socket) == SOCKET_ERROR) {
 		printf("closesocket() failed with error %d\n", WSAGetLastError());
 	}
 	char buff[BUFF_SIZE];
-	clearPlayerInfo(players[index], buff);
+	clearPlayerInfo(players[index], buff); // Clear player's information
 	return index;
 }
 
+/* The header_data_check function validate header of a request and calculate request payload size
+* @param	buffer			[IN]	Buffer of a single perIoData object
+* @param	size			[IN]	Buffer length of a single perIoData object
+* @param	requestLen		[OUT]	Request payload size
+* @return	true/false if valid/not valid
+*/
 int header_data_check(char * buffer, int size, int &requestLen) {
-	if (size > OP_SIZE) {
+	if (size > HEADER_SIZE) {
 		if ((buffer[HEADER_SIZE - 2] + 255) % 256 > 8) { // When the payload is too big
 			requestLen = -1;
 			return false;
@@ -350,6 +361,11 @@ int header_data_check(char * buffer, int size, int &requestLen) {
 	return size < requestLen ? false : true;
 }
 
+/* The Receive function receive message from client, each client has a single LPPER_IO_OPERATION_DATA object for receiving on server
+* @param	player			[IN]	Client to receive from
+* @param	perIoData		[IN]	LPPER_IO_OPERATION_DATA object to receive and store message
+* @return	0
+*/
 int Receive(PLAYER player, LPPER_IO_OPERATION_DATA perIoData) {
 	DWORD transferredBytes;
 	DWORD flags = 0;
@@ -366,7 +382,11 @@ int Receive(PLAYER player, LPPER_IO_OPERATION_DATA perIoData) {
 }
 
 /* The send() wrapper function*/
-// To send message to player, create a new perIoData Structure, to send, seperate send and receive and each send
+/* The Send function send message to a client, each send use a seperated LPPER_IO_OPERATION_DATA object
+* @param	player			[IN]	Player receive message
+* @param	buff			[IN]	Message to send
+* @return	0/1
+*/
 int Send(PLAYER player, char* buff) {
 	DWORD transferredBytes;
 	LPPER_IO_OPERATION_DATA perIoData;
@@ -395,7 +415,12 @@ int Send(PLAYER player, char* buff) {
 
 	return 1;
 }
-
+/* The Send function send leftover to a client if not completed
+* @param	player			[IN]	Player receive message
+* @param	perIoData		[IN]	LPPER_IO_OPERATION_DATA object store message to send
+* @param	transferredBytes	[IN]	Number of bytes were sent
+* @return	0/1
+*/
 int Send(PLAYER player, LPPER_IO_OPERATION_DATA perIoData, DWORD transferredBytes) {
 	ZeroMemory(&(perIoData->overlapped), sizeof(OVERLAPPED));
 	perIoData->sentBytes += transferredBytes;
@@ -411,7 +436,7 @@ int Send(PLAYER player, LPPER_IO_OPERATION_DATA perIoData, DWORD transferredByte
 	return 1;
 }
 
-/* The Communicate function slit opcode and payload
+/* The Communicate function split opcode and payload
 * @param	perIoData		[IN/OUT]	Somehow after join game, perIoData from thread will be lost, so store it in this function
 * @param	player			[IN/OUT]	Player
 * @param	buff			[IN]		A message from client
@@ -515,30 +540,32 @@ void processPayload(PLAYER player, char *opcode, char *buff) {
 void clearPlayerInfo(PLAYER player, char *buff) {
 	// Remove player from game and team
 	while (!TryEnterCriticalSection(&player->criticalSection)) {}
+	// If player in a game
 	if (player->game != NULL) {
 		while (!TryEnterCriticalSection(&player->game->criticalSection)) {}
 		GAME game = player->game;
 		int i;
-		game->players[player->gameIndex] = NULL;
-		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL;
-		for (i = 0; i < PLAYER_NUM; i++) {
+		game->players[player->gameIndex] = NULL; // Remove player from game
+		game->teams[player->teamIndex]->players[player->placeInTeam] = NULL; // Remove player from team
+		for (i = 0; i < PLAYER_NUM; i++) { // Find the not-empty place in game
 			if (game->players[i] != NULL) {
 				break;
 			}
 		}
-		if (i == PLAYER_NUM) emptyGame(game);
+		if (i == PLAYER_NUM) emptyGame(game); // If all of them are empty, empty the game
 		else {
-			if (player->gameIndex == game->host) {
+			if (player->gameIndex == game->host) { // Update host player
 				game->host = i;
 				if (game->gameState == ONGOING) game->players[game->host]->state = PLAYING;
 				else if (game->gameState == WAITING) game->players[game->host]->state = JOINT;
 			}
+			// Inform game room about player's leaving
 			informGameRoomChange(game, player->gameIndex, (char *) UPDATE_LOBBY, (char *) UPDATE_LOBBY_QUIT, buff);
 		}
 		LeaveCriticalSection(&game->criticalSection);
 	}
-	map<string, pair<string, int>>::iterator it = accountMap.find(player->account);
+	map<string, pair<string, int>>::iterator it = accountMap.find(player->account); // Log player out
 	if (it != accountMap.end()) it->second.second = NOT_AUTHORIZED;
-	updatePlayerInfo(player, INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED);
+	updatePlayerInfo(player, INVALID_SOCKET, 0, 0, 0, 0, 0, 0, 0, NOT_AUTHORIZED); // Update player information
 	LeaveCriticalSection(&player->criticalSection);
 }
