@@ -178,6 +178,12 @@ void getGameProperties(GAME game, char *buff) {
 	}
 }
 
+/* The getCastleQuestion function get castle question from file into buffer
+* @param	castle			[IN/OUT]	New question needed castle
+* @param	fileName		[IN]		Castle's question file
+* @param	buff			[IN/OUT]	Buffer to store new question
+* @return	nothing
+*/
 void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
@@ -195,6 +201,13 @@ void getCastleQuestion(CASTLE castle, char *fileName, char *buff) {
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
 
+/* The getCastleQuestion function get mine question from file into buffer
+* @param	mine			[IN/OUT]	New question needed mine
+* @param	fileName		[IN]		Castle's question file
+* @param	type			[IN]		New question needed resource type
+* @param	buff			[IN/OUT]	Buffer to store new question
+* @return	nothing
+*/
 void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	FILE *file;
 	fopen_s(&file, fileName, "r");
@@ -212,6 +225,10 @@ void getMineQuestion(MINE mine, char *fileName, int type, char *buff) {
 	strcpy_s(buff, BUFF_SIZE, buff + 1);
 }
 
+/* The createEmptyGame function create new game object to fill games list
+* @param	game			[IN/OUT]	New game
+* @return	nothing
+*/
 void createEmptyGame(GAME game) {
 	game->id = 0; // set id to 0
 	game->startAt = 0; // set start time to 0
@@ -287,7 +304,7 @@ void emptyGame(GAME game) {
 	}
 }
 
-/* The createGame function create a game
+/* The createGame function create a game from player request
 * @param	player			[IN/OUT]		Creator
 * @param	game			[IN/OUT]		Pointer to a emptyGame
 * @param	teamNum			[IN]			Number of teams in game
@@ -327,7 +344,7 @@ void createGame(PLAYER player, GAME game, int teamNum) {
 	updatePlayerInfo(player, player->socket, player->IP, player->port, 0, 0, 0, game, player->account, JOINT);
 }
 
-/* The resetGame function reset a game
+/* The resetGame function reset a game, clear resource and question, switch players back to joint
 * @param	game			[IN/OUT]		Pointer to a emptyGame
 * @return	nothing
 */
