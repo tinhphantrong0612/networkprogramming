@@ -4,6 +4,7 @@ extern CRITICAL_SECTION					gameListCriticalSection;
 extern GAME								games[GAME_NUM];
 extern unsigned __stdcall				timelyUpdate(LPVOID game);
 
+// Pre-declaration some function
 int		Send(PLAYER, char *);
 int		Send(PLAYER, LPPER_IO_OPERATION_DATA, DWORD);
 int		Receive(PLAYER, LPPER_IO_OPERATION_DATA);
@@ -25,7 +26,7 @@ void	informCheat(GAME, int, char *, char *, char *);
 //GAME	informUpdate(GAME, char *, char *);
 GAME	informEndGame(GAME, char *, char *, char *);
 
-/* The setResponseAndSend function sets response, then send to player
+/* The setResponseAndSend function sets response
 * @param	opcode				[IN]		Operation code
 * @param	response			[IN]		Response buffer
 * @param	responseLen			[IN]		Size of response
@@ -222,11 +223,11 @@ void getLobbyList(char *buff) {
 * @return	Nothing
 */
 void getGameInfo(GAME game, char *buff) {
-	_i64toa_s(game->id, buff + BUFFLEN, BUFF_SIZE, 10); // 13 bytes
+	_i64toa_s(game->id, buff + BUFFLEN, BUFF_SIZE, 10); // 13 bytes of game id
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#");
-	_itoa_s(game->teamNum, buff + BUFFLEN, BUFF_SIZE, 10);
+	_itoa_s(game->teamNum, buff + BUFFLEN, BUFF_SIZE, 10); // number of teams
 	strcat_s(buff + BUFFLEN, BUFF_SIZE, "#"); // 16 bytes
-	getTeamPlayerString(game, buff + BUFFLEN);
+	getTeamPlayerString(game, buff + BUFFLEN); // team-player string
 }
 
 /* The getTeamPlayerString function get game-team-player info, example: Player 0, 3, 7 in team 0, player 4, 5, 9 in team 2, result: 0xx022x0x2xx
@@ -263,7 +264,7 @@ void handleJoinGame(PLAYER player, char *opcode, char *buff) {
 			if (distance != 13 || *(sharp + 2) != 0) setResponseAndSend(player, opcode, (char *)JOIN_E_FORMAT, strlen(JOIN_E_FORMAT), buff);
 			else {
 				sharp[0] = 0;
-				long long gameId = _atoi64(buff);
+				long long gameId = _atoi64(buff); // get game id
 				if (gameId == 0) setResponseAndSend(player, opcode, (char *)JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
 				else {
 					int team = atoi(sharp + 1);
@@ -271,28 +272,32 @@ void handleJoinGame(PLAYER player, char *opcode, char *buff) {
 					GAME game = NULL;
 					while (!TryEnterCriticalSection(&gameListCriticalSection)) {}
 					bool isLeavedGameListCriticalSection = false;
-					for (i = 0; i < GAME_NUM; i++) {
+					for (i = 0; i < GAME_NUM; i++) { // Find game with the id
 						if (games[i]->id == gameId) {
 							game = games[i];
 							break;
 						}
 					}
+					// If game not found
 					if (i == GAME_NUM || game == NULL) setResponseAndSend(player, opcode, (char *)JOIN_E_NOGAME, strlen(JOIN_E_NOGAME), buff);
 					while (!TryEnterCriticalSection(&game->criticalSection)) {}
+					// If game started already
 					if (game->gameState != WAITING) setResponseAndSend(player, opcode, (char *)JOIN_E_PLAYING, strlen(JOIN_E_PLAYING), buff);
 					else {
 						LeaveCriticalSection(&gameListCriticalSection);
 						isLeavedGameListCriticalSection = true;
-						for (i = 0; i < PLAYER_NUM; i++) {
+						for (i = 0; i < PLAYER_NUM; i++) { // Find empty place in game and count player
 							if (game->players[i] == NULL) {
 								if (emptyPlaceInGame == -1) emptyPlaceInGame = i;
 							}
 							else countPlayer++;
 						}
+						// If game has enough player
 						if (countPlayer == game->teamNum * 3) setResponseAndSend(player, opcode, (char *)JOIN_E_FULLGAME, strlen(JOIN_E_FULLGAME), buff);
+						// If requested team is not valid
 						else if ((team < 0) || (team > game->teamNum - 1)) setResponseAndSend(player, opcode, (char *)JOIN_E_NOTEAM, strlen(JOIN_E_NOTEAM), buff);
 						else {
-							for (i = 0; i < 3; i++) {
+							for (i = 0; i < 3; i++) { // Find empty place in team
 								if (game->teams[team]->players[i] == NULL) {
 									emptyPlaceInTeam = i;
 									break;
@@ -483,7 +488,7 @@ void handleUnreadyPlay(PLAYER player, char *opcode, char *buff) {
 		else if (player->state == JOINT) setResponseAndSend(player, opcode, (char *)UNREADY_E_ALREADY, strlen(UNREADY_E_ALREADY), buff);
 		else {
 			while (!TryEnterCriticalSection(&player->game->criticalSection)) {}
-			player->state = JOINT;
+			player->state = JOINT; // Change state to joint
 			informGameRoomChange(player->game, player->gameIndex, (char *)UPDATE_LOBBY, (char *)UPDATE_LOBBY_UNREADY, buff);
 			LeaveCriticalSection(&player->game->criticalSection);
 		}
