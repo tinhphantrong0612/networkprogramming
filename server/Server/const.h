@@ -287,8 +287,8 @@
 #define CANNON_IRON				1800
 
 // Update loop info
-#define LOOP_TIME               10000 
-#define MAX_LOOP                10 // 4 hour
+#define LOOP_TIME               30000 
+#define MAX_LOOP                60 // 4 hour
 
 // Addtion per 30 seconds
 #define ADDITION_GOLD			5

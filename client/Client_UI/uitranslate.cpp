@@ -37,7 +37,7 @@ QString getOccupiedText(int occupied_by){
 }
 
 QString getMineResourceText(Mine mine){
-    return QString::number(mine.wood) + "W " + QString::number(mine.stone) + "S " + QString::number(mine.stone) + "I";
+    return QString::number(mine.wood) + "W " + QString::number(mine.stone) + "S " + QString::number(mine.iron) + "I";
 }
 
 QPixmap getWeaponPixMap(int weapon_id){
